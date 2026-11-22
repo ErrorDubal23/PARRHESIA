@@ -4,7 +4,7 @@ const BASE = "http://127.0.0.1:8080";
 const b = await puppeteer.launch({ executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", headless: "new" });
 const p = await b.newPage(); await p.setViewport({ width: 1440, height: 900 });
 await p.goto(BASE + "/", { waitUntil: "domcontentloaded" });
-await p.evaluate(async () => fetch("/api/social/v1/sesiones", { method: "POST", headers: { "Content-Type": "application/json", "X-Parrhesia": "1" }, body: JSON.stringify({ correo: "laura_castano@demo.parrhesia.local", clave: process.env.CLAVE_DEMO }) }));
+await p.evaluate(async (clave) => fetch("/api/social/v1/sesiones", { method: "POST", headers: { "Content-Type": "application/json", "X-Parrhesia": "1" }, body: JSON.stringify({ correo: "laura_castano@demo.parrhesia.local", clave }) }), process.env.CLAVE_DEMO);
 await p.goto(BASE + "/", { waitUntil: "networkidle0" });
 let fallos = 0;
 const caso = (d, ok, det = "") => { if (!ok) fallos++; console.log(`${ok ? "OK   " : "FALLA"} FN-18 ${d}${ok ? "" : " → " + det}`); };

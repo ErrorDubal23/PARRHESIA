@@ -25,8 +25,8 @@ for (const c of CONFIGS) {
   p.on("response", (r) => { if (r.url().includes("/api/") && r.status() >= 500) malas.push(r.status() + " " + r.url().replace(BASE, "")); });
   await p.goto(BASE + "/", { waitUntil: "domcontentloaded" });
   await p.evaluate((t) => { try { localStorage.setItem("parrhesia.tema", t); } catch {} }, c.tema);
-  if (c.sesion) await p.evaluate(async () => fetch("/api/social/v1/sesiones", { method: "POST", headers: { "Content-Type": "application/json", "X-Parrhesia": "1" },
-    body: JSON.stringify({ correo: "laura_castano@demo.parrhesia.local", clave: process.env.CLAVE_DEMO }) }));
+  if (c.sesion) await p.evaluate(async (clave) => fetch("/api/social/v1/sesiones", { method: "POST", headers: { "Content-Type": "application/json", "X-Parrhesia": "1" },
+    body: JSON.stringify({ correo: "laura_castano@demo.parrhesia.local", clave }) }), process.env.CLAVE_DEMO);
   console.log(`\n== ${c.nombre}`);
   for (const ruta of RUTAS) {
     errores = []; malas = [];

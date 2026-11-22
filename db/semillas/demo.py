@@ -887,6 +887,13 @@ CREATE TEMP TABLE demo_id ON COMMIT DROP AS
     UNION SELECT id::text FROM demo_publicacion;
 """
 
+# Restos de desarrollo y de la auditoría (22-23 nov 2026), que solo se borran con --con-pruebas: cuentas creadas
+# por las pruebas manuales, la evaluación (T14) y los scripts de auditoría, y las comunidades de prueba. Nunca
+# entran aquí las cuentas con un rol (verificador o administrador): sus fichas y su bitácora son trabajo real.
+CUENTAS_DE_PRUEBA = (r"^(auditoria|ataque|dbg|fn|evaluacion)_"
+                     r"|^(demo_verificacion|perfil_nuevo|prueba_acceso|prueba_comunidad|lucia_demo|mateo_demo)$")
+COMUNIDADES_DE_PRUEBA = "%(prueba)"
+
 # Lo que la limpieza NO borra: si existe, se detiene sin tocar nada.
 FUERA_DE_LA_DEMO = {
     "publicaciones de otras cuentas que responden o comparten la demo": """
@@ -967,7 +974,7 @@ TABLAS_CON_TRIGGERS = ["verificacion.entrega_evento", "verificacion.evento_salid
                        "social.evento_salida"]
 
 
-def limpiar(conn, incluir_de: str | None = None) -> None:
+def limpiar(conn, incluir_de: str | None = None, con_pruebas: bool = False) -> None:
     """Borra de verdad todo lo de la demo (solo desarrollo): las cuentas @demo.parrhesia.local y lo que crearon.
 
     La base no deja borrar publicaciones, bitácoras ni el outbox, y eso está bien en producción. Aquí se apagan
@@ -975,8 +982,33 @@ def limpiar(conn, incluir_de: str | None = None) -> None:
     confirmar. No se confirma nada a medias: no toca otras cuentas, datos oficiales ni verificaciones.
     """
     cur = conn.cursor()
-    for sentencia in DEMO_SQL.strip().split(";\n"):
+    for i, sentencia in enumerate(DEMO_SQL.strip().split(";\n")):
         cur.execute(sentencia)
+        if con_pruebas and i == 0:          # después de crear demo_usuario: se suman las cuentas de prueba
+            cur.execute("INSERT INTO demo_usuario SELECT id FROM social.usuario WHERE nombre_usuario ~ %s AND rol = 'usuario'",
+                        (CUENTAS_DE_PRUEBA,))
+            print(f"Se incluyen {cur.rowcount} cuentas de prueba (desarrollo y auditoría).")
+        if con_pruebas and i == 1:          # después de crear demo_comunidad: las comunidades de prueba
+            cur.execute("INSERT INTO demo_comunidad SELECT id FROM social.comunidad WHERE nombre LIKE %s"
+                        " AND id NOT IN (SELECT id FROM demo_comunidad)", (COMUNIDADES_DE_PRUEBA,))
+            print(f"Se incluyen {cur.rowcount} comunidades de prueba.")
+    if con_pruebas:
+        # Publicaciones de otras cuentas que mencionan a una cuenta de prueba (también eran pruebas, por ejemplo
+        # de formato): se borran con ella. Las que mencionan a las personas de la demo siguen protegidas.
+        cur.execute("""
+            WITH suyas AS (SELECT DISTINCT m.publicacion_id AS id FROM social.mencion_usuario m
+                           JOIN social.usuario u ON u.id = m.usuario_id
+                           WHERE u.nombre_usuario ~ %(patron)s AND m.publicacion_id NOT IN (SELECT id FROM demo_publicacion)),
+            a AS (INSERT INTO demo_publicacion SELECT id FROM suyas RETURNING id),
+            b AS (INSERT INTO demo_etiqueta SELECT DISTINCT etiqueta_id FROM social.publicacion_etiqueta
+                  WHERE publicacion_id IN (SELECT id FROM suyas) ON CONFLICT DO NOTHING)
+            INSERT INTO demo_id SELECT id::text FROM a""", {"patron": CUENTAS_DE_PRUEBA})
+        if cur.rowcount:
+            print(f"Se incluyen {cur.rowcount} publicaciones de otras cuentas que mencionan a cuentas de prueba.")
+        # La propuesta con la que una cuenta de prueba pidió la ficha de prueba (ya archivada): la ficha queda.
+        cur.execute("DELETE FROM social.propuesta_figura WHERE propuesta_por IN (SELECT id FROM demo_usuario)")
+        if cur.rowcount:
+            print(f"Se borran {cur.rowcount} propuestas de figura hechas por cuentas de prueba.")
     if incluir_de:
         # Con permiso explícito: las publicaciones de esa cuenta que responden o comparten la demo (pruebas
         # hechas sobre la demo) se borran con ella. Nada más de esa cuenta se toca.
@@ -1074,6 +1106,8 @@ def main() -> None:
     accion.add_argument("--cifras", action="store_true", help="agrega a la demo las publicaciones con cifras (usan IA)")
     accion.add_argument("--fotos", action="store_true", help="pone avatares ilustrados a las cuentas de la demo")
     parser.add_argument("--seguidor", help="nombre de usuario de una cuenta real para conectarla con la demo")
+    parser.add_argument("--con-pruebas", action="store_true",
+                        help="al limpiar, borra también las cuentas y comunidades de prueba (desarrollo y auditoría)")
     parser.add_argument("--incluir-de", help="al limpiar, borra también las publicaciones de esta cuenta hechas sobre la demo")
     args = parser.parse_args()
     conn = connect(autocommit=False)
@@ -1081,10 +1115,10 @@ def main() -> None:
         if args.retirar:
             retirar(conn)
         elif args.limpiar:
-            limpiar(conn, args.incluir_de)
+            limpiar(conn, args.incluir_de, args.con_pruebas)
             conn.commit()
         elif args.resembrar:
-            limpiar(conn, args.incluir_de)
+            limpiar(conn, args.incluir_de, args.con_pruebas)
             sembrar(conn, args.seguidor)  # confirma las dos cosas juntas
             sembrar_cifras(conn)
         elif args.cifras:

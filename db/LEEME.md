@@ -69,6 +69,7 @@ uv run python db/semillas/demo.py --resembrar --seguidor dubal_aguilar  # el dí
 uv run python db/semillas/demo.py --cifras                              # agrega las 11 publicaciones con cifras (usan IA)
 uv run python db/semillas/demo.py --fotos                               # avatares ilustrados (DiceBear, CC0), nunca fotos de personas reales
 uv run python db/semillas/demo.py --resembrar --seguidor dubal_aguilar --incluir-de dubal_aguilar  # y borra lo que esa cuenta hizo sobre la demo
+uv run python db/semillas/demo.py --resembrar --con-pruebas --seguidor dubal_aguilar  # y borra cuentas y comunidades de prueba (desarrollo y auditoría)
 uv run python db/semillas/figuras.py --verificador prueba_editor        # figuras públicas reales (13), con fuente
 uv run python db/semillas/declaraciones.py --verificador prueba_editor  # 7 declaraciones reales, solo texto entre comillas del medio
 uv run python db/consola/asignar_rol.py --usuario <usuario> --rol admin --motivo "..."  # primer administrador (solo consola)
