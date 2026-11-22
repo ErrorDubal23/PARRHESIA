@@ -1,0 +1,11 @@
+# Los archivos de texto se guardan y se descargan con saltos de línea de Unix (LF), también en Windows:
+# así el código, las migraciones y la configuración de Docker quedan idénticos en todos los equipos.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.pdf binary
+*.xlsx binary
+*.xls binary
+*.dump binary
