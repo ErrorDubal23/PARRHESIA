@@ -210,3 +210,11 @@ def test_a_new_account_sees_its_own_post_in_its_home(cliente):
     ana = cuenta(cliente, "ana")
     p = cliente.post("/v1/publicaciones", json={"texto": "Mi primera publicación"}, headers=ana).json()
     assert [x["id"] for x in cliente.get("/v1/feed", headers=ana).json()["publicaciones"]] == [p["id"]]
+
+
+def test_a_source_must_be_a_real_web_address(cliente):
+    ana = cuenta(cliente, "ana")
+    base = {"nombre_completo": "Persona Propuesta", "cargo": "Concejal"}
+    for mala in ("https://http://sin-https.example", "https://localhost", "https://sitio con espacio.co", "http://sitio.co"):
+        assert cliente.post("/v1/propuestas-figura", json={**base, "url_fuente": mala}, headers=ana).status_code == 422, mala
+    assert cliente.post("/v1/propuestas-figura", json={**base, "url_fuente": "https://www.concejobogota.gov.co"}, headers=ana).status_code == 201

@@ -52,7 +52,11 @@ class Reaccion(BaseModel):
     tipo: Literal["me_gusta", "util"]
 
 
-URL_HTTPS = r"^https://"
+# Una dirección web de verdad (auditoría FN-12): dominio con punto y terminación, puerto y ruta opcionales, sin
+# espacios. Antes bastaba con empezar por "https://", y el formulario (que trae "https://" escrito) aceptaba
+# "https://http://sitio" como fuente.
+URL_HTTPS = r"^https://[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}(:[0-9]{1,5})?([/?#]\S*)?$"
+URL_WEB = r"^https?://[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}(:[0-9]{1,5})?([/?#]\S*)?$"
 
 
 class NuevaFigura(BaseModel):
@@ -93,7 +97,7 @@ class NuevaDeclaracion(BaseModel):
     texto: str = Field(min_length=1, max_length=2000)
     dicha_el: date
     tipo: Literal["declaracion", "promesa"] = "declaracion"
-    url_fuente: str = Field(pattern=r"^https?://")
+    url_fuente: str = Field(pattern=URL_WEB, max_length=1000)
     etiquetas: list[str] = Field(default_factory=list, max_length=10)
 
 

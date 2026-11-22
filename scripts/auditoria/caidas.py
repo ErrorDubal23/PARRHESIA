@@ -1,6 +1,6 @@
 """Caídas en plena demo (plan de pruebas MS-11, MS-12, MS-14, MS-15). DETIENE CONTENEDORES: hacer un respaldo antes.
 
-    uv run python scripts/auditoria/caidas.py [--solo grafo,neo4j,ia,social,db,reinicio,reconstruir]
+    CLAVE_DEMO=<clave de la demo> uv run python scripts/auditoria/caidas.py [--solo grafo,neo4j,ia,social,db,reinicio,reconstruir]
 
 Para cada caída: detiene el contenedor, comprueba lo que ve la persona (por el gateway, como la página), lo
 vuelve a encender y comprueba que se recupere solo, sin reiniciar nada más y sin perder datos. Nunca usa
@@ -20,7 +20,9 @@ import httpx
 RAIZ = Path(__file__).resolve().parents[2]
 API = "http://127.0.0.1:8080/api"
 FALLOS = 0
-CORREO, CLAVE = "laura_castano@demo.parrhesia.local", "iAvYzWWLoEeemD-a"
+import os
+CORREO = "laura_castano@demo.parrhesia.local"
+CLAVE = os.environ.get("CLAVE_DEMO", "")          # la que imprime demo.py al sembrar; nunca en el código
 
 
 def caso(codigo, descripcion, ok, detalle=""):

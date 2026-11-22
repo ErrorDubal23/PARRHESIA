@@ -100,7 +100,11 @@ export function TarjetaPublicacion({ publicacion: inicial, enlazar = true }: { p
             <strong>{p.autor.nombre_visible}</strong>
             <span className="tenue">@{p.autor.nombre_usuario}</span>
           </Link>
-          <time className="tenue" dateTime={p.creado_en} title={new Date(p.creado_en).toLocaleString("es-CO")}>{haceCuanto(p.creado_en)}</time>
+          {/* La hora es el enlace a la publicación (auditoría FN-18): así se abre también con el teclado. */}
+          <Link to={`/publicacion/${p.id}`} className="publicacion__hora" onClick={(e) => e.stopPropagation()}
+            aria-label={`Abrir la publicación de ${p.autor.nombre_visible}, ${haceCuanto(p.creado_en)}`}>
+            <time className="tenue" dateTime={p.creado_en} title={new Date(p.creado_en).toLocaleString("es-CO")}>{haceCuanto(p.creado_en)}</time>
+          </Link>
           {p.distancia === 2 && <span className="sello" title="Lo sigue alguien a quien sigues">Red ampliada</span>}
           {p.comunidad && (
             <Link to={`/comunidades/${p.comunidad.id}`} className="publicacion__comunidad" onClick={(e) => e.stopPropagation()}
