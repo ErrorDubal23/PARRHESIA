@@ -44,10 +44,12 @@ export function Inicio() {
   }
   return (
     <>
-      <button className="caja-publicar tarjeta" onClick={() => abrir()}>
+      <button className="caja-publicar tarjeta" onClick={() => abrir()} title="Publicar (tecla N)">
         <Avatar nombre={usuario.nombre_visible} foto={usuario.foto} />
-        <span className="tenue">¿Qué quieres decir, {usuario.nombre_visible.split(" ")[0]}?</span>
-        <kbd>N</kbd>
+        <span className="caja-publicar__campo tenue">¿Qué quieres compartir hoy, {usuario.nombre_visible.split(" ")[0]}?</span>
+        <span className="caja-publicar__enviar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 3 3 10.5l7.5 2.6L13 21z" /><path d="m10.5 13.1 4-4" /></svg>
+        </span>
       </button>
       {feed === null && <span className="cargando"><i /><i /><i /></span>}
       {feed?.fuente === "respaldo" && (

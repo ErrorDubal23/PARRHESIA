@@ -1,6 +1,7 @@
 /* Parrhesia · sistema visual
-   Paleta neutral: negro, arena y crema. Ningún color de partido político colombiano
-   (rojo, azul, verde, amarillo, naranja). Las conclusiones se distinguen por forma, no por color. */
+   Base crema y tinta, con acentos apagados (azul pizarra, arena, mostaza, salvia, verde azulado; 23 nov 2026).
+   Los colores no significan nada: no se asocian a partidos ni a posturas, y los de los avatares salen del
+   nombre de la cuenta. Las conclusiones se distinguen por forma y por texto, nunca por color. */
 
 :root {
   /* Tipografía: la jerarquía se construye con letra, tamaño y espacio, no con líneas decorativas. */
@@ -25,24 +26,50 @@
   --foco: #1e1e1e;
   --seda-luz: #fdfaf5;
   --seda-sombra: #e3d8c6;
+  /* Acentos (referencia visual del 23 nov 2026) */
+  --acento: #6a879d;            /* avatar de inicial */
+  --acento-suave: #cfdbe4;      /* sección activa del menú */
+  --acento-fuerte: #3f6684;     /* ficha del selector de tema, punto activo */
+  --detalle: #8a8279;           /* rótulos pequeños (Opinión, Retirar) */
+  --flotante: #2f4756;          /* botón de publicar */
+  --flotante-texto: #f3eee6;
+  /* Formas del fondo (FondoSeda.tsx), medidas sobre la referencia */
+  --forma-banda: #b3c1cb;       /* banda que entra por arriba: pizarra claro */
+  --forma-esquina: #c9a36c;     /* esquina superior derecha: arena tostada */
+  --forma-tira: #a4b5c2;        /* tira junto a la columna derecha: pizarra */
+  --forma-lado: #d9dfe3;        /* trazo largo del borde derecho: gris azulado claro */
+  --forma-izq: #a7b7c4;         /* lóbulo detrás del menú: pizarra */
+  --forma-rincon: #cba673;      /* esquina inferior izquierda: arena tostada (contraste) */
   color-scheme: light;
 }
 
 :root[data-tema="oscuro"] {
-  --fondo: #121110;
-  --superficie: #1b1a18;
-  --superficie-2: #22201d;
+  --fondo: #0d1317;
+  --superficie: #151c21;
+  --superficie-2: #1a2228;
   --tinta: #f2ece2;
-  --tinta-2: #c9c1b5;
-  --tinta-3: #8f877c;
+  --tinta-2: #c4c6c4;
+  --tinta-3: #8b9196;
   --arena: #b8a383;
   --arena-fuerte: #d2bf9f;
-  --arena-suave: #2b2722;
-  --linea: #2f2b26;
+  --arena-suave: #1f2a31;
+  --linea: #26313a;
   --sombra: 0 1px 0 rgba(0, 0, 0, 0.3), 0 10px 30px -14px rgba(0, 0, 0, 0.7);
   --foco: #f2ece2;
   --seda-luz: #2e2923;
   --seda-sombra: #050404;
+  --acento: #2f6c96;
+  --acento-suave: #1a4560;
+  --acento-fuerte: #3b8bc0;
+  --detalle: #d6a649;           /* ámbar: Opinión, Retirar */
+  --flotante: #f2ece2;
+  --flotante-texto: #1e1e1e;
+  --forma-banda: #463a27;
+  --forma-esquina: #1c3646;
+  --forma-tira: #1f3748;
+  --forma-lado: #1b2c37;
+  --forma-izq: #3d3324;
+  --forma-rincon: #1f3a4d;
   color-scheme: dark;
 }
 

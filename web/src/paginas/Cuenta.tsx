@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { FondoSeda } from "../componentes/FondoSeda";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { api, destinoSeguro, ErrorApi } from "../api";
 import { BotonTema } from "../componentes/BotonTema";
@@ -41,6 +42,8 @@ function CampoClave({ valor, cambiar, nueva }: { valor: string; cambiar: (v: str
 
 function Pantalla({ referencia, titulo, ayuda, children }: { referencia: string; titulo: ReactNode; ayuda: string; children: ReactNode }) {
   return (
+    <>
+    <FondoSeda />
     <div className="acceso">
       <PanelVivo />
       <section className="acceso__panel">
@@ -53,6 +56,7 @@ function Pantalla({ referencia, titulo, ayuda, children }: { referencia: string;
         </div>
       </section>
     </div>
+    </>
   );
 }
 

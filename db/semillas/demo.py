@@ -1054,7 +1054,9 @@ def limpiar(conn, incluir_de: str | None = None, con_pruebas: bool = False) -> N
 
 # Avatares ilustrados y genéricos (DiceBear "notionists", licencia CC0): no son fotos de personas reales,
 # porque una cara real en una cuenta ficticia sería atribuirle a alguien lo que nunca dijo.
-AVATAR = "https://api.dicebear.com/9.x/notionists/png?seed={}&size=400&backgroundColor=e9dfd0,dccbb4,efe7da,d8c9b8"
+# Fondos de color apagados (referencia visual del 23 nov 2026): mostaza, azul acero, salvia, verde azulado y
+# azul pizarra. DiceBear elige uno por cuenta a partir del nombre: el color no significa nada.
+AVATAR = "https://api.dicebear.com/9.x/notionists/png?seed={}&size=400&backgroundColor=f2c24f,5a8fc1,7aab6e,4ea6a4,7d9bb3"
 GUARDAR_FOTO = (
     "import sys\n"
     "from servicios.comun.configuracion import conectar_postgres\n"
@@ -1064,11 +1066,13 @@ GUARDAR_FOTO = (
     "    pg.execute('CALL social.fijar_foto(%s, %s, NULL)', (sys.argv[1], nombre))\n")
 
 
-def poner_fotos(conn) -> None:
-    """Cada cuenta de la demo recibe su avatar por el mismo camino que una foto subida (se valida y se limpia)."""
+def poner_fotos(conn, todas: bool = False) -> None:
+    """Cada cuenta de la demo recibe su avatar por el mismo camino que una foto subida (se valida y se limpia).
+    Con `todas`, también se rehacen los que ya tienen (por ejemplo, al cambiar la paleta)."""
     import httpx
     cur = conn.cursor()
-    cur.execute("SELECT id::text, nombre_usuario FROM social.usuario WHERE correo LIKE %s AND foto IS NULL", (f"%@{DOMINIO}",))
+    cur.execute("SELECT id::text, nombre_usuario FROM social.usuario WHERE correo LIKE %s" + ("" if todas else " AND foto IS NULL"),
+                (f"%@{DOMINIO}",))
     cuentas = cur.fetchall()
     puestas = 0
     with httpx.Client(timeout=20) as http:
@@ -1106,6 +1110,7 @@ def main() -> None:
     accion.add_argument("--cifras", action="store_true", help="agrega a la demo las publicaciones con cifras (usan IA)")
     accion.add_argument("--fotos", action="store_true", help="pone avatares ilustrados a las cuentas de la demo")
     parser.add_argument("--seguidor", help="nombre de usuario de una cuenta real para conectarla con la demo")
+    parser.add_argument("--todas", action="store_true", help="con --fotos: rehace también los avatares que ya existen")
     parser.add_argument("--con-pruebas", action="store_true",
                         help="al limpiar, borra también las cuentas y comunidades de prueba (desarrollo y auditoría)")
     parser.add_argument("--incluir-de", help="al limpiar, borra también las publicaciones de esta cuenta hechas sobre la demo")
@@ -1124,7 +1129,7 @@ def main() -> None:
         elif args.cifras:
             sembrar_cifras(conn)
         elif args.fotos:
-            poner_fotos(conn)
+            poner_fotos(conn, args.todas)
         else:
             sembrar(conn, args.seguidor)
     except BaseException:
