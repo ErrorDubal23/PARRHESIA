@@ -1,0 +1,19 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Original downloaded files never go to git; only hashes and metadata do (evidence/).
+data/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

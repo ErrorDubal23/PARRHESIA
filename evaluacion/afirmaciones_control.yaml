@@ -1,0 +1,70 @@
+# Conjunto de control: 10 afirmaciones NUEVAS, escritas el 21 nov 2026 DESPUÉS de las correcciones de la
+# evaluación v1 y ANTES de correrlas. Sirven para saber si las correcciones mejoraron el sistema o solo lo
+# ajustaron a las 30 frases de la v1: ninguna de estas frases se usó para corregir nada.
+#
+# Las expectativas salen de las reglas aprobadas del motor (docs/diseno/08_motor_de_reglas.md) y de los datos
+# oficiales que hay en la base ese día:
+#   - desempleo (DANE, GEIH): mar 2026 8,79 · abr 8,78 · may 8,02 · jul 8,10 · ago 9,36 (nota oficial del
+#     sismo) · ago 2025 8,60
+#   - inflación anual (DANE): jun 2026 6,14 · jul 6,03 · jul 2025 4,90; mensual jul 2026 0,17;
+#     año corrido sep 2026 5,74
+#   - homicidios (Policía Nacional): oct 2025 1.112 (ya no es provisional)
+# No se ajustan después de ver los resultados. Mismo formato que afirmaciones_v1.yaml.
+
+- n: 1
+  texto: "La tasa de desempleo en marzo de 2026 fue de 8,8 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "8.8", conclusion: se_sostiene}]
+  por_que: "El DANE publica 8,79 % para marzo de 2026; dicho con un decimal es 8,8 %."
+- n: 2
+  texto: "En julio de 2026 la inflación anual bajó a 6,03 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "6.03", conclusion: se_debilita, prueba: periodo_limitado}]
+  por_que: "La cifra coincide, pero que haya bajado depende de con qué se compare: frente a junio (6,14 %) bajó; frente a julio de 2025 (4,90 %) subió."
+- n: 3
+  texto: "En agosto de 2026 el desempleo bajó a 9,4 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "9.4", conclusion: se_invierte, prueba: nota_serie}]
+  por_que: "La cifra coincide (9,36 %), pero subió frente a julio (8,10 %) y frente a agosto de 2025 (8,60 %). Además ese mes tiene la nota oficial del sismo."
+- n: 4
+  texto: "La inflación anual de julio de 2026 fue de 0,17 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "0.17", conclusion: se_debilita, prueba: variante_equivocada}]
+  por_que: "0,17 % es la variación mensual de julio de 2026; la anual fue 6,03 %."
+- n: 5
+  texto: "El desempleo de mayo de 2026 se ubicó en 8,8 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "8.8", conclusion: se_debilita, prueba: periodo_limitado}]
+  por_que: "El dato de mayo de 2026 es 8,02 %; 8,8 % es el de abril (8,78 %)."
+- n: 6
+  texto: "En octubre de 2025 se registraron 1.112 homicidios en Colombia."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "1112", conclusion: se_sostiene}]
+  por_que: "Coincide con el conteo de la Policía Nacional para octubre de 2025."
+- n: 7
+  texto: "En lo corrido de 2026, hasta septiembre, la inflación acumula 5,74 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "5.74", conclusion: se_sostiene}]
+  por_que: "La variación año corrido a septiembre de 2026 es 5,74 % (DANE)."
+- n: 8
+  texto: "En Medellín el desempleo fue de 8,5 % en julio de 2026."
+  categoria: sin_serie
+  esperado: {ninguna_conclusion: [se_sostiene, se_debilita, se_invierte]}
+  por_que: "Solo hay series nacionales registradas; no se compara una ciudad con el total del país."
+- n: 9
+  texto: "El Banco de la República espera que la inflación cierre 2026 en 5,5 %."
+  categoria: proyeccion
+  esperado: {ninguna_conclusion: [se_sostiene, se_debilita, se_invierte]}
+  por_que: "Es una proyección, no un dato observado."
+- n: 10
+  texto: "Con este gobierno el costo de vida está imposible."
+  categoria: sin_cifra
+  esperado: {ninguna_conclusion: [se_sostiene, se_debilita, se_invierte]}
+  por_que: "No hay cifra: se publica como opinión."

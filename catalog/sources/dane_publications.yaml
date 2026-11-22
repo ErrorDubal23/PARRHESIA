@@ -1,0 +1,35 @@
+# Publicaciones del DANE que usan las series de inflación y desempleo.
+#
+# Los nombres de archivo cambian cada mes (llevan el mes en la ruta), así que
+# cada archivo se encuentra en su página: por el inicio del texto del enlace o
+# por el patrón de su dirección. El periodo de cada archivo sale de su propio
+# contenido, nunca del nombre del archivo.
+#
+# El DANE envía Last-Modified: un archivo ya descargado se revisa a lo sumo una
+# vez al mes con If-Modified-Since. Si cambia la dirección (archivo nuevo del
+# mes), se descarga. Los originales no van a git (data/); el manifiesto con
+# hashes y metadatos sí (evidence/dane_publications.jsonl).
+
+code: dane_publications
+channel: dane_web
+
+sources:
+  # Anexo "Variaciones porcentuales" del IPC (.xls): variación mensual 2003 en
+  # adelante y fila "En año corrido".
+  - name: dane_ipc_variations_annex
+    page: https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc
+    link_text_prefix: "Variaciones porcentuales - "
+
+  # Anexo de la GEIH del mes (.xlsx); no el desestacionalizado.
+  - name: dane_geih_annex
+    page: https://www.dane.gov.co/index.php/estadisticas-por-tema/mercado-laboral/empleo-y-desempleo
+    href_pattern: '/files/operaciones/GEIH/anex-GEIH-[a-z]{3}\d{4}\.xlsx$'
+
+  # Boletines técnicos del IPC desde 2023 (formato estable verificado en los 45
+  # boletines de 2023-01 a 2026-09). Los anteriores están en el backlog. El año
+  # del nombre del archivo solo sirve para elegir cuáles descargar.
+  - name: dane_ipc_bulletin
+    page: https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc/ipc-historico
+    href_pattern: '/(?:bol-IPC-[a-z]{3}(?P<year4>\d{4})|bol_ipc_[a-z]{3}(?P<year2>\d{2}))\.pdf$'
+    many: true
+    from_year: 2023

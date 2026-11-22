@@ -1,0 +1,145 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+
+code: minimum_wage_monthly
+indicator: minimum_wage
+variant: nominal
+name: Salario mínimo mensual legal vigente (pesos corrientes)
+definition: >
+  Valor mensual del salario mínimo legal fijado por decreto para cada año, en
+  pesos corrientes (nominal, sin ajustar por inflación). No incluye el auxilio de
+  transporte.
+unit: cop
+unit_label: Pesos colombianos
+frequency: annual
+geography: national
+
+producer: MinTrabajo
+access_channel: banrep_suameca
+
+external:
+  menu_id: 500023
+  series_id: 15416
+  series_name: Salario mínimo mensual
+  url: https://suameca.banrep.gov.co/estadisticas-economicas-back/rest/estadisticaEconomicaRestService/consultaMenuXId?idMenu=500023
+
+methodology:
+  technical_sheet:   # no hay ficha metodológica; el valor lo fija cada decreto anual
+  notes: >
+    SUAMECA registra como fuente "Ministerio del Trabajo, Presidencia de la
+    República". Fe de erratas activa: en enero de 2021 se corrigieron el salario
+    mínimo mensual de 1991 y la variación de 1992.
+
+history:
+  first_period: 1984
+  decimals: 0
+  # SUAMECA dates each year at 31 December. The value dated 2026-12-31 is the one in force during 2026.
+  period_from_timestamp: year_of_timestamp
+
+# Filtro 3 (propuesta). Fuera de rango: cuarentena para revisión.
+plausibility:
+  min: 0
+  must_increase: true   # el salario mínimo nominal nunca ha bajado en la serie
+  no_gaps: true
+  no_duplicates: true
+
+# Filtro 5 no aplica: la única fuente oficial es el decreto anual. Las
+# observaciones llevan la marca "sin segunda fuente", que no bloquea.
+contrast_with: []
+
+# Ningún año de la serie (1984-2026) viola must_increase (verificado el 25 oct 2026).
+known_exceptions: []
+
+reference_values:
+  - period: "2026"
+    value: "1750905"
+    precision: 0
+    published_by: Gobierno Nacional (Ministerio del Trabajo)
+    document: >
+      Decreto 1469 del 29 de diciembre de 2025, artículo 1. Diario Oficial
+      No. 53.350 (29 de diciembre de 2025). El decreto dice que el valor
+      "representa un incremento del veintitrés por ciento (23%)".
+    # Diario Oficial scan hosted by the Rama Judicial (SIDN).
+    url: https://sidn.ramajudicial.gov.co/SIDN//NORMATIVA/TEXTOS_COMPLETOS/5_DECRETOS/DECRETOS%202025/Decreto%201469%20de%202025.pdf
+    sha256: 5fc8ec35fa8285fd7e8a3ae24605b1c12cb884811a40b97f74734647f852084c
+    retrieved_on: 2026-10-25
+
+# Notas con rango de fechas (entidad nota_serie). No cambian el valor de la
+# serie; el motor las cita si una afirmación cae en ese periodo.
+series_notes:
+  - id: decree_1469_suspended
+    type: legal
+    valid_from: 2026-02-12
+    valid_to: 2026-07-09   # fecha del auto que revocó la suspensión
+    status: confirmed
+    related_notes: [decree_0159_transitional, suspension_revoked]
+    text: >
+      El Consejo de Estado (Sección Segunda, Subsección A, radicado
+      11001-03-25-000-2026-00004-00) suspendió provisionalmente el Decreto 1469
+      de 2025 por auto del 12 de febrero de 2026 y ordenó al Gobierno expedir en
+      ocho días un decreto con un porcentaje transitorio de aumento. La
+      suspensión fue revocada por auto del 9 de julio de 2026.
+    source:
+      document: Auto del 12 de febrero de 2026, resuelve segundo y tercero (publicado por el Consejo de Estado)
+      url: https://linkce.consejodeestado.gov.co/docum/prensa/PQRSDFa3aefc.pdf
+      sha256: 02b33b7725e1a42bee17ca63d92b4721ef4c079dae7d269ceb6a2c7a2bc790a2
+      retrieved_on: 2026-10-25
+  # Sin fecha de fin y pendiente (decisión del 25 oct 2026). Solo se cierra cuando
+  # una fuente oficial (la sentencia de nulidad o una norma que lo derogue) diga
+  # que perdió efecto. No se cierra con la ejecutoria del auto del 9 de julio:
+  # no hacemos interpretaciones jurídicas propias.
+  - id: decree_0159_transitional
+    type: legal
+    valid_from: 2026-02-19
+    valid_to:
+    status: pending_official_source
+    related_notes: [decree_1469_suspended, suspension_revoked]
+    text: >
+      El Decreto 0159 de 2026 fijó transitoriamente, desde su publicación, el
+      salario mínimo mensual de 2026 en $1.750.905 (el mismo valor del Decreto
+      1469), vigente "hasta que se dicte sentencia en el proceso de nulidad".
+      Repite que el valor representa un incremento del 23 %. Ninguna fuente
+      oficial consultada (sentencia de nulidad o norma derogatoria) dice todavía
+      que haya perdido efecto.
+    source:
+      document: Decreto 0159 del 19 de febrero de 2026, artículos 1 y 2. Diario Oficial No. 53.403 del 19 de febrero de 2026
+      url: https://sidn.ramajudicial.gov.co/SIDN//NORMATIVA/TEXTOS_COMPLETOS/5_DECRETOS/DECRETOS%202026/Decreto%200159%20de%202026.pdf
+      sha256: 8572d382fa777cf41281e081ee5a78bd09f39ba2e0df51c075d5c315094691c1
+      retrieved_on: 2026-10-25
+  - id: suspension_revoked
+    type: legal
+    valid_from: 2026-07-09
+    valid_to:
+    status: confirmed
+    related_notes: [decree_1469_suspended, decree_0159_transitional]
+    text: >
+      El Consejo de Estado (Sección Segunda, auto del 9 de julio de 2026,
+      ponente Jorge Iván Duque Gutiérrez, con dos salvamentos de voto) revocó el
+      auto del 12 de febrero de 2026, negó la suspensión provisional del Decreto
+      1469 de 2025 "que fijó en 23% el porcentaje de incremento del salario
+      mínimo para 2026" y dejó sin efectos el acto dictado en cumplimiento de la
+      medida cautelar. El proceso de nulidad sigue abierto.
+    source:
+      document: Auto del 9 de julio de 2026, radicado 11001-03-25-000-2026-00004-00, resuelve primero a tercero (publicado por el Consejo de Estado el 17 de julio de 2026)
+      url: https://linkce.consejodeestado.gov.co/docum/prensa/PQRSDFeb986e.pdf
+      sha256: b755e329b73cab78cfb2db9e628a36d241377d815ae7002662934b49702de1de
+      retrieved_on: 2026-10-25
+
+legal_status:
+  in_force: true
+  pending_litigation: true   # proceso de nulidad 11001-03-25-000-2026-00004-00
+  closed: false
+  # Texto que el motor muestra cuando una afirmación toca este decreto.
+  user_message: >
+    Según las fuentes oficiales disponibles, la situación jurídica del decreto
+    del salario mínimo de 2026 no está cerrada: el proceso de nulidad sigue
+    abierto en el Consejo de Estado.
+
+open_questions: []
+
+approval:
+  status: approved
+  approved_by: Dubal Aguilar Torres
+  approved_on: 2026-10-25
+  content_sha256: eafd135f294e912aa40e97f5670baeb9998d932d2c603c532ef919d72e1eb4a1
+  comments: "Revisada y aprobada por Dubal Aguilar Torres; bloque escrito por el asistente por instrucción suya."

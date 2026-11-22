@@ -1,0 +1,723 @@
+// Modelo relacional, proyecto final de Bases de Datos (v1, 20 nov 2026).
+// Pegar en https://dbdiagram.io para ver el diagrama. Detalle en 02_MR.md.
+// Nombres en español sin tildes (decisión 14); equivalencias en glosario_codigo.md.
+// Las referencias marcadas "// lógica" cruzan esquemas: no son llaves foráneas,
+// las revisa un trigger con una función (ver 02_MR.md, integridad entre esquemas).
+
+Project proyecto_social {
+  database_type: 'PostgreSQL'
+  Note: 'Red social con verificación automática de cifras oficiales'
+}
+
+// ---------- oficial (migración 0001, renombrada en 0002) ----------
+
+Table oficial.fuente {
+  id uuid [pk]
+  codigo text [unique, not null]
+  nombre text [not null]
+  rol text [not null, note: 'productor | canal_acceso']
+}
+
+Table oficial.indicador {
+  id uuid [pk]
+  codigo text [unique, not null]
+  categoria text [not null, note: 'economia | seguridad']
+}
+
+Table oficial.serie {
+  id uuid [pk]
+  codigo text [unique, not null]
+  indicador_id uuid [not null]
+  fuente_productora_id uuid [not null]
+  fuente_canal_id uuid [not null]
+  variante text [not null]
+  nombre text [not null]
+  unidad text [not null]
+  etiqueta_unidad text [not null]
+  frecuencia text [not null, note: 'mensual | anual']
+  geografia text [not null]
+  huella_contenido text [not null]
+  aprobada boolean [not null]
+}
+
+Table oficial.aprobacion_serie {
+  id uuid [pk]
+  serie_id uuid [not null]
+  estado text [not null, note: 'pendiente | aprobada | rechazada']
+  huella_contenido text
+  aprobada_por text
+  aprobada_el date
+  comentarios text
+}
+
+Table oficial.nota_serie {
+  id uuid [pk]
+  serie_id uuid [not null]
+  clave_nota text [not null]
+  tipo text [not null]
+  vigente_desde text
+  vigente_hasta text
+  estado text [not null]
+  contenido jsonb [not null]
+}
+
+Table oficial.diferencia_version {
+  id uuid [pk]
+  serie_id uuid [not null]
+  periodo text [not null]
+  nivel text [not null]
+  fuente text [not null]
+  valor_fuente numeric [not null]
+  valor_serie numeric [not null]
+}
+
+Table oficial.descarga {
+  id uuid [pk]
+  serie_id uuid [not null]
+  canal text [not null]
+  descargado_en timestamptz [not null]
+  actualizado_fuente text
+}
+
+Table oficial.archivo_original {
+  id uuid [pk]
+  descarga_id uuid [not null]
+  nombre text [not null]
+  url text [not null]
+  sha256 text [not null]
+  ubicacion text [not null]
+}
+
+Table oficial.observacion {
+  id uuid [pk]
+  secuencia bigint [unique, increment]
+  serie_id uuid [not null]
+  descarga_id uuid [not null]
+  periodo text [not null]
+  territorio text [not null]
+  valor numeric
+  estado text [not null, note: 'en_cuarentena | aceptada']
+  estado_contraste text [not null]
+  nivel_contraste text
+  marcas "text[]" [not null]
+}
+
+Table oficial.comparacion_contraste {
+  id uuid [pk]
+  observacion_id uuid [not null]
+  fuente text [not null]
+  nivel text [not null]
+  periodo_comparado text [not null]
+  valor_fuente numeric
+  valor_serie numeric
+  tolerancia numeric [not null]
+  resultado text [not null]
+  diferencia_conocida boolean [not null]
+}
+
+Table oficial.alerta {
+  id uuid [pk]
+  serie_id uuid [not null]
+  observacion_id uuid [not null]
+  periodo text [not null]
+  territorio text [not null]
+  tipo text [not null]
+  valor numeric
+  estado text [not null, note: 'abierta | cerrada']
+}
+
+Table oficial.evento_alerta {
+  id uuid [pk]
+  alerta_id uuid [not null]
+  evento text [not null, note: 'abierta | comentada | cerrada | reabierta']
+  actor text [not null]
+  motivo text
+}
+
+Table oficial.archivo_evidencia {
+  id uuid [pk]
+  manifiesto text [not null]
+  fuente text [not null]
+  url text [not null]
+  descargado_en timestamptz [not null]
+  sha256 text [not null]
+  tamano bigint [not null]
+  ubicacion text [not null]
+}
+
+Table oficial.brecha_contexto {
+  id uuid [pk]
+  codigo text [unique, not null]
+  nombre text [not null]
+  explicacion text [not null]
+  prueba text
+}
+
+Ref: oficial.serie.indicador_id > oficial.indicador.id
+Ref: oficial.serie.fuente_productora_id > oficial.fuente.id
+Ref: oficial.serie.fuente_canal_id > oficial.fuente.id
+Ref: oficial.aprobacion_serie.serie_id > oficial.serie.id
+Ref: oficial.nota_serie.serie_id > oficial.serie.id
+Ref: oficial.diferencia_version.serie_id > oficial.serie.id
+Ref: oficial.descarga.serie_id > oficial.serie.id
+Ref: oficial.archivo_original.descarga_id > oficial.descarga.id
+Ref: oficial.observacion.serie_id > oficial.serie.id
+Ref: oficial.observacion.descarga_id > oficial.descarga.id
+Ref: oficial.comparacion_contraste.observacion_id > oficial.observacion.id
+Ref: oficial.alerta.serie_id > oficial.serie.id
+Ref: oficial.alerta.observacion_id > oficial.observacion.id
+Ref: oficial.evento_alerta.alerta_id > oficial.alerta.id
+
+// ---------- social ----------
+
+Table social.usuario {
+  id uuid [pk]
+  nombre_usuario text [unique, not null]
+  nombre_visible text [not null]
+  correo text [unique, not null]
+  clave_hash text [not null]
+  rol text [not null, note: 'usuario | verificador | admin']
+  estado text [not null, note: 'activo | en_revision | suspendido | desactivada']
+  biografia text
+  foto text [note: 'archivo en el volumen de fotos (0014)']
+  creado_en timestamptz [not null]
+  actualizado_en timestamptz [not null]
+}
+
+Table social.bitacora_figura {
+  id bigint [pk, increment]
+  figura_id uuid [not null]
+  actor_id uuid [not null]
+  accion text [not null, note: 'creada | editada | archivada | reactivada | foto']
+  cambios jsonb [not null]
+  motivo text
+  creada_en timestamptz [not null]
+}
+
+Table social.propuesta_figura {
+  id uuid [pk]
+  propuesta_por uuid [not null]
+  nombre_completo text [not null]
+  cargo text [not null]
+  url_fuente text [not null]
+  nota text
+  estado text [not null, note: 'pendiente | aceptada | rechazada']
+  creada_en timestamptz [not null]
+  resuelta_por uuid
+  resuelta_en timestamptz
+  motivo text
+  figura_id uuid
+}
+
+Ref: social.bitacora_figura.figura_id > social.figura_publica.id
+Ref: social.bitacora_figura.actor_id > social.usuario.id
+Ref: social.propuesta_figura.propuesta_por > social.usuario.id
+Ref: social.propuesta_figura.figura_id > social.figura_publica.id
+
+Table social.comunidad {
+  id uuid [pk]
+  nombre text [not null, note: 'único sin importar mayúsculas']
+  descripcion text [not null]
+  reglas text
+  privacidad text [not null, note: 'publica | privada']
+  imagen text
+  creada_por uuid [not null]
+  total_integrantes integer [not null]
+  creada_en timestamptz [not null]
+  actualizada_en timestamptz [not null]
+}
+
+Table social.integrante {
+  comunidad_id uuid [not null]
+  usuario_id uuid [not null]
+  papel text [not null, note: 'integrante | moderador | gestor | administrador']
+  desde timestamptz [not null]
+  indexes { (comunidad_id, usuario_id) [pk] }
+}
+
+Table social.solicitud_ingreso {
+  id uuid [pk]
+  comunidad_id uuid [not null]
+  usuario_id uuid [not null]
+  mensaje text
+  estado text [not null, note: 'pendiente | aceptada | rechazada | retirada']
+  creada_en timestamptz [not null]
+  resuelta_por uuid
+  resuelta_en timestamptz
+  motivo text
+}
+
+Table social.bitacora_comunidad {
+  id bigint [pk, increment]
+  comunidad_id uuid [not null]
+  actor_id uuid [not null]
+  accion text [not null]
+  afectado_id uuid
+  publicacion_id uuid
+  motivo text
+  datos jsonb [not null]
+  creada_en timestamptz [not null]
+}
+
+Ref: social.comunidad.creada_por > social.usuario.id
+Ref: social.integrante.comunidad_id > social.comunidad.id
+Ref: social.integrante.usuario_id > social.usuario.id
+Ref: social.solicitud_ingreso.comunidad_id > social.comunidad.id
+Ref: social.solicitud_ingreso.usuario_id > social.usuario.id
+Ref: social.bitacora_comunidad.comunidad_id > social.comunidad.id
+Ref: social.publicacion.comunidad_id > social.comunidad.id
+
+Table social.nombre_anterior {
+  nombre text [pk]
+  usuario_id uuid [not null]
+  usado_hasta timestamptz [not null]
+}
+
+Ref: social.nombre_anterior.usuario_id > social.usuario.id
+
+Table social.seguimiento {
+  seguidor_id uuid [not null]
+  seguido_id uuid [not null]
+  creado_en timestamptz [not null]
+  indexes {
+    (seguidor_id, seguido_id) [pk]
+    seguido_id
+  }
+  Note: 'CHECK (seguidor_id <> seguido_id)'
+}
+
+Table social.publicacion {
+  id uuid [pk]
+  autor_id uuid [not null]
+  texto text
+  responde_a_id uuid [note: 'respuesta']
+  comparte_id uuid [note: 'compartida']
+  estado text [not null, note: 'visible | retirada_por_autor | retirada_por_moderacion']
+  total_respuestas integer [not null, default: 0]
+  total_compartidas integer [not null, default: 0]
+  total_reacciones integer [not null, default: 0]
+  creado_en timestamptz [not null]
+  actualizado_en timestamptz [not null]
+  indexes {
+    (autor_id, creado_en)
+    (responde_a_id, creado_en)
+    creado_en
+  }
+  Note: 'CHECK num_nonnulls(responde_a_id, comparte_id) <= 1; contadores mantenidos por triggers'
+}
+
+Table social.etiqueta {
+  id uuid [pk]
+  nombre text [unique, not null]
+  creado_en timestamptz [not null]
+}
+
+Table social.publicacion_etiqueta {
+  publicacion_id uuid [not null]
+  etiqueta_id uuid [not null]
+  indexes {
+    (publicacion_id, etiqueta_id) [pk]
+    etiqueta_id
+  }
+}
+
+Table social.reaccion {
+  publicacion_id uuid [not null]
+  usuario_id uuid [not null]
+  tipo text [not null, note: 'me_gusta | util']
+  creado_en timestamptz [not null]
+  actualizado_en timestamptz [not null]
+  indexes {
+    (publicacion_id, usuario_id) [pk]
+  }
+}
+
+Table social.figura_publica {
+  id uuid [pk]
+  nombre_completo text [unique, not null]
+  cargo text
+  partido text
+  creado_en timestamptz [not null]
+  actualizado_en timestamptz [not null]
+}
+
+Table social.declaracion {
+  id uuid [pk]
+  figura_id uuid [not null]
+  texto text [not null]
+  dicha_el date [not null]
+  tipo text [not null, note: 'declaracion | promesa']
+  url_fuente text [not null]
+  estado_promesa text
+  registrada_por uuid [not null]
+  creado_en timestamptz [not null]
+}
+
+Table social.declaracion_etiqueta {
+  declaracion_id uuid [not null]
+  etiqueta_id uuid [not null]
+  indexes {
+    (declaracion_id, etiqueta_id) [pk]
+    etiqueta_id
+  }
+}
+
+Table social.mencion_figura {
+  publicacion_id uuid [not null]
+  figura_id uuid [not null]
+  indexes {
+    (publicacion_id, figura_id) [pk]
+  }
+}
+
+Table social.mencion_usuario {
+  publicacion_id uuid [not null]
+  usuario_id uuid [not null]
+  indexes {
+    (publicacion_id, usuario_id) [pk]
+  }
+}
+
+Table social.tendencia {
+  id uuid [pk]
+  ventana_inicio timestamptz [not null]
+  ventana_fin timestamptz [not null]
+  etiqueta_id uuid [not null]
+  total_publicaciones integer [not null]
+  total_autores integer [not null]
+  diversidad numeric [not null]
+  puntaje numeric [not null]
+  posicion smallint [not null]
+  calculada_en timestamptz [not null]
+  indexes {
+    (ventana_inicio, ventana_fin, etiqueta_id) [unique]
+  }
+}
+
+Table social.sesion {
+  jti uuid [pk]
+  usuario_id uuid [not null]
+  agente text
+  creada_en timestamptz [not null]
+  vence_en timestamptz [not null]
+  revocada_en timestamptz
+}
+
+Table social.intento_acceso {
+  id bigint [pk, increment]
+  correo text [not null]
+  origen text [not null, note: 'sha256 del origen, nunca la IP']
+  exito boolean [not null]
+  creado_en timestamptz [not null]
+}
+
+Ref: social.sesion.usuario_id > social.usuario.id
+
+Table social.evento_salida {
+  id bigint [pk, increment]
+  tipo_entidad text [not null]
+  entidad_id text [not null]
+  tipo_evento text [not null]
+  datos jsonb [not null]
+  creado_en timestamptz [not null]
+}
+
+Table social.entrega_evento {
+  evento_id bigint [not null]
+  consumidor text [not null, note: 'grafo | verificacion']
+  entregado_en timestamptz [not null]
+  indexes {
+    (evento_id, consumidor) [pk]
+  }
+}
+
+Ref: social.entrega_evento.evento_id > social.evento_salida.id
+Ref: social.seguimiento.seguidor_id > social.usuario.id
+Ref: social.seguimiento.seguido_id > social.usuario.id
+Ref: social.publicacion.autor_id > social.usuario.id
+Ref: social.publicacion.responde_a_id > social.publicacion.id
+Ref: social.publicacion.comparte_id > social.publicacion.id
+Ref: social.publicacion_etiqueta.publicacion_id > social.publicacion.id
+Ref: social.publicacion_etiqueta.etiqueta_id > social.etiqueta.id
+Ref: social.reaccion.publicacion_id > social.publicacion.id
+Ref: social.reaccion.usuario_id > social.usuario.id
+Ref: social.declaracion.figura_id > social.figura_publica.id
+Ref: social.declaracion.registrada_por > social.usuario.id
+Ref: social.declaracion_etiqueta.declaracion_id > social.declaracion.id
+Ref: social.declaracion_etiqueta.etiqueta_id > social.etiqueta.id
+Ref: social.mencion_figura.publicacion_id > social.publicacion.id
+Ref: social.mencion_figura.figura_id > social.figura_publica.id
+Ref: social.mencion_usuario.publicacion_id > social.publicacion.id
+Ref: social.mencion_usuario.usuario_id > social.usuario.id
+Ref: social.tendencia.etiqueta_id > social.etiqueta.id
+
+// ---------- verificacion ----------
+
+Table verificacion.afirmacion {
+  id uuid [pk]
+  publicacion_id uuid [note: 'lógica -> social.publicacion']
+  declaracion_id uuid [note: 'lógica -> social.declaracion']
+  declaracion_reportada_id uuid [note: 'lógica -> temas.declaracion_reportada']
+  posicion smallint [not null]
+  texto_citado text [not null]
+  codigo_indicador text
+  variante text
+  periodo_desde text
+  periodo_hasta text
+  territorio text
+  valor_dicho numeric
+  unidad_dicha text
+  comparacion text [note: 'nivel | variacion_porcentual | variacion_puntos']
+  confianza_extraccion numeric [not null]
+  trabajo_ia_id uuid [note: 'lógica -> ia.trabajo']
+  trabajo_ia_2_id uuid [note: 'lógica -> ia.trabajo (segunda lectura)']
+  consenso text [note: 'coinciden | difieren']
+  estado text [not null, note: 'extraida | no_verificable | verificada | requiere_revision']
+  creado_en timestamptz [not null]
+  Note: 'CHECK num_nonnulls(publicacion_id, declaracion_id, declaracion_reportada_id) = 1 (arco exclusivo)'
+}
+
+Table verificacion.verificacion {
+  id uuid [pk]
+  afirmacion_id uuid [not null]
+  version smallint [not null]
+  codigo_serie text [note: 'lógica -> oficial.serie.codigo']
+  conclusion text [not null, note: 'se_sostiene | se_debilita | se_invierte | sin_dato_comparable']
+  explicacion text [not null]
+  explicacion_validada boolean [not null]
+  version_motor text [not null]
+  creado_en timestamptz [not null]
+  indexes {
+    (afirmacion_id, version) [unique]
+  }
+}
+
+Table verificacion.evidencia {
+  verificacion_id uuid [not null]
+  observacion_id uuid [not null, note: 'lógica -> oficial.observacion (aceptada)']
+  rol text [not null, note: 'citada | completa | contraste']
+  indexes {
+    (verificacion_id, observacion_id) [pk]
+  }
+}
+
+Table verificacion.prueba_robustez {
+  codigo text [pk]
+  nombre text [not null]
+  descripcion text [not null]
+}
+
+Table verificacion.resultado_prueba {
+  verificacion_id uuid [not null]
+  codigo_prueba text [not null]
+  resultado text [not null, note: 'sin_brecha | con_brecha | no_aplica']
+  detalle text
+  indexes {
+    (verificacion_id, codigo_prueba) [pk]
+  }
+}
+
+Table verificacion.revision_humana {
+  id uuid [pk]
+  verificacion_id uuid [not null]
+  revisor_id uuid [not null, note: 'lógica -> social.usuario (verificador/admin)']
+  decision text [not null, note: 'confirmada | corregida']
+  motivo text [not null]
+  creado_en timestamptz [not null]
+}
+
+Table verificacion.evento_salida {
+  id bigint [pk, increment]
+  tipo_entidad text [not null]
+  entidad_id text [not null]
+  tipo_evento text [not null]
+  datos jsonb [not null]
+  creado_en timestamptz [not null]
+}
+
+Table verificacion.entrega_evento {
+  evento_id bigint [not null]
+  consumidor text [not null, note: 'grafo | verificacion']
+  entregado_en timestamptz [not null]
+  indexes {
+    (evento_id, consumidor) [pk]
+  }
+}
+
+Table verificacion.procesamiento {
+  origen_tipo text [not null, note: 'publicacion | declaracion | declaracion_reportada']
+  origen_id uuid [not null]
+  resultado text [not null, note: 'sin_cifras | sin_afirmaciones | con_afirmaciones | fallido']
+  procesado_en timestamptz [not null]
+  indexes {
+    (origen_tipo, origen_id) [pk]
+  }
+}
+
+Table verificacion.palabra_clave {
+  codigo_indicador text [not null]
+  palabra text [not null]
+  indexes {
+    (codigo_indicador, palabra) [pk]
+  }
+}
+
+Ref: verificacion.entrega_evento.evento_id > verificacion.evento_salida.id
+Ref: verificacion.verificacion.afirmacion_id > verificacion.afirmacion.id
+Ref: verificacion.evidencia.verificacion_id > verificacion.verificacion.id
+Ref: verificacion.resultado_prueba.verificacion_id > verificacion.verificacion.id
+Ref: verificacion.resultado_prueba.codigo_prueba > verificacion.prueba_robustez.codigo
+Ref: verificacion.revision_humana.verificacion_id > verificacion.verificacion.id
+
+// lógica (trigger), entre esquemas:
+Ref: verificacion.afirmacion.publicacion_id > social.publicacion.id
+Ref: verificacion.afirmacion.declaracion_id > social.declaracion.id
+Ref: verificacion.evidencia.observacion_id > oficial.observacion.id
+Ref: verificacion.verificacion.codigo_serie > oficial.serie.codigo
+Ref: verificacion.revision_humana.revisor_id > social.usuario.id
+
+// ---------- ia ----------
+
+Table ia.credencial {
+  alias text [pk, note: 'la llave secreta NO está aquí']
+  proveedor text [not null]
+  habilitada boolean [not null]
+  pausada_hasta timestamptz
+  creado_en timestamptz [not null]
+  actualizado_en timestamptz [not null]
+}
+
+Table ia.trabajo {
+  id uuid [pk]
+  tipo text [not null, note: 'extraer_afirmaciones | redactar_explicacion | agrupar_temas | extraer_declaraciones']
+  version_prompt text [not null]
+  entrada jsonb [not null]
+  huella_entrada text [not null]
+  proveedor text [note: 'exigido por el consenso; nulo = cualquiera']
+  estado text [not null, note: 'en_cola | en_curso | terminado | fallido']
+  salida jsonb
+  proximo_intento_en timestamptz [not null]
+  creado_en timestamptz [not null]
+  terminado_en timestamptz
+  indexes {
+    (estado, proximo_intento_en)
+  }
+  Note: 'índice único parcial (tipo, version_prompt, huella_entrada) WHERE estado = terminado'
+}
+
+Table ia.intento {
+  trabajo_id uuid [not null]
+  numero smallint [not null]
+  credencial_alias text [not null]
+  modelo text [not null]
+  resultado text [not null, note: 'ok | limite_alcanzado | error_proveedor | salida_invalida']
+  tokens_entrada integer
+  tokens_salida integer
+  error text
+  iniciado_en timestamptz [not null]
+  terminado_en timestamptz [not null]
+  indexes {
+    (trabajo_id, numero) [pk]
+  }
+}
+
+Ref: ia.intento.trabajo_id > ia.trabajo.id
+Ref: ia.intento.credencial_alias > ia.credencial.alias
+
+// lógica (trigger), entre esquemas:
+Ref: verificacion.afirmacion.trabajo_ia_id > ia.trabajo.id
+
+// ---------- temas (temas del día, 06_temas_del_dia.md) ----------
+
+Table temas.medio {
+  id uuid [pk]
+  nombre text [unique, not null]
+  url_sitio text [not null]
+  canal text [not null, note: 'rss | gdelt']
+  url_canal text [not null]
+  habilitado boolean [not null]
+  creado_en timestamptz [not null]
+  actualizado_en timestamptz [not null]
+}
+
+Table temas.articulo {
+  id uuid [pk]
+  medio_id uuid [not null]
+  url text [unique, not null]
+  titulo text [not null]
+  resumen text
+  texto text [note: 'nulo si el medio no permite leerlo']
+  publicado_en timestamptz [not null]
+  huella text [not null]
+  creado_en timestamptz [not null]
+  indexes {
+    publicado_en
+  }
+}
+
+Table temas.tema {
+  id uuid [pk]
+  ventana_inicio timestamptz [not null]
+  ventana_fin timestamptz [not null]
+  titulo text [not null, note: 'sin cifras (trigger)']
+  etiqueta text [not null]
+  total_articulos integer [not null]
+  total_medios integer [not null, note: '>= 3; lo calcula la base']
+  posicion smallint [not null]
+  trabajo_ia_id uuid [note: 'lógica -> ia.trabajo']
+  creado_en timestamptz [not null]
+  indexes {
+    (ventana_inicio, ventana_fin, posicion) [unique]
+  }
+}
+
+Table temas.tema_articulo {
+  tema_id uuid [not null]
+  articulo_id uuid [not null]
+  indexes {
+    (tema_id, articulo_id) [pk]
+  }
+}
+
+Table temas.declaracion_reportada {
+  id uuid [pk]
+  articulo_id uuid [not null]
+  actor text [not null]
+  figura_id uuid [note: 'lógica -> social.figura_publica']
+  texto_citado text [not null, note: 'textual en el artículo (trigger)']
+  trabajo_ia_id uuid [note: 'lógica -> ia.trabajo']
+  creado_en timestamptz [not null]
+  indexes {
+    (articulo_id, texto_citado) [unique]
+  }
+}
+
+Table temas.evento_salida {
+  id bigint [pk, increment]
+  tipo_entidad text [not null]
+  entidad_id text [not null]
+  tipo_evento text [not null]
+  datos jsonb [not null]
+  creado_en timestamptz [not null]
+}
+
+Table temas.entrega_evento {
+  evento_id bigint [not null]
+  consumidor text [not null, note: 'grafo | verificacion']
+  entregado_en timestamptz [not null]
+  indexes {
+    (evento_id, consumidor) [pk]
+  }
+}
+
+Ref: temas.articulo.medio_id > temas.medio.id
+Ref: temas.tema_articulo.tema_id > temas.tema.id
+Ref: temas.tema_articulo.articulo_id > temas.articulo.id
+Ref: temas.declaracion_reportada.articulo_id > temas.articulo.id
+Ref: temas.entrega_evento.evento_id > temas.evento_salida.id
+
+// lógica (trigger), entre esquemas:
+Ref: verificacion.afirmacion.declaracion_reportada_id > temas.declaracion_reportada.id
+Ref: temas.declaracion_reportada.figura_id > social.figura_publica.id
+Ref: temas.tema.trabajo_ia_id > ia.trabajo.id
+Ref: temas.declaracion_reportada.trabajo_ia_id > ia.trabajo.id

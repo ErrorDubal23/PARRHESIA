@@ -1,0 +1,175 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+
+code: homicides_intentional_national
+indicator: homicides
+variant: monthly_count
+name: Homicidio intencional, víctimas por mes, total nacional
+definition: >
+  Muertes causadas por otra persona con cualquier tipo de elemento, medidas en
+  víctimas, según la fecha del hecho. Incluye homicidio intencional y
+  feminicidio. No incluye homicidio en accidente de tránsito (dataset aparte).
+unit: victims
+unit_label: Víctimas
+frequency: monthly
+geography: national
+# El dataset trae departamento y municipio (DIVIPOLA); la serie nacional es la suma.
+geography_breakdown: [department, municipality]
+
+producer: Policía Nacional (SIEDCO)
+access_channel: mindefensa_datos_gov_co
+
+external:
+  platform: socrata
+  domain: www.datos.gov.co
+  dataset_id: m8fd-ahd9
+  dataset_name: HOMICIDIO
+  published_by: Ministerio de Defensa Nacional - MinDefensa
+  url: https://www.datos.gov.co/resource/m8fd-ahd9.json
+  date_field: fecha_hecho
+  count_field: cantidad   # cada fila puede contar más de una víctima (máximo observado: 38)
+  # Regla de agregación: la serie nacional mensual es la suma de "cantidad" de
+  # las filas cuyo spoa_caracterizacion es una de las dos categorías de
+  # expected_categories, agrupadas por mes de fecha_hecho. Ninguna otra fila
+  # entra en la suma; una categoría nueva detiene la descarga.
+  aggregation:
+    sum_field: cantidad
+    group_by: month(fecha_hecho)
+    include_only:
+      spoa_caracterizacion:
+        - HOMICIDIO INTENCIONAL O CON DOLO
+        - FEMINICIDIO
+  # Filtro 2: campos y tipos del dataset (metadatos de /api/views/m8fd-ahd9.json,
+  # 25 oct 2026), en este orden.
+  expected_fields:
+    fecha_hecho: calendar_date
+    cod_depto: text
+    departamento: text
+    cod_muni: text
+    municipio: text
+    zona: text
+    sexo: text
+    arma_medio: text
+    _modalidad_presunta: text
+    spoa_caracterizacion: text
+    cantidad: number
+  # Values seen for spoa_caracterizacion (agosto 2026): HOMICIDIO INTENCIONAL O CON DOLO, FEMINICIDIO.
+  # A new value stops the download for review.
+  expected_categories:
+    spoa_caracterizacion:
+      - HOMICIDIO INTENCIONAL O CON DOLO
+      - FEMINICIDIO
+
+methodology:
+  technical_sheet: https://www.policia.gov.co/estadistica-delictiva
+  classification: ICCS adaptada para Colombia (DANE, 2022), código 0101
+  notes: >
+    Los datos son provisionales hasta marzo del año siguiente. La Policía extrae
+    los datos de SIEDCO el día 16 posterior al mes de corte. datos.gov.co no
+    publica la fecha de corte; se guarda la fecha de actualización del dataset
+    (rowsUpdatedAt) y la fecha de descarga.
+
+history:
+  first_period: 2003-01
+  decimals: 0
+
+# Filtro 3 (propuesta). Fuera de rango o salto mayor: cuarentena para revisión.
+plausibility:
+  min: 300          # mínimo histórico mensual: 655 (abril 2020)
+  max: 3000         # máximo histórico mensual: 2.061 (marzo 2003)
+  max_step_pct: 25  # salto mayor observado: 35,4 % (mayo 2020)
+  max_step_applies_to: new_observations   # no a la carga inicial del historial
+  no_gaps: true
+  no_duplicates: false   # varias filas por día y municipio es normal
+
+# Saltos históricos mayores a max_step_pct (datos.gov.co, 25 oct 2026).
+known_exceptions:
+  - periods: [2020-05]
+    largest_change: "+35,4 % (de 655 en abril de 2020 a 887 en mayo de 2020)"
+    explanation: >
+      Sube después del mínimo de la serie (abril de 2020). Coincide con el
+      periodo de aislamiento obligatorio por la COVID-19.
+    explanation_source:
+  - periods: [2021-05]
+    largest_change: "+35,3 % (de 1.010 en abril de 2021 a 1.367 en mayo de 2021)"
+    explanation: Sin explicación documentada.
+    explanation_source:
+  - periods: [2015-03]
+    largest_change: "+26,9 % (de 826 en febrero de 2015 a 1.048 en marzo de 2015)"
+    explanation: Sin explicación documentada.
+    explanation_source:
+
+# La Policía: "los datos son provisionales y solo hasta marzo del siguiente año
+# pasarán a ser definitivos". Interpretación nuestra, no regla oficial de la
+# Policía: un periodo del año A se trata como definitivo desde el 1 de abril del
+# año A+1 (desde entonces, un cambio dispara la alerta del filtro 6).
+status: provisional_until_march_next_year
+
+reference_values:
+  - period: 2026-08
+    value: "1190"
+    precision: 0
+    status: provisional
+    published_by: Policía Nacional (DIJIN)
+    document: >
+      Cuadros de salida, último mes, Cuadro 1 "0101 - Homicidio intencional"
+      (fecha de publicación: 20 de octubre de 2026; cifra provisional)
+    url: https://www.policia.gov.co/sites/default/files/CUADROS_DE_SALIDA_DELICTIVO_ULTIMO_MES_2.xlsx
+    # The file is replaced every month (its name can change). The archiver finds it
+    # by its link text and keeps every version (download date + sha256) as evidence.
+    archive_versions: true
+
+# Filtro 5: consistencia entre publicaciones del mismo sistema (SIEDCO):
+# datos.gov.co frente a Cuadros de salida y archivos de registro de la Policía.
+# No es una verificación independiente; la fuente independiente es Medicina
+# Legal (measured_differently_by). Fuentes y años: catalog/sources/homicides_intentional_policia.yaml.
+contrast_with: [homicides_intentional_policia]
+# Fuentes que miden distinto: la diferencia se documenta, no bloquea el filtro 5.
+measured_differently_by: [medicina_legal_homicides, minjusticia_homicide_rate]
+
+# Diferencias registradas con cada fuente de contraste, con el valor exacto de
+# cada lado. Una diferencia nueva, o un cambio en una registrada, va a cuarentena.
+# Lista de la primera corrida del conector (25 oct 2026; datos.gov.co con
+# rowsUpdatedAt 2026-10-21; archivos de la Policía en evidence/). source_value es
+# el valor de la Policía; series_value, el de datos.gov.co.
+known_version_differences:
+  - {period: 2010-01, level: monthly, source: policia_legacy_2010, source_value: 1270, series_value: 1272}
+  - {period: "2020", level: annual, source: policia_cuadros_anual, source_value: 12009, series_value: 12010}
+  - {period: 2020-12, level: monthly, source: policia_registro_2020, source_value: 1209, series_value: 1210}
+  - {period: "2024", level: annual, source: policia_cuadros_anual, source_value: 13496, series_value: 13497}
+  - {period: 2024-10, level: monthly, source: policia_registro_2024, source_value: 1135, series_value: 1136}
+  - {period: "2025", level: annual, source: policia_cuadros_anual, source_value: 14037, series_value: 14038}
+  - {period: 2025-10, level: monthly, source: policia_registro_2025, source_value: 1111, series_value: 1112}
+  - {period: 2026-06, level: monthly, source: policia_cuadros_ultimo_mes, source_value: 1141, series_value: 1140}
+  - {period: 2026-06, level: monthly, source: policia_registro_2026, source_value: 1141, series_value: 1140}
+  - {period: 2026-09, level: monthly, source: policia_cuadros_ultimo_mes, source_value: 967, series_value: 966}
+  - {period: 2026-09, level: monthly, source: policia_registro_2026, source_value: 967, series_value: 966}
+
+# Notas con rango de fechas (entidad nota_serie). El motor las cita si una
+# afirmación cae en ese periodo o usa ese desglose.
+series_notes:
+  - id: gender_age_completeness
+    type: data_quality
+    valid_from: 2020-01
+    valid_to:
+    status: confirmed
+    applies_to_breakdowns: [genero, edad]
+    text: >
+      Según la Policía Nacional, en sus archivos de delitos a nivel de registro
+      "las variables de género y edad etarea no cuentan con la calidad en cuanto
+      a completitud, ya que se encuentran en un proceso de calidad y consistencia
+      de la información", y recomienda consultar los Cuadros de salida delictivo.
+    source:
+      document: Información de delitos a nivel de registro, año 2024 (Policía Nacional, DIJIN; fecha de entrega 20 de agosto de 2026), nota al pie
+      url: https://www.policia.gov.co/sites/default/files/INFORMACI%C3%93N_DE_DELITOS_A_NIVEL_DE_REGISTRO_A%C3%91O_2024_3.xlsx
+      sha256: e472b63bc021d08b442affcde589262e8377d196e9764a41bfa0f99b0cc179ba
+      retrieved_on: 2026-10-25
+
+open_questions: []
+
+approval:
+  status: approved
+  approved_by: Dubal Aguilar Torres
+  approved_on: 2026-10-25
+  content_sha256: 83d1d7bd1782701207161258eefe3d05a9034c60784944a2976db33666014dac
+  comments: "Revisada y aprobada por Dubal Aguilar Torres; bloque escrito por el asistente por instrucción suya."

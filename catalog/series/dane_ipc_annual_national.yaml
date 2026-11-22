@@ -1,0 +1,107 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+
+code: dane_ipc_annual_national
+indicator: inflation
+variant: annual
+name: Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE
+definition: >
+  Variación porcentual del IPC total nacional frente al mismo mes del año
+  anterior, tal como la publica el DANE (productor). Es la misma variable que
+  inflation_annual_national (canal SUAMECA); el motor usa esta serie cuando las
+  dos no coinciden (regla en docs/PROYECTO.md, filtro 5).
+unit: percent
+unit_label: Variación porcentual anual
+frequency: monthly
+geography: national
+
+producer: DANE
+access_channel: dane_web
+
+external:
+  page: https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc
+  history_page: https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc/ipc-historico
+  # De dónde sale cada valor (nunca se calcula):
+  sources:
+    - name: dane_ipc_bulletin
+      # Boletín técnico de cada mes, desde 2023-01 (formato estable verificado en
+      # los 45 boletines de 2023-01 a 2026-09). Frase usada:
+      # "En el mes de <mes> de <año>, el IPC registró una variación de X% en
+      # comparación con <mes> de <año - 1>."
+      link_text: Boletín técnico
+      covers: 2023-01 en adelante
+    - name: dane_ipc_variations_annex
+      # Anexo "Variaciones porcentuales", fila "En año corrido". En diciembre, la
+      # variación año corrido (enero-diciembre) es la variación a doce meses de
+      # diciembre; verificado: coincide con SUAMECA en los 23 diciembres 2003-2025.
+      link_text_prefix: "Variaciones porcentuales - "
+      covers: diciembres de 2003 a 2022
+  # Si un mes tiene valor en las dos fuentes (diciembres desde 2023), deben ser
+  # iguales; si no, el valor queda en cuarentena.
+
+methodology:
+  technical_sheet: https://www.dane.gov.co/files/investigaciones/fichas/precios-y-costos/DSO-IPC-MET-001-v7.pdf
+  base: IPC base diciembre 2018 = 100
+  notes: >
+    Los resultados publicados del IPC son definitivos (metodología, p. 57). Un
+    cambio de base se registra como serie nueva. Valores como decimal exacto,
+    nunca float: del boletín, el texto tal como está escrito; del .xls, la
+    representación más corta del número.
+
+history:
+  first_period: 2003-12
+  decimals: 2
+
+# Filtro 3 (propuesta). Fuera de rango o salto mayor: cuarentena para revisión.
+plausibility:
+  min: -5.0
+  max: 50.0
+  max_step: 2.0    # salto mensual máximo desde 2005 en SUAMECA: 1,35 pp
+  max_step_applies_to: new_observations
+  no_gaps: false
+  # Antes de 2023 solo se publica (en estas fuentes) el valor de diciembre.
+  expected_gaps:
+    - range: [2003-12, 2022-12]
+      except_months: [12]
+      reason: Antes de 2023 solo hay valor de diciembre (anexo, fila "En año corrido"); los boletines anteriores a 2023 están en el backlog.
+  no_duplicates: true
+
+known_exceptions: []
+
+status: final_on_release
+base_change_policy: new_series
+
+reference_values:
+  - period: 2026-08
+    value: "6.24"
+    precision: 2
+    published_by: DANE
+    document: Boletín técnico IPC agosto 2026 (Bogotá, 7 de septiembre de 2026)
+    url: https://www.dane.gov.co/files/operaciones/IPC/ago2026/bol-IPC-ago2026.pdf
+    sha256: aee7df9c092809be3894de9b0286464f9155a00c566bc03c43eec71e1b281fd3
+  - period: 2026-09
+    value: "6.29"
+    precision: 2
+    published_by: DANE
+    document: Boletín técnico IPC septiembre 2026 (Bogotá, 7 de octubre de 2026)
+    url: https://www.dane.gov.co/files/operaciones/IPC/sep2026/bol-IPC-sep2026.pdf
+    sha256: 454cc653a63752840e1050f735d5c2bcb740ec3ec560291d9487d8a3a01d276c
+
+# Filtro 5: contraste en las dos direcciones con inflation_annual_national
+# (SUAMECA). Si coinciden, ambas quedan aprobadas. Si no coinciden, el motor usa
+# este valor y se genera una alerta obligatoria para revisión humana (regla en
+# docs/PROYECTO.md, filtro 5). Meses sin valor en SUAMECA: "unavailable".
+# Entre las dos fuentes de esta serie (diciembres desde 2023) se exige
+# coincidencia (ver external.sources).
+contrast_with: [inflation_annual_national]
+
+related_variants: [inflation_annual_national]
+
+open_questions: []
+
+approval:
+  status: approved
+  approved_by: Dubal Aguilar Torres
+  approved_on: 2026-10-25
+  content_sha256: fd855529916e8273a09859b1aac1da7a474e67cc12bc713e3d7aea729fd42569
+  comments: "Revisada y aprobada por Dubal Aguilar Torres; bloque escrito por el asistente por instrucción suya."

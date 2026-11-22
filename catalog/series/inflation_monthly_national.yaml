@@ -1,0 +1,81 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+
+code: inflation_monthly_national
+indicator: inflation
+variant: monthly
+name: Inflación total mensual (variación del IPC frente al mes anterior), total nacional
+definition: >
+  Variación porcentual del IPC total nacional frente al mes inmediatamente
+  anterior, publicada por el DANE. Es una serie distinta de la inflación anual y
+  de la de año corrido: el motor no puede mezclarlas.
+unit: percent
+unit_label: Variación porcentual mensual
+frequency: monthly
+geography: national
+
+producer: DANE
+access_channel: dane_web
+
+external:
+  page: https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc
+  # Anexo "Variaciones porcentuales" (.xls, el nombre cambia cada mes), hoja
+  # VarNal, bloque "Variaciones mensuales": una columna por año (2003 en
+  # adelante), una fila por mes.
+  link_text_prefix: "Variaciones porcentuales - "
+  sheet: VarNal
+  covers: 2003-01 en adelante
+
+methodology:
+  technical_sheet: https://www.dane.gov.co/files/investigaciones/fichas/precios-y-costos/DSO-IPC-MET-001-v7.pdf
+  base: IPC base diciembre 2018 = 100
+  notes: >
+    Los resultados publicados del IPC son definitivos (metodología, p. 57).
+    El anexo trae la línea "Actualizado el <fecha>", que se guarda como fecha de corte.
+    El .xls guarda cada número como binario de doble precisión; se guarda como
+    decimal exacto con su representación más corta (por ejemplo 0,39), nunca
+    como float.
+
+history:
+  first_period: 2003-01
+  decimals: 2
+
+# Filtro 3 (propuesta, con la historia 2003-2026 del anexo al 25 oct 2026).
+# Enero sube casi todos los años: el salto se mide contra el mismo mes del año anterior.
+plausibility:
+  min: -2.0          # mínimo histórico: -0,38 (2020-06)
+  max: 5.0           # máximo histórico: 1,78 (2023-01)
+  max_step_yoy: 1.5  # mayor cambio interanual: 1,32 pp (2021-05); cuarentena solo si es estrictamente mayor
+  max_step_applies_to: new_observations
+  no_gaps: true
+  no_duplicates: true
+
+known_exceptions: []
+
+status: final_on_release
+base_change_policy: new_series
+
+reference_values:
+  - period: 2026-08
+    value: "0.39"
+    precision: 2
+    published_by: DANE
+    document: Boletín técnico IPC agosto 2026 (Bogotá, 7 de septiembre de 2026)
+    url: https://www.dane.gov.co/files/operaciones/IPC/ago2026/bol-IPC-ago2026.pdf
+    sha256: aee7df9c092809be3894de9b0286464f9155a00c566bc03c43eec71e1b281fd3
+
+# Filtro 5: coherencia dentro del DANE, contra el boletín técnico de cada mes
+# desde 2023-01 (verificado: los 45 meses 2023-01 a 2026-09 coinciden
+# exactamente). Antes de 2023: "unavailable".
+contrast_with: [dane_ipc_bulletins]
+
+related_variants: [inflation_annual_national, dane_ipc_annual_national, inflation_ytd_national]
+
+open_questions: []
+
+approval:
+  status: approved
+  approved_by: Dubal Aguilar Torres
+  approved_on: 2026-10-25
+  content_sha256: 80da88d97562e0fbeecca17889d87e75c17bf1c07d5240002b0eb894305f8e7a
+  comments: "Revisada y aprobada por Dubal Aguilar Torres; bloque escrito por el asistente por instrucción suya."

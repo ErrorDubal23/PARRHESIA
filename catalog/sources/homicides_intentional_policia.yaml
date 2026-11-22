@@ -1,0 +1,49 @@
+# Fuentes de contraste (filtro 5) para homicides_intentional_national.
+#
+# Todas son publicaciones de la Policía Nacional (DIJIN, SIEDCO), el mismo sistema
+# del dataset de datos.gov.co: el contraste es de consistencia entre publicaciones,
+# no una verificación independiente (la fuente independiente es Medicina Legal).
+#
+# Años sin ninguna fuente aquí (2003-2009, 2012, 2014, 2016, 2017 al 25 oct 2026):
+# el contraste queda "unavailable". Si aparece una fuente, se agrega y se corre.
+#
+# Los servidores de la Policía no envían ETag ni Last-Modified: cada archivo se
+# descarga una vez al mes y se compara su sha256. Los archivos originales no van
+# a git (data/raw/); el manifiesto con hashes y metadatos sí (evidence/).
+
+code: homicides_intentional_policia
+channel: policia_siedco
+page: https://www.policia.gov.co/estadistica-delictiva
+legacy_page: https://www.policia.gov.co/estadistica-delictiva-old
+
+sources:
+  # Año en curso, mensual. El año se confirma con el total del archivo anual.
+  - name: policia_cuadros_ultimo_mes
+    kind: cuadros_ultimo_mes
+    level: monthly
+    link_text: Cuadro de salida delictivo ultimo mes
+
+  # Totales anuales; solo años definitivos (los marcados "p" no se usan).
+  - name: policia_cuadros_anual
+    kind: cuadros_anual
+    level: annual
+    link_text_prefix: Cuadro de salida delictivo mes a mes anualizado
+    years: [2020, 2021, 2022, 2023, 2024, 2025]
+
+  # Archivos de delitos a nivel de registro: mensual, un archivo por año.
+  - {name: policia_registro_2020, kind: registro, level: monthly, years: [2020], link_text: Información de delitos a nivel de registro año 2020}
+  - {name: policia_registro_2021, kind: registro, level: monthly, years: [2021], link_text: Información de delitos a nivel de registro año 2021}
+  - {name: policia_registro_2022, kind: registro, level: monthly, years: [2022], link_text: Información de delitos a nivel de registro año 2022}
+  - {name: policia_registro_2023, kind: registro, level: monthly, years: [2023], link_text: Información de delitos a nivel de registro año 2023}
+  - {name: policia_registro_2024, kind: registro, level: monthly, years: [2024], link_text: Información de delitos a nivel de registro año 2024}
+  - {name: policia_registro_2025, kind: registro, level: monthly, years: [2025], link_text: Información de delitos a nivel de registro año 2025}
+  - {name: policia_registro_2026, kind: registro, level: monthly, years: [2026], link_text: Información de delitos a nivel de registro año 2026}
+
+  # Página heredada (estadistica-delictiva-old): un archivo de homicidio
+  # intencional por año, "datos extraídos el día 12 de abril 2025".
+  - {name: policia_legacy_2010, kind: legacy, level: monthly, years: [2010], url: "https://www.policia.gov.co/sites/default/files/delitos-impacto/Homicidio%20Intencional%202010.xlsx"}
+  - {name: policia_legacy_2011, kind: legacy, level: monthly, years: [2011], url: "https://www.policia.gov.co/sites/default/files/delitos-impacto/Homicidio%20Intencional%202011.xlsx"}
+  - {name: policia_legacy_2013, kind: legacy, level: monthly, years: [2013], url: "https://www.policia.gov.co/sites/default/files/delitos-impacto/Homicidio%20Intencional%202013.xlsx"}
+  - {name: policia_legacy_2015, kind: legacy, level: monthly, years: [2015], url: "https://www.policia.gov.co/sites/default/files/delitos-impacto/Homicidio%20Intencional%202015.xlsx"}
+  - {name: policia_legacy_2018, kind: legacy, level: monthly, years: [2018], url: "https://www.policia.gov.co/sites/default/files/delitos-impacto/Homicidio%20Intencional%202018.xlsx"}
+  - {name: policia_legacy_2019, kind: legacy, level: monthly, years: [2019], url: "https://www.policia.gov.co/sites/default/files/delitos-impacto/Homicidio%20Intencional%202019.xlsx"}

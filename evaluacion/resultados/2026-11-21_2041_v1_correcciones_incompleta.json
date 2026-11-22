@@ -1,0 +1,520 @@
+{
+  "resumen": {
+    "conjunto": "v1",
+    "etiqueta": "correcciones",
+    "fecha": "2026-11-21T20:41:07",
+    "aciertos": 4,
+    "total": 30,
+    "evaluables": 28,
+    "meta": 24,
+    "aciertos_con_dato": 0,
+    "total_con_dato": 7
+  },
+  "filas": [
+    {
+      "n": 1,
+      "texto": "El secuestro bajó 79 % en el primer mes de gobierno: agosto de 2026 frente a agosto de 2025.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "No hay serie oficial de secuestro conectada; además es un cambio que la fuente no publica. Lo correcto es no dar veredicto.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 2,
+      "texto": "La extorsión cayó entre 62 % y 63 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de extorsión. No se aproxima con otra fuente.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 3,
+      "texto": "Las masacres cayeron 58 %.",
+      "categoria": "variacion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Masacres no es una serie del catálogo y el cambio porcentual no lo publica la fuente.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 4,
+      "texto": "Los homicidios bajaron 64 % en los primeros 30 días del gobierno.",
+      "categoria": "variacion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "La serie de homicidios publica conteos mensuales, no ese cambio; calcularlo no está permitido.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 5,
+      "texto": "Los hurtos bajaron 24 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de hurtos conectada.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 6,
+      "texto": "En agosto de 2026 hubo 499 homicidios según MinDefensa y 717 según la Policía.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "499",
+            "conclusion": "se_debilita",
+            "prueba": "dato_provisional"
+          },
+          {
+            "valor": "717",
+            "conclusion": "se_debilita",
+            "prueba": "dato_provisional"
+          }
+        ]
+      },
+      "por_que": "El dato oficial de agosto de 2026 (Policía Nacional, SIEDCO) es 1.190 y es provisional. Ninguna de las dos cifras coincide.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 7,
+      "texto": "El hurto a personas cayó 49 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de hurtos.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 8,
+      "texto": "Las denuncias de extorsión cayeron 46 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de extorsión.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 9,
+      "texto": "El presidente presentó una reducción de homicidios en Barranquilla.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "El registro original no trae la cifra. Sin cifra es una opinión; además solo hay series nacionales.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 10,
+      "texto": "El salario mínimo subió 23,7 % en 2026.",
+      "categoria": "variacion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "El cambio no lo publica la fuente y la serie del salario mínimo no tiene datos aceptados.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 11,
+      "texto": "El gobierno anterior recibió el salario mínimo por debajo del millón y lo dejó en $1.750.905.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "La serie del salario mínimo no tiene datos aceptados (suspensión del decreto registrada en sus notas).",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 12,
+      "texto": "El aumento del salario mínimo supera en 17,9 puntos a la inflación de 2025, que fue de 5,10 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "5.10",
+            "conclusion": "se_sostiene"
+          }
+        ],
+        "ninguna_conclusion_salvo_requeridas": [
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "La inflación anual a diciembre de 2025 fue 5,10 % (DANE). Los 17,9 puntos son un cambio no publicado y no deben recibir veredicto.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 13,
+      "texto": "El aumento del salario mínimo dejará a miles de personas sin trabajo.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Es una proyección sin cifra exacta: se publica como opinión.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 14,
+      "texto": "Fue el mayor aumento del salario mínimo desde la Constitución de 1991.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "El único número es un año. No hay cifra del indicador que verificar.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 15,
+      "texto": "El Consejo de Estado cuestionó el aumento con una inflación cercana al 5 % y una productividad menor al 1 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "No dice a qué periodo corresponde la inflación; sin periodo no hay dato comparable. Productividad no es un indicador del catálogo.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 16,
+      "texto": "La inflación anual de septiembre de 2026 fue 6,29 %, 1,11 puntos más que un año antes.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "6.29",
+            "conclusion": "se_sostiene"
+          }
+        ],
+        "ninguna_conclusion_salvo_requeridas": [
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "6,29 % coincide con el DANE. El cambio de 1,11 puntos no lo publica la fuente y no debe recibir veredicto (menos aún \"se debilita\").",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 17,
+      "texto": "La inflación de agosto de 2026 fue 0,39 %: una inflación bajísima.",
+      "categoria": "con_dato",
+      "esperado": {
+        "alguna_de": [
+          {
+            "conclusion": "sin_dato_comparable",
+            "motivo_contiene": "variaci"
+          },
+          {
+            "prueba": "variante_equivocada"
+          }
+        ]
+      },
+      "por_que": "0,39 % es la variación mensual; la anual de agosto fue 6,24 %. Acierta si señala que no dice qué variación cita o que la cifra es de otra variante. Darla por buena sin más es no detectar la trampa.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 18,
+      "texto": "Los analistas proyectaban una inflación anual de 6,33 % para septiembre de 2026.",
+      "categoria": "proyeccion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Es una proyección, no un dato observado. Verificarla como si fuera una afirmación sobre el dato sería un error.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 19,
+      "texto": "El desempleo de julio de 2026 fue 8,1 %, 0,7 puntos menos que en julio de 2025.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "8.1",
+            "conclusion": "se_sostiene"
+          }
+        ],
+        "ninguna_conclusion_salvo_requeridas": [
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "El DANE da 8,1 % para julio de 2026. Los 0,7 puntos son un cambio no publicado.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 20,
+      "texto": "El desempleo se disparó: pasó de 8,1 % en julio a 9,4 % en agosto de 2026.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "9.4",
+            "prueba": "nota_serie"
+          }
+        ]
+      },
+      "por_que": "Las cifras coinciden, pero agosto de 2026 tiene una nota oficial (ajuste de los factores de expansión por el sismo del 10 de agosto) que debe acompañar el dato.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 21,
+      "texto": "Las relaciones laborales dependientes bajaron 0,4 % mientras baja el desempleo.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Relaciones laborales (RELAB) no es una serie del catálogo, y el 0,4 % no es una tasa de desempleo.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 22,
+      "texto": "La deuda pública llegó a un récord de $1.238,2 billones en febrero de 2026.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública conectada.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 23,
+      "texto": "En enero la deuda equivalía al 65 % del PIB y en febrero al 62,9 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 24,
+      "texto": "La deuda bajó al 60,6 % del PIB en mayo.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 25,
+      "texto": "La deuda externa bajó del 41,8 % en 2022 al 24,1 % en 2026.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 26,
+      "texto": "La deuda neta está alrededor del 57 % del PIB.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 27,
+      "texto": "La deuda total es de US$370.000 millones.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": false,
+      "nota": "la verificación no terminó a tiempo",
+      "resultado": null
+    },
+    {
+      "n": 28,
+      "texto": null,
+      "categoria": "no_evaluable",
+      "por_que": "Plantilla de una gráfica con el eje recortado. Es una imagen, no un texto, y la v1 solo lee texto.",
+      "acierto": false,
+      "nota": "no evaluable",
+      "resultado": null
+    },
+    {
+      "n": 29,
+      "texto": "La inseguridad está peor que nunca, según una encuesta de percepción.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Plantilla sin caso real ni cifra. Una percepción no es un registro oficial; se publica como opinión.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 30,
+      "texto": null,
+      "categoria": "no_evaluable",
+      "por_que": "Plantilla sin caso real. Inventar la cifra de inflación de alimentos rompería la regla de no inventar números.",
+      "acierto": false,
+      "nota": "no evaluable",
+      "resultado": null
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "SERIES": [
+    {
+      "id": 15416,
+      "nombre": "Salario mínimo mensual",
+      "categoria": "Salarios",
+      "subcategoria": "Salarios",
+      "unidad": "Pesos colombianos",
+      "unidadCorta": "COP",
+      "idPeriodicidad": 18,
+      "descripcionPeriodicidad": "Anual",
+      "idPlan": "SALARIO_MINIMO",
+      "categoriaNivel1": "Actividad económica, mercado laboral y cuentas financieras",
+      "categoriaNivel2": "Salarios",
+      "categoriaNivel3": "Salarios",
+      "ajusteEstacional": "",
+      "base": "",
+      "descripcion": "Salario mínimo mensual",
+      "descripcionCorta": "Salario mínimo mensual",
+      "fichaTecnica": [
+        "https://www.mintrabajo.gov.co/web/guest/relaciones-laborales/comision-permanente-de-concertacion?inheritRedirect\u003dtrue"
+      ],
+      "fuente": "Ministerio del Trabajo, Presidencia de la República",
+      "fechaInicial": "2025",
+      "fechaFinal": "2025",
+      "notas": "Se entiende por sueldo y salario la retribución fija u ordinaria que el personal (permanente o contratado directamente por el establecimiento) percibe como pago por los servicios prestados durante el periodo al que se refiere la información, antes de deducir los descuentos por retención en la fuente, seguro social, sindicato, fondo de empleados y similares, etc.\nEn Colombia los salarios de cada sector se determinan mediante la interacción entre oferta y demanda laboral. Sin embargo, existe un salario mínimo que se utiliza como referencia salarial y base para determinar auxilios, pagos mínimos para cotizar a seguridad social y otros. Al final de cada año se instala una Mesa de Concertación Laboral tripartita para acordar el salario mínimo mensual que tendrá vigencia el año inmediatamente siguiente. En esta negociación participa la Comisión Permanente de Concertación de Políticas Salariales y Laborales, conformada por representantes del Gobierno nacional, las centrales de trabajadores y dirigentes gremiales. Tanto trabajadores como empleadores proponen una cifra de ajuste teniendo en cuenta como parámetros la meta de inflación del siguiente año fijada por la Junta del Banco de la República, la Productividad Total de los Factores, la Contribución de los Salarios al Ingreso Nacional, el incremento del Producto Interno Bruto (PIB) y el Índice de Precios al Consumidor (IPC). En caso de no lograr un consenso entre las partes, el Gobierno nacional fijará el salario mínimo mediante decreto, teniendo en cuenta los mismos parámetros.",
+      "fechaUltimoCargue": "07 de enero de 2026",
+      "geografia": "Nacional",
+      "precio": "Corrientes",
+      "periodoReferencia": "",
+      "fecha": "31/12/2026",
+      "valor": 1750905.0,
+      "numeroDecimales": 2,
+      "feErratas": "-",
+      "definicion": "Se entiende por sueldo y salario la retribución fija u ordinaria que el personal (permanente o contratado directamente por el establecimiento) percibe como pago por los servicios prestados durante el periodo al que se refiere la información, antes de deducir los descuentos por retención en la fuente, seguro social, sindicato, fondo de empleados y similares, etc.\nEn Colombia los salarios de cada sector se determinan mediante la interacción entre oferta y demanda laboral. Sin embargo, existe un salario mínimo que se utiliza como referencia salarial y base para determinar auxilios, pagos mínimos para cotizar a seguridad social y otros. Al final de cada año se instala una Mesa de Concertación Laboral tripartita para acordar el salario mínimo mensual que tendrá vigencia el año inmediatamente siguiente. En esta negociación participa la Comisión Permanente de Concertación de Políticas Salariales y Laborales, conformada por representantes del Gobierno nacional, las centrales de trabajadores y",
+      "tipoVisualizacion": "line",
+      "palabrasClave": "salario, salarios, minimo, salario minimo, sueldo, mercado laboral",
+      "isSerie": "SI",
+      "tieneHijos": "NO",
+      "data": [
+        [
+          473317200000,
+          11298.00
+        ],
+        [
+          504853200000,
+          13558.00
+        ],
+        [
+          536389200000,
+          16811.00
+        ],
+        [
+          567925200000,
+          20510.00
+        ],
+        [
+          599547600000,
+          25637.00
+        ],
+        [
+          631083600000,
+          32560.00
+        ],
+        [
+          662619600000,
+          41025.00
+        ],
+        [
+          694155600000,
+          51720.00
+        ],
+        [
+          725774400000,
+          65190.00
+        ],
+        [
+          757314000000,
+          81510.00
+        ],
+        [
+          788850000000,
+          98700.00
+        ],
+        [
+          820386000000,
+          118934.00
+        ],
+        [
+          852008400000,
+          142125.00
+        ],
+        [
+          883544400000,
+          172005.00
+        ],
+        [
+          915080400000,
+          203826.00
+        ],
+        [
+          946616400000,
+          236460.00
+        ],
+        [
+          978238800000,
+          260100.00
+        ],
+        [
+          1009774800000,
+          286000.00
+        ],
+        [
+          1041310800000,
+          309000.00
+        ],
+        [
+          1072846800000,
+          332000.00
+        ],
+        [
+          1104469200000,
+          358000.00
+        ],
+        [
+          1136005200000,
+          381500.00
+        ],
+        [
+          1167541200000,
+          408000.00
+        ],
+        [
+          1199077200000,
+          433700.00
+        ],
+        [
+          1230699600000,
+          461500.00
+        ],
+        [
+          1262235600000,
+          496900.00
+        ],
+        [
+          1293771600000,
+          515000.00
+        ],
+        [
+          1325307600000,
+          535600.00
+        ],
+        [
+          1356930000000,
+          566700.00
+        ],
+        [
+          1388466000000,
+          589500.00
+        ],
+        [
+          1420002000000,
+          616000.00
+        ],
+        [
+          1451538000000,
+          644350.00
+        ],
+        [
+          1483160400000,
+          689455.00
+        ],
+        [
+          1514696400000,
+          737717.00
+        ],
+        [
+          1546232400000,
+          781242.00
+        ],
+        [
+          1577768400000,
+          828116.00
+        ],
+        [
+          1609390800000,
+          877803.00
+        ],
+        [
+          1640926800000,
+          908526.00
+        ],
+        [
+          1672462800000,
+          1000000.00
+        ],
+        [
+          1703998800000,
+          1160000.00
+        ],
+        [
+          1735621200000,
+          1300000.00
+        ],
+        [
+          1767157200000,
+          1423500.00
+        ],
+        [
+          1798693200000,
+          1750905.00
+        ]
+      ],
+      "metadataNotas": {
+        "idSerie": 920000,
+        "nivel": "1",
+        "idNivel": "5.3",
+        "nombre": "Salario mínimo",
+        "notas": [
+          {
+            "idNota": 0,
+            "descripcion": "En enero del año 2021 se corrigieron los valores del salario mínimo diario (COP) y el valor del salario mínimo mensual del año 1991, igualmente se corrigió la variación porcentual anual del salario mínimo mensual para el año 1992.",
+            "fechaNotaDesde": "2021-01-01",
+            "fechaNotaHasta": "",
+            "tipo": "FE_ERRATA",
+            "estado": "ACTIVO"
+          },
+          {
+            "idNota": 0,
+            "descripcion": "Se informa que en los datos publicados por el Banco de la República correspondiente a salario mínimo, publicados el 15 de enero del año 2021 a las 3:00 p.m. COT presentaban un error en su contenido. Dicho error fue corregido el día 18 de enero de 2021 a las 11:30 a.m. COT. El error afectaba los datos del año 2019 y 2020 respectivamente.",
+            "fechaNotaDesde": "2021-18-01",
+            "fechaNotaHasta": "",
+            "tipo": "FE_ERRATA",
+            "estado": "ACTIVO"
+          },
+          {
+            "idNota": 0,
+            "descripcion": "Desde el 1 de julio de 1984 se unificó el salario mínimo para todos los sectores de la economía. En los años en que se decretó el salario mínimo diario, este se multiplica por 30 días y se redondea a la unidad para determinar el valor mensual. Cuando se decretó el salario mínimo mensual, se divide por 30 días y se redondea a dos decimales para obtener el salario diario.",
+            "fechaNotaDesde": "1984-07-01",
+            "fechaNotaHasta": "",
+            "tipo": "NOTA_ACLARATORIA",
+            "estado": "ACTIVO"
+          }
+        ],
+        "seriesHijas": [
+          {
+            "idSerie": 15416,
+            "nivel": "2",
+            "idNivel": "5.3.1",
+            "nombre": "Salario mínimo mensual",
+            "notas": [],
+            "seriesHijas": []
+          }
+        ]
+      }
+    }
+  ],
+  "MENU": {
+    "id": 500023,
+    "idPadre": 50002,
+    "nombre": "Salarios",
+    "clasificacionMenu": "CATALOGO_DATOS",
+    "idCarguePlan": "SALARIO_MINIMO",
+    "mostrarHijos": "N",
+    "direccion_a_tabla": "N",
+    "idMenuJson": "ACTIV_ECONOM_MERC_LABOR_Y_CTAS_FINAN",
+    "idSubmenuJson": "SALARIO_MINIMO",
+    "enlace_reporte_tabla": "5020305",
+    "enlace_pagina_externa": "15416",
+    "enlace_dashboard": "Mercado laboral y población|Salarios",
+    "ordenPublicacion": "9999999",
+    "ordenMenu": "500023",
+    "urlAcceso": "mercado_laboral_poblacion_salarios",
+    "menuHijos": []
+  }
+}

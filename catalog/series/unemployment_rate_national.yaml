@@ -1,0 +1,199 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+
+code: unemployment_rate_national
+indicator: unemployment
+variant: monthly_rate
+name: Tasa de desocupación, total nacional (mensual, serie empalmada)
+definition: >
+  Proporción de personas de la fuerza de trabajo que no tienen empleo y lo
+  buscan, sobre la fuerza de trabajo total, en el mes de referencia. Fuente: Gran
+  Encuesta Integrada de Hogares (GEIH) del DANE.
+unit: percent
+unit_label: Porcentaje
+frequency: monthly
+geography: national
+
+producer: DANE
+access_channel: banrep_suameca
+
+external:
+  menu_id: 500021
+  series_id: 15312
+  series_name: Tasa de desempleo - total nacional
+  url: https://suameca.banrep.gov.co/estadisticas-economicas-back/rest/estadisticaEconomicaRestService/consultaMenuXId?idMenu=500021
+  # The menu also returns series 15313 (employment rate), which gets its own ficha if needed.
+  ignore_series_ids: [15313]
+
+methodology:
+  # SUAMECA no trae ficha técnica para esta serie ("-"); se usa la del DANE.
+  technical_sheet: https://www.dane.gov.co/files/operaciones/GEIH/met-GEIH.pdf
+  technical_sheet_version: DSO-GEIH-MET-001, versión 11 (16 de junio de 2023)
+  technical_sheet_sha256: 8535f1d8ef5903ad8cda426e8efaf52f3737d922c1d28173413e1baf6c355589
+  notes: >
+    SUAMECA: "En septiembre de 2022, el DANE publicó las series empalmadas entre
+    la GEIH Marco 2005 y la GEIH Marco 2018 de las tasas de ocupación y
+    desempleo. Por lo anterior, a partir de la fecha, se publica únicamente la
+    serie empalmada por el DANE" (nota aclaratoria desde 2022-09-01).
+    Serie sin desestacionalizar: comparar meses distintos mezcla estacionalidad.
+    El trimestre móvil es otra variante (ficha futura): suele citarse en lugar
+    del dato mensual y no debe confundirse con esta serie. La serie
+    desestacionalizada que publica el DANE también es otra variante.
+
+history:
+  first_period: 2001-01
+  decimals: 2
+  period_from_timestamp: last_day_of_month_bogota
+
+# Filtro 3 (propuesta). Fuera de rango o salto mayor: cuarentena para revisión.
+plausibility:
+  min: 0.0
+  max: 30.0        # rango del documento; máximo histórico 21,97 % (2020)
+  # El salto se mide contra el mismo mes del año anterior (no contra el mes
+  # anterior), porque la serie no está desestacionalizada y enero sube casi
+  # todos los años (decisión del 25 oct 2026).
+  max_step_yoy: 4.0   # cuarentena solo si el cambio es estrictamente mayor a 4.0
+  # Umbral = mayor cambio interanual histórico, sin contar pares en los que
+  # alguno de los dos meses cae en 2020 o 2021 (260 pares de 296):
+  # 4,0 pp en 2005-01 (17,26 % en 2004-01 frente a 13,26 % en 2005-01).
+  max_step_applies_to: new_observations   # no a la carga inicial del historial
+  # Los valores de 2021 son historia: no pasan por el filtro de saltos aunque
+  # una descarga nueva los traiga de nuevo.
+  max_step_excluded_years: [2021]
+  no_gaps: true
+  no_duplicates: true
+
+# Cambios interanuales históricos mayores a max_step_yoy (serie de SUAMECA,
+# 25 oct 2026). Documentados para que no queden en cuarentena.
+known_exceptions:
+  - periods: [2020-04, 2020-05, 2020-06, 2020-07, 2020-08, 2020-09, 2020-10,
+              2020-11]
+    largest_change: "+11,02 pp (2020-05: 21,97 % frente a 10,95 % en 2019-05)"
+    explanation: Coincide con el periodo de aislamiento obligatorio por la COVID-19.
+    explanation_source:
+  - periods: [2021-01, 2021-04, 2021-05, 2021-06, 2021-07, 2021-08, 2021-09]
+    largest_change: "-7,85 pp (2021-07: 13,06 % frente a 20,91 % en 2020-07)"
+    explanation: >
+      La comparación es contra los meses de 2020. Sin explicación documentada.
+    explanation_source:
+  - periods: [2022-04, 2022-05]
+    largest_change: "-4,55 pp (2022-05: 10,65 % frente a 15,20 % en 2021-05)"
+    explanation: >
+      La comparación es contra los meses de 2021. Sin explicación documentada.
+    explanation_source:
+
+
+# Filtro 4. El DANE publica con 1 decimal; SUAMECA con 2. Sin regla de redondeo:
+# pasa si |valor - referencia| <= 0,5 x 10^(-precision); con precision 1, ±0,05.
+reference_values:
+  - period: 2026-07
+    value: "8.1"
+    precision: 1
+    published_by: DANE
+    document: Boletín técnico GEIH julio 2026 (Bogotá, 31 de agosto de 2026)
+    url: https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIH-jul2026.pdf
+  - period: 2026-08
+    value: "9.4"
+    precision: 1
+    published_by: DANE
+    document: Boletín técnico GEIH agosto 2026 (Bogotá, 30 de septiembre de 2026)
+    url: https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIH-ago2026.pdf
+
+contrast_with: [dane_geih_unemployment_rate_national]
+
+# La serie empalmada se usa para todo el historial (decisión del 25 oct 2026).
+# Para explicar diferencias con cifras citadas en su momento existe la variante
+# unemployment_rate_national_as_published (ficha aparte, conector del DANE).
+related_variants: [unemployment_rate_national_as_published]
+
+# Rango del empalme según la Nota técnica del DANE (septiembre de 2022).
+# Notas con rango de fechas (entidad nota_serie); no cambian ningún valor.
+series_notes:
+  - type: methodological
+    valid_from: 2001-01
+    valid_to: 2021-12
+    status: confirmed
+    text: >
+      Valores recalculados por el DANE en 2022 con proyecciones de población del
+      CNPV 2018 y población en edad de trabajar de 15 años y más. Pueden no
+      coincidir con la cifra publicada en su momento.
+  - type: methodological
+    valid_from: 2010-01
+    valid_to: 2020-12
+    status: confirmed
+    text: >
+      Periodo con factor de empalme entre la GEIH marco 2005 y la GEIH marco 2018:
+      un factor por mes, distribuido en 132 meses, que ajusta gradualmente el
+      nivel de ocupados y de población fuera de la fuerza laboral. Antes de 2010
+      no se aplica factor de empalme.
+  - type: methodological
+    valid_from: 2021-01
+    valid_to: 2021-12
+    status: confirmed
+    related_notes: [marco_2018_start_conflict]
+    text: >
+      Año de recolección en paralelo de la GEIH marco 2005 y marco 2018; el
+      contraste de ese año define el factor de empalme.
+  # Dos documentos oficiales del DANE dan fechas distintas para el inicio de la
+  # GEIH marco 2018. Se registran ambos, sin elegir.
+  - id: marco_2018_start_conflict
+    type: methodological
+    valid_from: 2021-01
+    valid_to:
+    status: official_sources_in_conflict
+    text: >
+      Fuentes oficiales en conflicto sobre desde cuándo los resultados provienen
+      de la GEIH marco 2018: enero de 2021 según la ficha metodológica del anexo
+      de la GEIH, y enero de 2022 según la nota técnica de empalme.
+    sources:
+      - document: Anexo GEIH agosto 2026, hoja "Ficha metodológica" (DANE, actualizado el 30 de septiembre de 2026)
+        quote: "Desde enero de 2021, los resultados de mercado laboral son proporcionados por la Gran Encuesta Integrada de Hogares rediseñada (GEIH marco 2018)."
+        url: https://www.dane.gov.co/files/operaciones/GEIH/anex-GEIH-ago2026.xlsx
+        sha256: ade9b213c799e967c121091438a53617f3a3ab8d85d311f5cada08e2461473d9
+        retrieved_on: 2026-10-25
+      - document: Nota técnica empalme series GEIH marco 2005 - GEIH marco 2018 (DANE, septiembre de 2022), sección 1
+        quote: "En diciembre de 2021 se terminó la recolección en paralelo y a partir de enero de 2022 la información de mercado laboral es proporcionada por la GEIH marco 2018."
+        url: https://www.dane.gov.co/files/investigaciones/boletines/ech/ech/Nota-tecnica-empalme-series-GEIH.pdf
+        sha256: cb51357ab910197708896890bcb926201853e4a1aa5a431e9b1e61eaac621031
+        retrieved_on: 2026-10-25
+  # Notas al pie del anexo de la GEIH, citadas textualmente.
+  - id: coverage_2014
+    type: methodological
+    valid_from: 2014-01
+    valid_to:
+    status: confirmed
+    quote: "Nota: el total nacional a partir del 2014, incorpora los dominios de ciudades capitales de los departamentos de la Amazonía y la Orinoquía y San Andrés."
+    source: &geih_annex
+      document: Anexo GEIH agosto 2026, hoja "Total nacional", notas al pie (DANE, actualizado el 30 de septiembre de 2026)
+      url: https://www.dane.gov.co/files/operaciones/GEIH/anex-GEIH-ago2026.xlsx
+      sha256: ade9b213c799e967c121091438a53617f3a3ab8d85d311f5cada08e2461473d9
+      retrieved_on: 2026-10-25
+  - id: population_adjustment_2021_q1
+    type: methodological
+    valid_from: 2021-01
+    valid_to: 2021-03
+    status: confirmed
+    quote: "Nota: para los meses de enero, febrero y marzo de 2021 se integró a los factores de expansión el factor de ajuste poblacional que corrige los errores operativos de estos tres meses. Este cambio genera modificaciones en desagregaciones poblacionales de los diferentes dominios geográficos publicados en los meses mencionados."
+    source: *geih_annex
+  # Solo la cita del DANE: no se estima cuánto pesó el ajuste en la tasa.
+  - id: earthquake_adjustment_2026_08
+    type: methodological
+    valid_from: 2026-08
+    valid_to: 2026-08
+    status: confirmed
+    quote: "Nota: como consecuencia de las afectaciones registradas en algunos municipios de la muestra de la GEIH por el sismo ocurrido el 10 de agosto de 2026, para la publicación de los resultados correspondientes a agosto de 2026, se realizó un ajuste en los factores de expansión, teniendo en cuenta los segmentos de muestra perdidos debido a la destrucción o inhabitabilidad de las viviendas."
+    source: *geih_annex
+empalme_source:
+  document: Nota técnica empalme series GEIH marco 2005 - GEIH marco 2018 (DANE, septiembre de 2022), secciones 2 y 3.3
+  url: https://www.dane.gov.co/files/investigaciones/boletines/ech/ech/Nota-tecnica-empalme-series-GEIH.pdf
+  sha256: cb51357ab910197708896890bcb926201853e4a1aa5a431e9b1e61eaac621031
+  retrieved_on: 2026-10-25
+
+open_questions: []
+
+approval:
+  status: approved
+  approved_by: Dubal Aguilar Torres
+  approved_on: 2026-10-25
+  content_sha256: 5fae9eef732780f595d138674eb43efc23c28b9dfff1cde0cc5a1544b530fb0e
+  comments: "Revisada y aprobada por Dubal Aguilar Torres; bloque escrito por el asistente por instrucción suya."

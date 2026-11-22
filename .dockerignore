@@ -1,0 +1,15 @@
+# Nunca entran a la imagen: secretos, datos descargados, entornos locales y archivos de git.
+.env
+data/
+.venv/
+.git/
+.pytest_cache/
+**/__pycache__/
+diagramas/
+web/node_modules/
+web/dist/
+docs/
+tests/
+*.drawio
+*.png
+.DS_Store

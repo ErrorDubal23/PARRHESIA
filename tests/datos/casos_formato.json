@@ -1,0 +1,43 @@
+[
+  {
+    "texto": "El **desempleo** bajó al *8,2 %* según [el DANE](https://www.dane.gov.co/#cifras_2026) #empleo",
+    "plano": "El desempleo bajó al 8,2 % según el DANE #empleo"
+  },
+  {
+    "texto": "5 * 3 = 15 y 2*4*5",
+    "plano": "5 * 3 = 15 y 2*4*5"
+  },
+  {
+    "texto": "**a** **b** y *c*",
+    "plano": "a b y c"
+  },
+  {
+    "texto": "** separado ** y * suelto *",
+    "plano": "** separado ** y * suelto *"
+  },
+  {
+    "texto": "palabra**pegada** no",
+    "plano": "palabra**pegada** no"
+  },
+  {
+    "texto": "[malo](javascript:alert(1)) y [http](http://x.co)",
+    "plano": "[malo](javascript:alert(1)) y [http](http://x.co)"
+  },
+  {
+    "texto": "**negrita con *cursiva* dentro**",
+    "plano": "**negrita con cursiva dentro**",
+    "nota": "no se anidan: la cursiva sí se aplica, la negrita que la contiene no"
+  },
+  {
+    "texto": "Inflación de *6,29 %* (DANE)",
+    "plano": "Inflación de 6,29 % (DANE)"
+  },
+  {
+    "texto": "@lucia_demo dijo **algo** sobre #inflacion",
+    "plano": "@lucia_demo dijo algo sobre #inflacion"
+  },
+  {
+    "texto": "línea uno **sin cerrar\ny otra** línea",
+    "plano": "línea uno **sin cerrar\ny otra** línea"
+  }
+]

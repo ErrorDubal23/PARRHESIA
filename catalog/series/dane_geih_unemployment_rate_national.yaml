@@ -1,0 +1,107 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+
+code: dane_geih_unemployment_rate_national
+indicator: unemployment
+variant: monthly_rate
+name: Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE
+definition: >
+  Tasa de desocupación nacional mensual de la GEIH, tal como la publica el DANE
+  (productor) en el anexo de cada mes. Es la misma variable que
+  unemployment_rate_national (canal SUAMECA); el motor usa esta serie cuando las
+  dos no coinciden (regla en docs/PROYECTO.md, filtro 5).
+unit: percent
+unit_label: Porcentaje
+frequency: monthly
+geography: national
+
+producer: DANE
+access_channel: dane_web
+
+external:
+  page: https://www.dane.gov.co/index.php/estadisticas-por-tema/mercado-laboral/empleo-y-desempleo
+  # Anexo de la GEIH del mes (el nombre del archivo cambia cada mes), hoja
+  # "Total nacional", sección "Total Nacional", fila "Tasa de Desocupación (TD)".
+  # Meses marcados con "*" (marzo a julio de 2020): el asterisco remite a una
+  # nota sobre la población subocupada, no a la tasa de desocupación.
+  annex_label: Anexos
+  sheet: Total nacional
+  # La hoja tiene dos secciones con las mismas filas: "Total Nacional" (primera)
+  # y "Total Cabeceras" (segunda, solo cabeceras municipales). Se lee solo la
+  # primera. Filtro 2: la lectura se detiene si la sección "Total Nacional" no
+  # aparece, aparece más de una vez o deja de ser la primera de la hoja.
+  section: Total Nacional
+  section_position: 1
+  row_label: Tasa de Desocupación (TD)
+  covers: 2001-01 en adelante
+
+methodology:
+  technical_sheet: https://www.dane.gov.co/files/operaciones/GEIH/met-GEIH.pdf
+  technical_sheet_version: DSO-GEIH-MET-001, versión 11 (16 de junio de 2023)
+  notes: >
+    El anexo trae la tasa con todos sus decimales (por ejemplo 9,3636797...);
+    se guarda como decimal exacto, tal como está escrito en el archivo (texto
+    de la celda en el .xlsx), nunca como float y sin redondear. El trimestre móvil y la serie
+    desestacionalizada son otras variantes (fichas futuras).
+
+history:
+  first_period: 2001-01
+  decimals: null   # sin redondeo: el anexo publica el valor completo
+
+# Filtro 3: las mismas reglas de unemployment_rate_national (aprobadas).
+plausibility:
+  min: 0.0
+  max: 30.0
+  max_step_yoy: 4.0   # cuarentena solo si el cambio es estrictamente mayor a 4.0
+  max_step_applies_to: new_observations
+  max_step_excluded_years: [2021]
+  no_gaps: true
+  no_duplicates: true
+
+known_exceptions:
+  - periods: [2020-04, 2020-05, 2020-06, 2020-07, 2020-08, 2020-09, 2020-10, 2020-11]
+    explanation: Coincide con el periodo de aislamiento obligatorio por la COVID-19.
+    explanation_source:
+  - periods: [2021-01, 2021-04, 2021-05, 2021-06, 2021-07, 2021-08, 2021-09]
+    explanation: La comparación es contra los meses de 2020. Sin explicación documentada.
+    explanation_source:
+  - periods: [2022-04, 2022-05]
+    explanation: La comparación es contra los meses de 2021. Sin explicación documentada.
+    explanation_source:
+
+# Las notas de serie (empalme, cobertura desde 2014, ajuste de 2021, sismo de
+# agosto de 2026 y el conflicto 2021/2022) están en unemployment_rate_national y
+# aplican igual a esta serie.
+shares_series_notes_with: unemployment_rate_national
+
+reference_values:
+  - period: 2026-07
+    value: "8.1"
+    precision: 1
+    published_by: DANE
+    document: Boletín técnico GEIH julio 2026 (Bogotá, 31 de agosto de 2026)
+    url: https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIH-jul2026.pdf
+  - period: 2026-08
+    value: "9.4"
+    precision: 1
+    published_by: DANE
+    document: Boletín técnico GEIH agosto 2026 (Bogotá, 30 de septiembre de 2026)
+    url: https://www.dane.gov.co/files/operaciones/GEIH/bol-GEIH-ago2026.pdf
+
+# Filtro 5: contraste en las dos direcciones con unemployment_rate_national
+# (SUAMECA), con la tolerancia de la precisión menor (SUAMECA, 2 decimales:
+# ±0,005). Verificado: los 308 meses 2001-01 a 2026-08 coinciden. Si coinciden,
+# ambas quedan aprobadas. Si no coinciden, el motor usa este valor y se genera
+# una alerta obligatoria para revisión humana (docs/PROYECTO.md, filtro 5).
+contrast_with: [unemployment_rate_national]
+
+related_variants: [unemployment_rate_national, unemployment_rate_national_as_published, unemployment_rate_national_cnpv2018_recalc]
+
+open_questions: []
+
+approval:
+  status: approved
+  approved_by: Dubal Aguilar Torres
+  approved_on: 2026-10-26
+  content_sha256: 7079af10f0d233866ed53b71bc63932743ca39af4f37c999d412fde64e01585a
+  comments: "Revisada y aprobada por Dubal Aguilar Torres; bloque escrito por el asistente por instrucción suya."

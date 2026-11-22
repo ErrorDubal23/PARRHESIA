@@ -1,0 +1,222 @@
+# Proyecto social: bases de datos, microservicios y puerta de entrada.
+#
+#   1. Copia .env.example a .env y llena las contraseñas (POSTGRES_PASSWORD, NEO4J_PASSWORD,
+#      PG_CLAVE_*, JWT_SECRETO) y las llaves de IA (GROQ_KEY_*, OPENROUTER_KEY_*).
+#   2. docker compose up -d --build
+#   3. La aplicación queda en http://localhost:8080 (API en /api/<servicio>/v1/...).
+#
+# Persistencia: los datos viven en los volúmenes "pgdata", "neo4jdata" y "fotos", fuera de los
+# contenedores. `docker compose down` y `up` los conservan; solo `down -v` los borra.
+# Resistencia: si se detiene un servicio, los demás siguen (ver docs/diseno/09_docker.md),
+# y con "restart: unless-stopped" todo vuelve a arrancar solo después de un reinicio.
+# Los puertos de las bases solo escuchan en 127.0.0.1: no se alcanzan desde la red.
+
+x-servicio: &servicio
+  image: proyecto_social/servicios:1
+  restart: unless-stopped
+  depends_on:
+    preparar:
+      condition: service_completed_successfully
+
+x-salud-api: &salud-api
+  test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/salud', timeout=3)"]
+  interval: 10s
+  timeout: 5s
+  retries: 6
+
+services:
+  # --- Bases de datos -------------------------------------------------------------------------
+  db:
+    image: pgvector/pgvector:0.8.0-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: proyecto_social
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?pon POSTGRES_PASSWORD en .env (ver .env.example)}
+    ports:
+      # 5433 en el computador, para no chocar con un PostgreSQL ya instalado en 5432.
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d proyecto_social"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  neo4j:
+    image: neo4j:5.26.33-community
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?pon NEO4J_PASSWORD en .env (ver .env.example)}
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+    ports:
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"   # Neo4j Browser: http://localhost:7474
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-7687}:7687"
+    volumes:
+      - neo4jdata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # --- Preparación: migraciones y contraseñas de los roles (corre una vez y termina) ------------
+  preparar:
+    build: .
+    image: proyecto_social/servicios:1
+    command: ["sh", "-c", "python -m app.db.migrate && python -m servicios.comun.preparar_roles"]
+    environment:
+      DATABASE_URL: host=db port=5432 dbname=proyecto_social user=app
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PG_CLAVE_OFICIAL: ${PG_CLAVE_OFICIAL:?pon PG_CLAVE_OFICIAL en .env}
+      PG_CLAVE_SOCIAL: ${PG_CLAVE_SOCIAL:?pon PG_CLAVE_SOCIAL en .env}
+      PG_CLAVE_VERIFICACION: ${PG_CLAVE_VERIFICACION:?pon PG_CLAVE_VERIFICACION en .env}
+      PG_CLAVE_IA: ${PG_CLAVE_IA:?pon PG_CLAVE_IA en .env}
+      PG_CLAVE_TEMAS: ${PG_CLAVE_TEMAS:?pon PG_CLAVE_TEMAS en .env}
+      PG_CLAVE_GRAFO: ${PG_CLAVE_GRAFO:?pon PG_CLAVE_GRAFO en .env}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # --- Microservicios: cada uno entra con su propio rol (decisión 13) ----------------------------
+  social:
+    <<: *servicio
+    command: ["uvicorn", "servicios.social.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      PG_URL_SOCIAL: host=db dbname=proyecto_social user=svc_social
+      PGPASSWORD: ${PG_CLAVE_SOCIAL}
+      JWT_SECRETO: ${JWT_SECRETO:?pon JWT_SECRETO en .env}
+      GRAFO_URL: http://grafo:8000
+      # En local la app corre en http://localhost; con HTTPS (producción) debe ser true.
+      COOKIE_SEGURA: ${COOKIE_SEGURA:-false}
+      FOTOS_DIR: /datos/fotos
+    volumes:
+      - fotos:/datos/fotos   # fotos de perfil: persisten como las bases
+    healthcheck: *salud-api
+
+  verificacion:
+    <<: *servicio
+    command: ["uvicorn", "servicios.verificacion.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      PG_URL_VERIFICACION: host=db dbname=proyecto_social user=svc_verificacion
+      PGPASSWORD: ${PG_CLAVE_VERIFICACION}
+      JWT_SECRETO: ${JWT_SECRETO}
+    healthcheck: *salud-api
+
+  verificacion-trabajador:
+    <<: *servicio
+    command: ["python", "-m", "servicios.verificacion.trabajador"]
+    environment:
+      PG_URL_VERIFICACION: host=db dbname=proyecto_social user=svc_verificacion
+      PGPASSWORD: ${PG_CLAVE_VERIFICACION}
+      GOOGLE_FACTCHECK_KEY: ${GOOGLE_FACTCHECK_KEY:-}   # verificaciones de otros medios (decisión 34); opcional
+
+  ia-trabajador:
+    <<: *servicio
+    command: ["python", "-m", "servicios.ia.trabajador"]
+    environment:
+      PG_URL_IA: host=db dbname=proyecto_social user=svc_ia
+      PGPASSWORD: ${PG_CLAVE_IA}
+      # Una línea por cuenta (alias). Para agregar una cuenta: su llave aquí y en .env, y reiniciar solo este contenedor.
+      GROQ_KEY_groq_cuenta_1: ${GROQ_KEY_groq_cuenta_1:-}
+      GROQ_KEY_groq_cuenta_2: ${GROQ_KEY_groq_cuenta_2:-}
+      OPENROUTER_KEY_openrouter_1: ${OPENROUTER_KEY_openrouter_1:-}
+      OPENROUTER_KEY_openrouter_2: ${OPENROUTER_KEY_openrouter_2:-}
+      GEMINI_KEY_gemini_1: ${GEMINI_KEY_gemini_1:-}
+
+  temas:
+    <<: *servicio
+    command: ["uvicorn", "servicios.temas.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      PG_URL_TEMAS: host=db dbname=proyecto_social user=svc_temas
+      PGPASSWORD: ${PG_CLAVE_TEMAS}
+      JWT_SECRETO: ${JWT_SECRETO}
+    healthcheck: *salud-api
+
+  temas-trabajador:
+    <<: *servicio
+    command: ["python", "-m", "servicios.temas.trabajador"]
+    environment:
+      PG_URL_TEMAS: host=db dbname=proyecto_social user=svc_temas
+      PGPASSWORD: ${PG_CLAVE_TEMAS}
+      UNSPLASH_ACCESS_KEY: ${UNSPLASH_ACCESS_KEY:-}   # imagen de los temas (migración 0028); opcional
+
+  oficial:
+    <<: *servicio
+    command: ["uvicorn", "servicios.oficial.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      PG_URL_OFICIAL: host=db dbname=proyecto_social user=svc_oficial
+      PGPASSWORD: ${PG_CLAVE_OFICIAL}
+      JWT_SECRETO: ${JWT_SECRETO}
+    healthcheck: *salud-api
+
+  grafo:
+    <<: *servicio
+    command: ["uvicorn", "servicios.grafo.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      PG_URL_GRAFO: host=db dbname=proyecto_social user=svc_grafo
+      PGPASSWORD: ${PG_CLAVE_GRAFO}
+      NEO4J_URL: bolt://neo4j:7687
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+    depends_on:
+      preparar:
+        condition: service_completed_successfully
+      neo4j:
+        condition: service_healthy
+    healthcheck: *salud-api
+
+  grafo-trabajador:
+    <<: *servicio
+    command: ["python", "-m", "servicios.grafo.trabajador"]
+    environment:
+      PG_URL_GRAFO: host=db dbname=proyecto_social user=svc_grafo
+      PGPASSWORD: ${PG_CLAVE_GRAFO}
+      NEO4J_URL: bolt://neo4j:7687
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+    depends_on:
+      preparar:
+        condition: service_completed_successfully
+      neo4j:
+        condition: service_healthy
+
+  # --- Solo para las pruebas: un Neo4j aparte, sin volumen, que las pruebas pueden vaciar --------
+  #     docker compose --profile pruebas up -d neo4j-pruebas
+  neo4j-pruebas:
+    image: neo4j:5.26.33-community
+    profiles: ["pruebas"]
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
+      NEO4J_server_memory_heap_max__size: 256m
+      NEO4J_server_memory_pagecache_size: 64m
+    ports:
+      - "127.0.0.1:7688:7687"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # --- Puerta de entrada (decisión 22) ----------------------------------------------------------
+  puerta:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+      args:
+        # Botones de ejemplos al azar para la presentación; MODO_DEMO=0 los quita de la app.
+        VITE_MODO_DEMO: ${MODO_DEMO:-1}
+    image: proyecto_social/puerta:1
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PUERTO_APP:-8080}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/salud"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+volumes:
+  pgdata:
+  neo4jdata:
+  fotos:

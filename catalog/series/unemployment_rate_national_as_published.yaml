@@ -1,0 +1,46 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+# BORRADOR: depende del conector del DANE (todavía no existe).
+
+code: unemployment_rate_national_as_published
+indicator: unemployment
+variant: monthly_rate_as_published
+name: Tasa de desocupación, total nacional, cifra publicada en su momento (GEIH marco 2005, antes de 2022)
+definition: >
+  Tasa de desocupación nacional tal como el DANE la publicó cada mes con la GEIH
+  marco 2005, antes del recálculo con proyecciones del CNPV 2018 y del empalme de
+  2022. Sirve para explicar por qué una cifra citada en su momento no coincide
+  con la serie empalmada actual. No reemplaza a unemployment_rate_national.
+unit: percent
+unit_label: Porcentaje
+frequency: monthly
+geography: national
+
+producer: DANE
+access_channel: dane_web
+
+external:
+  # Monthly anexos on the GEIH historical page, one file per month, e.g.
+  # /files/investigaciones/boletines/ech/ech/anexo_empleo_dic_21.xlsx
+  page: https://www.dane.gov.co/index.php/estadisticas-por-tema/mercado-laboral/empleo-y-desempleo/geih-historicos
+  file_pattern: anexo_empleo_<mes>_<aa>.xlsx   # verified for 2021 only
+
+history:
+  first_period:   # por confirmar al construir el conector del DANE
+  last_period: 2021-12
+
+related_variants: [unemployment_rate_national, unemployment_rate_national_cnpv2018_recalc]
+
+# Cada mes vale lo que dice su primera publicación (el anexo de ese mes), no lo
+# que digan anexos posteriores (decisión del 25 oct 2026).
+value_rule: first_publication
+
+open_questions:
+  - La página histórica solo muestra anexos mensuales de 2021. La ubicación de los
+    de 2001 a 2020 queda pendiente para el conector del DANE.
+
+approval:
+  status: pending
+  approved_by:
+  approved_on:
+  comments:

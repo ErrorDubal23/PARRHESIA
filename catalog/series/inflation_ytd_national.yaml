@@ -1,0 +1,107 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+
+code: inflation_ytd_national
+indicator: inflation
+variant: year_to_date
+name: Inflación total año corrido (variación del IPC frente a diciembre del año anterior), total nacional
+definition: >
+  Variación porcentual del IPC total nacional entre diciembre del año anterior
+  y el mes de referencia, publicada por el DANE. Es una serie distinta de la
+  inflación anual y de la mensual: el motor no puede mezclarlas.
+unit: percent
+unit_label: Variación porcentual año corrido
+frequency: monthly
+geography: national
+
+producer: DANE
+access_channel: dane_web
+
+external:
+  page: https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc
+  history_page: https://www.dane.gov.co/index.php/estadisticas-por-tema/precios-y-costos/indice-de-precios-al-consumidor-ipc/ipc-historico
+  # De dónde sale cada valor. Nunca se calcula (ni desde el índice ni desde la
+  # variación mensual): un mes sin publicación queda sin valor.
+  sources:
+    - name: dane_ipc_variations_annex
+      # Anexo "Variaciones porcentuales", fila "En año corrido": el valor de
+      # diciembre de cada año y el del mes actual del año en curso. Al archivar
+      # el anexo cada mes, la serie se completa hacia adelante.
+      link_text_prefix: "Variaciones porcentuales - "
+      covers: diciembres desde 2003 y cada mes desde el archivo del anexo
+    - name: dane_ipc_bulletin
+      # Boletín técnico, frase "En lo corrido del año, (enero - <mes>), [...]
+      # promedio nacional (X%)". Los boletines de enero y diciembre no traen esa
+      # sección, y el de agosto de 2024 la redacta sin la cifra total.
+      link_text: Boletín técnico
+      covers: 2023-02 en adelante, salvo eneros, diciembres y 2024-08
+
+methodology:
+  technical_sheet: https://www.dane.gov.co/files/investigaciones/fichas/precios-y-costos/DSO-IPC-MET-001-v7.pdf
+  base: IPC base diciembre 2018 = 100
+  notes: >
+    Los resultados publicados del IPC son definitivos (metodología, p. 57).
+    Valores como decimal exacto, nunca float: del .xls, la representación más
+    corta del número; del boletín, el texto tal como está escrito.
+
+history:
+  first_period: 2003-12
+  decimals: 2
+
+# Filtro 3 (propuesta). El año corrido arranca de cero cada enero, así que no se
+# revisan saltos.
+plausibility:
+  min: -5.0
+  max: 50.0
+  max_step_applies_to: new_observations
+  no_gaps: false
+  # Huecos esperados (meses sin publicación en estas fuentes). Cualquier otro mes
+  # faltante genera una alerta.
+  expected_gaps:
+    - range: [2003-12, 2022-12]
+      except_months: [12]
+      reason: Antes de 2023 solo hay valor de diciembre (anexo); los boletines anteriores a 2023 están en el backlog.
+    - periods: [2023-01, 2024-01, 2025-01, 2026-01]
+      reason: Los boletines de enero no traen la sección de año corrido, y el anexo de esas fechas no se archivó.
+    - periods: [2024-08]
+      reason: El boletín de agosto de 2024 redacta el año corrido sin la cifra total, y el anexo de esa fecha no se archivó.
+  no_duplicates: true
+
+known_exceptions: []
+
+status: final_on_release
+base_change_policy: new_series
+
+reference_values:
+  - period: 2026-09
+    value: "5.74"
+    precision: 2
+    published_by: DANE
+    document: Boletín técnico IPC septiembre 2026 (Bogotá, 7 de octubre de 2026) y anexo de variaciones septiembre 2026
+    url: https://www.dane.gov.co/files/operaciones/IPC/sep2026/bol-IPC-sep2026.pdf
+    sha256: 454cc653a63752840e1050f735d5c2bcb740ec3ec560291d9487d8a3a01d276c
+  - period: 2026-08
+    value: "5.35"
+    precision: 2
+    published_by: DANE
+    document: Boletín técnico IPC agosto 2026 (Bogotá, 7 de septiembre de 2026)
+    url: https://www.dane.gov.co/files/operaciones/IPC/ago2026/bol-IPC-ago2026.pdf
+    sha256: aee7df9c092809be3894de9b0286464f9155a00c566bc03c43eec71e1b281fd3
+
+# Filtro 5: coherencia dentro del DANE desde 2023. Solo hay contraste cuando un
+# mes tiene valor en las dos publicaciones (anexo y boletín); si el valor sale
+# de una sola, ese mes queda "unavailable" (decisión del 25 oct 2026). Con lo
+# archivado hoy, solo 2026-09 tiene las dos (5,74); hacia adelante, cada mes
+# tendrá las dos. Antes de 2023: "unavailable".
+contrast_with: [dane_ipc_bulletins]
+
+related_variants: [inflation_annual_national, dane_ipc_annual_national, inflation_monthly_national]
+
+open_questions: []
+
+approval:
+  status: approved
+  approved_by: Dubal Aguilar Torres
+  approved_on: 2026-10-25
+  content_sha256: f49e2b4ee29408ed40c45e58d42dafd7b28941ebe81219c4c7bff2df0ccb8ec0
+  comments: "Revisada y aprobada por Dubal Aguilar Torres; bloque escrito por el asistente por instrucción suya."

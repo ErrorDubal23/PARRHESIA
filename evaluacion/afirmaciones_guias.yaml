@@ -1,0 +1,94 @@
+# Conjunto de guías (decisión 34): 15 frases NUEVAS, escritas el 22 nov 2026 ANTES de correrlas. Miden que
+# cada análisis traiga la guía correcta (el consejo del motivo o de la trampa y la fuente oficial para
+# comprobarlo) y que ninguna guía redactada por la IA lleve cifras ni juicios (esa revisión se hace siempre).
+# Datos oficiales de referencia ese día: desempleo ago 2026 9,36 · sep 2026 8,02; inflación anual ago 2026
+# 6,24, mensual jul 2026 0,17, mensual ago 2026 0,39; homicidios: último mes aceptado, sep 2026.
+- n: 1
+  texto: "En Cali el desempleo llegó a 11 % en agosto de 2026."
+  categoria: sin_serie
+  esperado:
+    requiere: [{valor: "11", consejo: territorio_no_nacional, con_fuente: true}]
+  por_que: "Solo hay series nacionales; la guía debe explicar por qué y llevar a la tabla por ciudades del DANE."
+- n: 2
+  texto: "La inflación fue de 5,9 % en agosto de 2026."
+  categoria: sin_serie
+  esperado:
+    requiere: [{valor: "5.9", consejo: variante_no_dicha, con_fuente: true}]
+  por_que: "No dice si es la variación anual, mensual o año corrido."
+- n: 3
+  texto: "Los homicidios subieron 12 % en septiembre de 2026 frente a septiembre de 2025."
+  categoria: variacion
+  esperado:
+    requiere: [{valor: "12", consejo: cambio_no_publicado, con_fuente: true}]
+  por_que: "Es un cambio que la fuente no publica; la guía explica cómo comprobarlo."
+- n: 4
+  texto: "La tasa de desempleo fue de 8,6 %."
+  categoria: sin_serie
+  esperado:
+    requiere: [{valor: "8.6", consejo: periodo_no_dicho}]
+  por_que: "Sin periodo no hay comparación."
+- n: 5
+  texto: "La deuda del Gobierno llegó al 60 % del PIB en junio de 2026."
+  categoria: sin_serie
+  esperado:
+    alguna_de: [{valor: "60", consejo: variante_sin_serie}, {valor: "60", consejo: indicador_sin_serie}]
+  por_que: "No hay serie de deuda pública con datos; la guía lleva a la página de Hacienda."
+- n: 6
+  texto: "La inflación anual de agosto de 2026 fue 6,24 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "6.24", conclusion: se_sostiene, consejo: se_sostiene, con_fuente: true}]
+  por_que: "Coincide; la guía recuerda mirar la serie completa."
+- n: 7
+  texto: "En septiembre de 2026 el desempleo subió a 8,0 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "8.0", conclusion: se_invierte, consejo: se_invierte}]
+  por_que: "La cifra coincide (8,02), pero bajó frente a agosto (9,36)."
+- n: 8
+  texto: "En julio de 2026 la inflación mensual fue 0,17 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "0.17", conclusion: se_sostiene, consejo: se_sostiene}]
+  por_que: "Coincide con la variación mensual de julio."
+- n: 9
+  texto: "En agosto de 2026 la inflación anual fue 0,39 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "0.39", conclusion: se_debilita, consejo: variante_equivocada}]
+  por_que: "0,39 % es la variación mensual de agosto; la guía explica la trampa de la variante."
+- n: 10
+  texto: "Los hurtos llegaron a 30.000 en agosto de 2026."
+  categoria: sin_serie
+  esperado:
+    alguna_de: [{valor: "30000", consejo: indicador_sin_serie}, {valor: "30000", consejo: variante_sin_serie}]
+  por_que: "Sin serie de hurtos con datos; la guía lleva a la estadística delictiva de la Policía."
+- n: 11
+  texto: "El salario mínimo de 2026 es de $1.750.905."
+  categoria: sin_serie
+  esperado:
+    alguna_de: [{valor: "1750905", consejo: periodo_sin_dato}, {valor: "1750905", consejo: indicador_sin_serie},
+                {valor: "1750905", consejo: variante_sin_serie}]
+  por_que: "La serie del salario mínimo no tiene datos aceptados."
+- n: 12
+  texto: "El secuestro aumentó en Antioquia durante 2026."
+  categoria: sin_cifra
+  esperado: {ninguna_conclusion: [se_sostiene, se_debilita, se_invierte]}
+  por_que: "No hay cifra del indicador, solo un año."
+- n: 13
+  texto: "Ojalá el empleo mejore pronto para los jóvenes."
+  categoria: sin_cifra
+  esperado: {ninguna_conclusion: [se_sostiene, se_debilita, se_invierte]}
+  por_que: "Es una opinión: se publica como opinión."
+- n: 14
+  texto: "En octubre de 2026 hubo 1.059 homicidios en Colombia."
+  categoria: sin_serie
+  esperado:
+    requiere: [{valor: "1059", consejo: periodo_sin_dato, con_fuente: true}]
+  por_que: "El último mes aceptado es septiembre de 2026: no se compara con un dato que no está."
+- n: 15
+  texto: "Según el DANE, el desempleo de agosto de 2026 fue 9,4 %."
+  categoria: con_dato
+  esperado:
+    requiere: [{valor: "9.4", conclusion: se_sostiene, consejo: nota_serie}]
+  por_que: "Coincide y el mes tiene la nota oficial del sismo: la guía invita a leerla."

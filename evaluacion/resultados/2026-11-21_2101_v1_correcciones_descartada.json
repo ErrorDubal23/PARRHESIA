@@ -1,0 +1,1910 @@
+{
+  "resumen": {
+    "conjunto": "v1",
+    "etiqueta": "correcciones",
+    "fecha": "2026-11-21T21:01:08",
+    "aciertos": 27,
+    "total": 30,
+    "evaluables": 28,
+    "meta": 24,
+    "aciertos_con_dato": 6,
+    "total_con_dato": 7
+  },
+  "filas": [
+    {
+      "n": 1,
+      "texto": "El secuestro bajó 79 % en el primer mes de gobierno: agosto de 2026 frente a agosto de 2025.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "No hay serie oficial de secuestro conectada; además es un cambio que la fuente no publica. Lo correcto es no dar veredicto.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 2,
+      "texto": "La extorsión cayó entre 62 % y 63 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de extorsión. No se aproxima con otra fuente.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "6a43e191-c72a-46fd-b190-1ed3afe45727",
+            "texto_citado": "62 %",
+            "indicador": "extortion",
+            "variante": null,
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "62",
+            "direccion": "baja",
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "e5dbe630-38f9-4e27-ba7d-93439839f5d9",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. El texto no dice qué variación del indicador cita.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.627304+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          },
+          {
+            "id": "fb1d5885-8342-4293-a1a4-8f462a5cf14c",
+            "texto_citado": "63 %",
+            "indicador": "extortion",
+            "variante": null,
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "63",
+            "direccion": "baja",
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "7f3d1e8a-7a32-4eac-a13d-888dc420b634",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. El texto no dice qué variación del indicador cita.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.634846+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 3,
+      "texto": "Las masacres cayeron 58 %.",
+      "categoria": "variacion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Masacres no es una serie del catálogo y el cambio porcentual no lo publica la fuente.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 4,
+      "texto": "Los homicidios bajaron 64 % en los primeros 30 días del gobierno.",
+      "categoria": "variacion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "La serie de homicidios publica conteos mensuales, no ese cambio; calcularlo no está permitido.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "3ee07470-594d-4e4c-9ca1-175abb6560a3",
+            "texto_citado": "Los homicidios bajaron 64 % en los primeros 30 días del gobierno.",
+            "indicador": "homicides",
+            "variante": null,
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "64",
+            "direccion": "baja",
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "a8f9c773-0c52-4b08-bdbb-7858ec909abc",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. La fuente oficial no publica ese cambio; calcularlo no está permitido en esta versión.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.652627+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 5,
+      "texto": "Los hurtos bajaron 24 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de hurtos conectada.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "a912b092-bc89-41d8-a2ae-e8e1655c82d9",
+            "texto_citado": "Los hurtos bajaron 24 %.",
+            "indicador": "theft",
+            "variante": null,
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "24",
+            "direccion": "baja",
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "786c2c33-70f8-49bb-b779-8cc5375522dd",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. El texto no dice qué variación del indicador cita.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.655465+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 6,
+      "texto": "En agosto de 2026 hubo 499 homicidios según MinDefensa y 717 según la Policía.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "499",
+            "conclusion": "se_debilita",
+            "prueba": "dato_provisional"
+          },
+          {
+            "valor": "717",
+            "conclusion": "se_debilita",
+            "prueba": "dato_provisional"
+          }
+        ]
+      },
+      "por_que": "El dato oficial de agosto de 2026 (Policía Nacional, SIEDCO) es 1.190 y es provisional. Ninguna de las dos cifras coincide.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "6dee8ded-5275-437f-a197-67e19ee752f4",
+            "texto_citado": "499 homicidios según MinDefensa",
+            "indicador": "homicides",
+            "variante": "conteo",
+            "periodo": "2026-08",
+            "territorio": "national",
+            "valor_dicho": "499",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "5e5d1a2d-6090-4aa5-91f8-78c8e44748f3",
+              "version": 1,
+              "conclusion": "se_debilita",
+              "explicacion": "Según Policía Nacional (SIEDCO), el dato oficial de agosto de 2026 es 1.190. El texto dice 499; el dato oficial de agosto de 2026 es 1.190. El dato oficial de agosto de 2026 todavía es provisional y puede cambiar. La serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "homicides_intentional_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.677788+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "0d821a3b-d808-4394-bc97-de9d5386e60f",
+                  "rol": "citada",
+                  "serie": "homicides_intentional_national",
+                  "nombre_serie": "Homicidio intencional, víctimas por mes, total nacional",
+                  "fuente": "Policía Nacional (SIEDCO)",
+                  "periodo": "2026-08",
+                  "valor": "1190"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "con_brecha",
+                  "detalle": "El dato de 2026-08 es provisional hasta abril del año siguiente."
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "gender_age_completeness"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                }
+              ]
+            }
+          },
+          {
+            "id": "93fab1af-603e-4722-840e-9018cc838121",
+            "texto_citado": "717 según la Policía",
+            "indicador": "homicides",
+            "variante": "conteo",
+            "periodo": "2026-08",
+            "territorio": "national",
+            "valor_dicho": "717",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "029c0fca-b3b3-404a-b6a2-f0c59ca813ba",
+              "version": 1,
+              "conclusion": "se_debilita",
+              "explicacion": "Según Policía Nacional (SIEDCO), el dato oficial de agosto de 2026 es 1.190. El texto dice 717; el dato oficial de agosto de 2026 es 1.190. El dato oficial de agosto de 2026 todavía es provisional y puede cambiar. La serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "homicides_intentional_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.686466+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "0d821a3b-d808-4394-bc97-de9d5386e60f",
+                  "rol": "citada",
+                  "serie": "homicides_intentional_national",
+                  "nombre_serie": "Homicidio intencional, víctimas por mes, total nacional",
+                  "fuente": "Policía Nacional (SIEDCO)",
+                  "periodo": "2026-08",
+                  "valor": "1190"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "con_brecha",
+                  "detalle": "El dato de 2026-08 es provisional hasta abril del año siguiente."
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "gender_age_completeness"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 7,
+      "texto": "El hurto a personas cayó 49 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de hurtos.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "c512e3a9-a177-4c98-8608-24a78dad40b4",
+            "texto_citado": "cayó 49 %",
+            "indicador": "theft",
+            "variante": "tasa",
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "49",
+            "direccion": "baja",
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 8,
+      "texto": "Las denuncias de extorsión cayeron 46 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de extorsión.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "b97ff6d8-c95b-4518-b0d8-1922e3d8e1b8",
+            "texto_citado": "cayeron 46 %",
+            "indicador": "extortion",
+            "variante": null,
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "46",
+            "direccion": "baja",
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 9,
+      "texto": "El presidente presentó una reducción de homicidios en Barranquilla.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "El registro original no trae la cifra. Sin cifra es una opinión; además solo hay series nacionales.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 10,
+      "texto": "El salario mínimo subió 23,7 % en 2026.",
+      "categoria": "variacion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "El cambio no lo publica la fuente y la serie del salario mínimo no tiene datos aceptados.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "d76d85a4-7f8c-4b2f-b191-6ddeeac17350",
+            "texto_citado": "El salario mínimo subió 23,7 % en 2026.",
+            "indicador": "minimum_wage",
+            "variante": null,
+            "periodo": "2026",
+            "territorio": "national",
+            "valor_dicho": "23.7",
+            "direccion": "sube",
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "34f7e768-9f50-40a4-a39d-0b32cb083265",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. La fuente oficial no publica ese cambio; calcularlo no está permitido en esta versión.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.704088+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 11,
+      "texto": "El gobierno anterior recibió el salario mínimo por debajo del millón y lo dejó en $1.750.905.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "La serie del salario mínimo no tiene datos aceptados (suspensión del decreto registrada en sus notas).",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "18fa79fb-360e-48d8-9cf5-9c2760173a44",
+            "texto_citado": "lo dejó en $1.750.905",
+            "indicador": "minimum_wage",
+            "variante": "nominal",
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "1750905",
+            "direccion": null,
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "2d7289a3-c425-4265-9b13-31224ea293c7",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. El texto no dice a qué periodo corresponde la cifra.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.706733+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 12,
+      "texto": "El aumento del salario mínimo supera en 17,9 puntos a la inflación de 2025, que fue de 5,10 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "5.10",
+            "conclusion": "se_sostiene"
+          }
+        ],
+        "ninguna_conclusion_salvo_requeridas": [
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "La inflación anual a diciembre de 2025 fue 5,10 % (DANE). Los 17,9 puntos son un cambio no publicado y no deben recibir veredicto.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "cee1ae63-b8b9-4a5d-b4ef-7342e02196c6",
+            "texto_citado": "inflación de 2025, que fue de 5,10 %",
+            "indicador": "inflation",
+            "variante": "anual",
+            "periodo": "2025",
+            "territorio": "national",
+            "valor_dicho": "5.1",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "a2f7239f-3cad-4391-baf6-33810bbd075d",
+              "version": 1,
+              "conclusion": "se_sostiene",
+              "explicacion": "El texto indica 5,1 %. Según DANE, el dato oficial de diciembre de 2025 es 5,1 %. La cifra coincide con la fuente oficial.",
+              "serie": "dane_ipc_annual_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.720255+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "be465a2e-f0b8-4462-b642-5e08b19b86e8",
+                  "rol": "citada",
+                  "serie": "dane_ipc_annual_national",
+                  "nombre_serie": "Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2025-12",
+                  "valor": "5.10"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          },
+          {
+            "id": "2d66c03a-a300-4879-a5bb-09cfb0cff0d1",
+            "texto_citado": "El aumento del salario mínimo supera en 17,9 puntos",
+            "indicador": "minimum_wage",
+            "variante": "nominal",
+            "periodo": "2025",
+            "territorio": "national",
+            "valor_dicho": "17.9",
+            "direccion": "sube",
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 13,
+      "texto": "El aumento del salario mínimo dejará a miles de personas sin trabajo.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Es una proyección sin cifra exacta: se publica como opinión.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 14,
+      "texto": "Fue el mayor aumento del salario mínimo desde la Constitución de 1991.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "El único número es un año. No hay cifra del indicador que verificar.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 15,
+      "texto": "El Consejo de Estado cuestionó el aumento con una inflación cercana al 5 % y una productividad menor al 1 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "No dice a qué periodo corresponde la inflación; sin periodo no hay dato comparable. Productividad no es un indicador del catálogo.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "67e7645b-2e48-4739-86c9-43dbcdef1ef7",
+            "texto_citado": "inflación cercana al 5 %",
+            "indicador": "inflation",
+            "variante": null,
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "5",
+            "direccion": null,
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "b4ac4dfc-f816-4f69-ae46-df44ccaa1ebe",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. El texto no dice qué variación del indicador cita.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.730729+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 16,
+      "texto": "La inflación anual de septiembre de 2026 fue 6,29 %, 1,11 puntos más que un año antes.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "6.29",
+            "conclusion": "se_sostiene"
+          }
+        ],
+        "ninguna_conclusion_salvo_requeridas": [
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "6,29 % coincide con el DANE. El cambio de 1,11 puntos no lo publica la fuente y no debe recibir veredicto (menos aún \"se debilita\").",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "e11af920-310f-41c5-9942-9d50f5d1a76a",
+            "texto_citado": "La inflación anual de septiembre de 2026 fue 6,29 %",
+            "indicador": "inflation",
+            "variante": "anual",
+            "periodo": "2026-09",
+            "territorio": "national",
+            "valor_dicho": "6.29",
+            "direccion": "sube",
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "e9368d4e-be6a-407a-a539-089c9f38a4cb",
+              "version": 1,
+              "conclusion": "se_sostiene",
+              "explicacion": "El texto indica 6,29 %. Según el DANE, el dato oficial de septiembre de 2026 es 6,29 %. La cifra coincide con la fuente oficial.",
+              "serie": "dane_ipc_annual_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.734857+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "6528c480-3f86-41c5-bdea-b4cbf57c2cc6",
+                  "rol": "citada",
+                  "serie": "dane_ipc_annual_national",
+                  "nombre_serie": "Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-09",
+                  "valor": "6.29"
+                },
+                {
+                  "observacion_id": "658e8d17-8f74-4c03-9f92-94850b2e7378",
+                  "rol": "completa",
+                  "serie": "dane_ipc_annual_national",
+                  "nombre_serie": "Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2025-09",
+                  "valor": "5.18"
+                },
+                {
+                  "observacion_id": "82b23ef5-d052-4ffa-af47-72c626ace02f",
+                  "rol": "completa",
+                  "serie": "dane_ipc_annual_national",
+                  "nombre_serie": "Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-08",
+                  "valor": "6.24"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          },
+          {
+            "id": "aabef73b-cfb0-45e1-b0a1-6ae8663afcf0",
+            "texto_citado": "1,11 puntos más que un año antes",
+            "indicador": "inflation",
+            "variante": "anual",
+            "periodo": "2026-09",
+            "territorio": "national",
+            "valor_dicho": "1.11",
+            "direccion": "sube",
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 17,
+      "texto": "La inflación de agosto de 2026 fue 0,39 %: una inflación bajísima.",
+      "categoria": "con_dato",
+      "esperado": {
+        "alguna_de": [
+          {
+            "conclusion": "sin_dato_comparable",
+            "motivo_contiene": "variaci"
+          },
+          {
+            "prueba": "variante_equivocada"
+          }
+        ]
+      },
+      "por_que": "0,39 % es la variación mensual; la anual de agosto fue 6,24 %. Acierta si señala que no dice qué variación cita o que la cifra es de otra variante. Darla por buena sin más es no detectar la trampa.",
+      "acierto": false,
+      "nota": "no se cumple ninguna de las alternativas esperadas",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "8327b920-830d-4c5d-bae8-66421bdd1a3a",
+            "texto_citado": "inflación de agosto de 2026 fue 0,39 %",
+            "indicador": "inflation",
+            "variante": "mensual",
+            "periodo": "2026-08",
+            "territorio": "national",
+            "valor_dicho": "0.39",
+            "direccion": "baja",
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 18,
+      "texto": "Los analistas proyectaban una inflación anual de 6,33 % para septiembre de 2026.",
+      "categoria": "proyeccion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Es una proyección, no un dato observado. Verificarla como si fuera una afirmación sobre el dato sería un error.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 19,
+      "texto": "El desempleo de julio de 2026 fue 8,1 %, 0,7 puntos menos que en julio de 2025.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "8.1",
+            "conclusion": "se_sostiene"
+          }
+        ],
+        "ninguna_conclusion_salvo_requeridas": [
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "El DANE da 8,1 % para julio de 2026. Los 0,7 puntos son un cambio no publicado.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "70f67818-980f-45ef-9ab0-eb08f31b930d",
+            "texto_citado": "8,1 %",
+            "indicador": "unemployment",
+            "variante": "tasa",
+            "periodo": "2026-07",
+            "territorio": "national",
+            "valor_dicho": "8.1",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "11087e31-83e4-4079-9661-6a95e4d56bc6",
+              "version": 1,
+              "conclusion": "se_sostiene",
+              "explicacion": "El texto indica 8,1 %. Según DANE, el dato oficial de julio de 2026 es 8,1 %. La serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "dane_geih_unemployment_rate_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.748541+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "07efad4f-c17f-449e-9ca8-5a4bb69cfc7f",
+                  "rol": "citada",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-07",
+                  "valor": "8.104577621609879"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "coverage_2014, marco_2018_start_conflict"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          },
+          {
+            "id": "5cd2fed4-84b5-4681-adac-0fee74e651c9",
+            "texto_citado": "0,7 puntos",
+            "indicador": "unemployment",
+            "variante": "tasa",
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "0.7",
+            "direccion": "baja",
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 20,
+      "texto": "El desempleo se disparó: pasó de 8,1 % en julio a 9,4 % en agosto de 2026.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "9.4",
+            "prueba": "nota_serie"
+          }
+        ]
+      },
+      "por_que": "Las cifras coinciden, pero agosto de 2026 tiene una nota oficial (ajuste de los factores de expansión por el sismo del 10 de agosto) que debe acompañar el dato.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "6bcd694d-66af-48cd-9173-8bbcd190bb34",
+            "texto_citado": "8,1 % en julio",
+            "indicador": "unemployment",
+            "variante": "tasa",
+            "periodo": "2026-07",
+            "territorio": "national",
+            "valor_dicho": "8.1",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "9b73bb5c-b8bc-405a-a142-f60e0fbf758e",
+              "version": 1,
+              "conclusion": "se_sostiene",
+              "explicacion": "El texto indica 8,1 %. Según el DANE, el dato oficial de julio de 2026 es 8,1 %. La cifra coincide con la fuente oficial y la serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "dane_geih_unemployment_rate_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.755751+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "07efad4f-c17f-449e-9ca8-5a4bb69cfc7f",
+                  "rol": "citada",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-07",
+                  "valor": "8.104577621609879"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "coverage_2014, marco_2018_start_conflict"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          },
+          {
+            "id": "62d89909-fa52-4035-a059-378b575f52f8",
+            "texto_citado": "9,4 % en agosto de 2026",
+            "indicador": "unemployment",
+            "variante": "tasa",
+            "periodo": "2026-08",
+            "territorio": "national",
+            "valor_dicho": "9.4",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "93ccaa50-72c4-46be-befc-fb545883f4b4",
+              "version": 1,
+              "conclusion": "se_sostiene",
+              "explicacion": "El texto indica 9,4 %. Según el DANE, el dato oficial de agosto de 2026 es 9,4 %. La cifra coincide con la fuente oficial y la serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "dane_geih_unemployment_rate_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.759390+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "af7f6de4-66db-4228-8acc-6e17c63889c9",
+                  "rol": "citada",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-08",
+                  "valor": "9.3636797215898682"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "coverage_2014, earthquake_adjustment_2026_08, marco_2018_start_conflict"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 21,
+      "texto": "Las relaciones laborales dependientes bajaron 0,4 % mientras baja el desempleo.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Relaciones laborales (RELAB) no es una serie del catálogo, y el 0,4 % no es una tasa de desempleo.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 22,
+      "texto": "La deuda pública llegó a un récord de $1.238,2 billones en febrero de 2026.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública conectada.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "ff58a39e-2163-422f-90a1-d9148a301f11",
+            "texto_citado": "$1.238,2 billones",
+            "indicador": "public_debt",
+            "variante": "nominal",
+            "periodo": "2026-02",
+            "territorio": "national",
+            "valor_dicho": "1238.2",
+            "direccion": null,
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "e8b3ee90-930c-45e3-9ce5-dfffe2f5fcb7",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. No hay una serie oficial registrada para esa variante del indicador.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.766739+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 23,
+      "texto": "En enero la deuda equivalía al 65 % del PIB y en febrero al 62,9 %.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "d4c8de66-0f4e-41db-b647-6d22b1e40d24",
+            "texto_citado": "En enero la deuda equivalía al 65 % del PIB",
+            "indicador": "public_debt",
+            "variante": "tasa",
+            "periodo": "2026-01",
+            "territorio": "national",
+            "valor_dicho": "65",
+            "direccion": null,
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          },
+          {
+            "id": "12f9eee4-d7fe-49de-b25e-027c10a6b062",
+            "texto_citado": "en febrero al 62,9 %",
+            "indicador": "public_debt",
+            "variante": "tasa",
+            "periodo": "2026-02",
+            "territorio": "national",
+            "valor_dicho": "62.9",
+            "direccion": null,
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 24,
+      "texto": "La deuda bajó al 60,6 % del PIB en mayo.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "048c4c60-01f7-4006-b372-b3de8294d13f",
+            "texto_citado": "bajó al 60,6 % del PIB en mayo",
+            "indicador": "public_debt",
+            "variante": "tasa",
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "60.6",
+            "direccion": "baja",
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "1b13a98a-941a-4a88-b2e9-6803504540c0",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. No hay una serie oficial registrada para esa variante del indicador.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.779438+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 25,
+      "texto": "La deuda externa bajó del 41,8 % en 2022 al 24,1 % en 2026.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "55dac1a6-f328-4cff-b47a-f17958ae7ccb",
+            "texto_citado": "41,8 %",
+            "indicador": "public_debt",
+            "variante": "tasa",
+            "periodo": "2022",
+            "territorio": "national",
+            "valor_dicho": "41.8",
+            "direccion": null,
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          },
+          {
+            "id": "396939c8-bc5b-4114-9009-8aedf2845e0a",
+            "texto_citado": "24,1 %",
+            "indicador": "public_debt",
+            "variante": "tasa",
+            "periodo": "2026",
+            "territorio": "national",
+            "valor_dicho": "24.1",
+            "direccion": null,
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 26,
+      "texto": "La deuda neta está alrededor del 57 % del PIB.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "e159ce54-67ac-4d9d-ba79-06377541059c",
+            "texto_citado": "La deuda neta está alrededor del 57 % del PIB.",
+            "indicador": "public_debt",
+            "variante": "tasa",
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "57",
+            "direccion": null,
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "c65ca73e-d2b1-4b02-9e67-7dd2f6569850",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. No hay una serie oficial registrada para esa variante del indicador.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.792986+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 27,
+      "texto": "La deuda total es de US$370.000 millones.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Sin serie de deuda pública.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "ab920310-5977-4a14-9e93-516a3a1c7cdc",
+            "texto_citado": "US$370.000 millones",
+            "indicador": "public_debt",
+            "variante": "nominal",
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "370000",
+            "direccion": null,
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "7317482d-b30a-4ed8-b1e1-92f14fcc81a1",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. No hay una serie oficial registrada para esa variante del indicador.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:01:08.801000+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 28,
+      "texto": null,
+      "categoria": "no_evaluable",
+      "por_que": "Plantilla de una gráfica con el eje recortado. Es una imagen, no un texto, y la v1 solo lee texto.",
+      "acierto": false,
+      "nota": "no evaluable",
+      "resultado": null
+    },
+    {
+      "n": 29,
+      "texto": "La inseguridad está peor que nunca, según una encuesta de percepción.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Plantilla sin caso real ni cifra. Una percepción no es un registro oficial; se publica como opinión.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 30,
+      "texto": null,
+      "categoria": "no_evaluable",
+      "por_que": "Plantilla sin caso real. Inventar la cifra de inflación de alimentos rompería la regla de no inventar números.",
+      "acierto": false,
+      "nota": "no evaluable",
+      "resultado": null
+    }
+  ]
+}

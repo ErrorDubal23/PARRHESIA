@@ -1,0 +1,113 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+
+code: inflation_annual_national
+indicator: inflation
+variant: annual
+name: Inflación total anual (variación del IPC a doce meses), total nacional
+definition: >
+  Variación porcentual del Índice de Precios al Consumidor (IPC) total nacional
+  frente al mismo mes del año anterior. El IPC mide la evolución del costo
+  promedio de una canasta de bienes y servicios representativa del consumo final
+  de los hogares.
+unit: percent
+unit_label: Variación porcentual anual
+frequency: monthly
+geography: national
+
+producer: DANE
+access_channel: banrep_suameca
+
+external:
+  menu_id: 100001
+  series_id: 15270
+  series_name: Inflación total anual
+  url: https://suameca.banrep.gov.co/estadisticas-economicas-back/rest/estadisticaEconomicaRestService/consultaMenuXId?idMenu=100001
+  # The menu also returns series 853 (inflation target). It must be ignored.
+  ignore_series_ids: [853]
+
+methodology:
+  technical_sheet: https://www.dane.gov.co/files/investigaciones/fichas/precios-y-costos/DSO-IPC-MET-001-v7.pdf
+  base: IPC base diciembre 2018 = 100
+  notes: >
+    SUAMECA: "La inflación total al consumidor se refiere a la variación
+    porcentual a doce meses del IPC Total Nacional Ponderado, producido por el
+    DANE" (nota aclaratoria desde 2023-01-01).
+
+history:
+  first_period: 1955-07
+  decimals: 2
+  # SUAMECA dates each month at its last day, midnight Bogotá time (epoch ms).
+  period_from_timestamp: last_day_of_month_bogota
+
+# Filtro 3 (propuesta, basada en la historia de la serie al 25 oct 2026).
+# Fuera de rango o salto mayor: la observación queda en cuarentena para revisión
+# (no se rechaza ni se borra; no se usa hasta que una persona la revise).
+plausibility:
+  min: -5.0
+  max: 50.0        # máximo histórico: 41,65 % (1955-2026)
+  max_step: 2.0    # salto mensual máximo desde 2005: 1,35 pp
+  max_step_applies_to: new_observations   # no a la carga inicial del historial
+  no_gaps: true
+  no_duplicates: true
+
+# Saltos históricos mayores a max_step (calculados sobre la serie de SUAMECA
+# descargada el 25 oct 2026). Documentados para que no queden en cuarentena.
+known_exceptions:
+  - periods: [1957-06, 1957-07, 1957-08, 1958-06, 1958-07, 1963-01, 1963-02,
+              1963-03, 1963-04, 1963-06, 1964-01, 1964-02, 1964-03, 1964-04,
+              1964-05, 1964-08, 1964-10, 1965-10, 1965-12, 1966-02, 1967-04,
+              1973-03, 1973-04, 1973-05, 1974-01, 1974-05, 1974-10, 1975-10,
+              1976-06, 1976-07, 1976-11, 1977-03, 1977-04, 1977-05, 1977-07,
+              1977-08, 1977-09, 1977-10, 1977-11, 1978-02, 1978-04, 1978-05,
+              1978-10, 1979-01, 1979-08, 1979-09, 1980-03, 1980-04, 1981-02,
+              1985-05, 1985-07, 1986-05, 1986-06, 1986-08, 1987-05, 1987-06,
+              1988-02, 1988-04, 1999-04]
+    largest_change: "-6,79 pp (1964-02: de 30,67 % a 23,88 %)"
+    explanation: >
+      59 saltos mensuales mayores a 2 pp entre 1957 y 1999 (máximo de la serie:
+      41,65 % en 1977). Desde 2000 no hay ningún salto mayor a 2 pp. Sin
+      explicación documentada.
+    explanation_source:
+
+
+# Filtro 4. "precision" = decimales con que se publicó la referencia.
+reference_values:
+  - period: 2026-08
+    value: "6.24"
+    precision: 2
+    published_by: DANE
+    document: Boletín técnico IPC agosto 2026 (Bogotá, 7 de septiembre de 2026)
+    url: https://www.dane.gov.co/files/operaciones/IPC/ago2026/bol-IPC-ago2026.pdf
+  - period: 2026-09
+    value: "6.29"
+    precision: 2
+    published_by: DANE
+    document: Boletín técnico IPC septiembre 2026 (Bogotá, 7 de octubre de 2026)
+    url: https://www.dane.gov.co/files/operaciones/IPC/sep2026/bol-IPC-sep2026.pdf
+
+# Filtro 5: contrastar con la serie del conector del DANE cuando exista.
+contrast_with: [dane_ipc_annual_national]
+
+# Confirmado en la metodología del DANE (DSO-IPC-MET-001-v7, dic 2019, p. 57):
+# "Los resultados publicados por el IPC son de carácter definitivo."
+# Por eso cualquier cambio de un valor histórico dispara la alerta del filtro 6.
+status: final_on_release
+status_source:
+  document: Metodología general IPC, DSO-IPC-MET-001-v7 (DANE, diciembre de 2019), página 57
+  url: https://www.dane.gov.co/files/investigaciones/fichas/precios-y-costos/DSO-IPC-MET-001-v7.pdf
+  sha256: f677f1cfbb05c28f66424bf1f3fec38c2bba956a3168afc3ca66ade5028f9739
+  retrieved_on: 2026-10-25
+
+# Un cambio de base (hoy diciembre 2018 = 100) se registra como serie nueva,
+# con ficha propia; nunca como revisión ni sobrescritura de esta serie.
+base_change_policy: new_series
+
+open_questions: []
+
+approval:
+  status: approved
+  approved_by: Dubal Aguilar Torres
+  approved_on: 2026-10-25
+  content_sha256: 03dce98e2311727ae877586510c867e0add86a410ce5ed1ac60684359b11750d
+  comments: "Revisada y aprobada por Dubal Aguilar Torres; bloque escrito por el asistente por instrucción suya."

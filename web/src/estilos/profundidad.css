@@ -1,0 +1,260 @@
+/* Profundidad, vidrio y entrada (22 nov 2026). Se carga después de app.css y solo cambia cómo se ven y aparecen
+   las superficies, no su contenido.
+   - Tres alturas: el fondo (seda, al fondo de verdad), el vidrio (tarjetas, menú, paneles) y lo que se toca
+     (al pasar el cursor una tarjeta se levanta y se inclina hacia él; ver Relieve.ts).
+   - Vidrio: superficie translúcida que desenfoca el fondo, borde con brillo arriba y sombra en capas.
+   - Entrada: cada página entra con un leve giro en profundidad y sus elementos en cascada; las barras crecen.
+   Todo se apaga con "reducir movimiento". Sin colores nuevos: solo transparencias de la paleta. */
+
+:root, :root[data-tema="claro"] {
+  --vidrio: rgba(251, 248, 243, 0.6);
+  --vidrio-fuerte: rgba(251, 248, 243, 0.82);
+  --vidrio-tarjeta: rgba(251, 248, 243, 0.78);
+  --vidrio-borde: rgba(255, 255, 255, 0.7);
+  --vidrio-filo: rgba(120, 100, 70, 0.14);
+  --brillo: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  --elevacion-1: 0 1px 1px rgba(60, 45, 25, 0.05), 0 6px 12px -4px rgba(60, 45, 25, 0.08), 0 22px 40px -18px rgba(60, 45, 25, 0.24);
+  --elevacion-2: 0 2px 3px rgba(60, 45, 25, 0.06), 0 14px 24px -8px rgba(60, 45, 25, 0.14), 0 42px 70px -24px rgba(60, 45, 25, 0.34);
+  --velo-borde: rgba(110, 85, 50, 0.16);
+  --hundido: rgba(226, 216, 199, 0.55);
+  --hundido-activo: rgba(220, 208, 188, 0.7);
+  --sombra-hundida: inset 0 2px 6px rgba(70, 52, 28, 0.16), inset 0 1px 2px rgba(70, 52, 28, 0.12), 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+:root[data-tema="oscuro"] {
+  --vidrio: rgba(30, 28, 25, 0.58);
+  --vidrio-fuerte: rgba(30, 28, 25, 0.82);
+  --vidrio-tarjeta: rgba(30, 28, 25, 0.74);
+  --vidrio-borde: rgba(255, 255, 255, 0.09);
+  --vidrio-filo: rgba(255, 255, 255, 0.06);
+  --brillo: inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  --elevacion-1: 0 1px 1px rgba(0, 0, 0, 0.3), 0 8px 16px -6px rgba(0, 0, 0, 0.45), 0 26px 48px -20px rgba(0, 0, 0, 0.7);
+  --elevacion-2: 0 2px 3px rgba(0, 0, 0, 0.35), 0 16px 28px -8px rgba(0, 0, 0, 0.55), 0 48px 80px -24px rgba(0, 0, 0, 0.85);
+  --velo-borde: rgba(0, 0, 0, 0.55);
+  --hundido: rgba(0, 0, 0, 0.28);
+  --hundido-activo: rgba(0, 0, 0, 0.36);
+  --sombra-hundida: inset 0 2px 7px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* --- 1. El fondo, al fondo ---------------------------------------------------------------------------------- */
+/* Rendimiento (medido: el scroll bajaba a ~25 cuadros/s): nada de desenfoque sobre lo que se anima y el
+   paralaje lo mueve el navegador con una animación ligada al scroll, sin JavaScript en cada evento. Lo lejano
+   se distingue por opacidad y por moverse menos. */
+.seda__plano { position: absolute; inset: -8vh 0; will-change: transform; }
+.seda__plano--lejos { opacity: 0.75; }
+@supports (animation-timeline: scroll()) {
+  .seda__plano--lejos { animation: paralaje-lejos linear both; animation-timeline: scroll(root); }
+  .seda__plano--cerca { animation: paralaje-cerca linear both; animation-timeline: scroll(root); }
+}
+@keyframes paralaje-lejos { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, -3vh, 0); } }
+@keyframes paralaje-cerca { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, -8vh, 0); } }
+.seda__velo {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 85% 75% at 55% 45%, transparent 45%, var(--velo-borde) 100%);
+}
+
+/* --- 2. Vidrio ------------------------------------------------------------------------------------------------- */
+/* Tarjetas de las listas (pueden ser decenas): translúcidas, con brillo y sombra, pero sin backdrop-filter, que
+   obligaba a desenfocar de nuevo el fondo animado detrás de cada una en cada cuadro. */
+.tarjeta, .publicacion, .comunidad-fila, .grafica-tendencias {
+  background: var(--vidrio-tarjeta);
+  border: 1px solid var(--vidrio-borde);
+  box-shadow: var(--brillo), var(--elevacion-1);
+}
+/* Desenfoque real (vidrio esmerilado) solo en las pocas superficies que flotan sobre todo. */
+.buscador, .aviso-analisis {
+  background: var(--vidrio);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+          backdrop-filter: blur(14px) saturate(1.3);
+  border: 1px solid var(--vidrio-borde);
+  box-shadow: var(--brillo), var(--elevacion-1);
+}
+:root[data-tema="oscuro"] .tarjeta, :root[data-tema="oscuro"] .publicacion, :root[data-tema="oscuro"] .buscador,
+:root[data-tema="oscuro"] .comunidad-fila, :root[data-tema="oscuro"] .grafica-tendencias, :root[data-tema="oscuro"] .aviso-analisis {
+  border-color: var(--vidrio-filo);
+}
+/* Lo que va dentro de otra tarjeta no repite el vidrio. */
+.publicacion .tarjeta, .tarjeta .tarjeta {
+  background: color-mix(in srgb, var(--superficie) 55%, transparent); box-shadow: none;
+}
+/* La publicación original dentro de otra (cita o respuesta): hundida en la tarjeta, como un hueco en la
+   superficie. Sombra interior arriba y un filo de luz abajo; así se lee como "esto es de otra persona". */
+.incrustada {
+  background: var(--hundido);
+  border: 1px solid transparent;
+  box-shadow: var(--sombra-hundida);
+  transition: box-shadow 0.25s ease, background 0.25s ease;
+}
+.incrustada:hover { border-color: transparent; background: var(--hundido-activo); }
+/* Paneles que se abren encima: más opacos, con más altura. */
+.compositor, .panel-cuenta {
+  background: var(--vidrio-fuerte);
+  -webkit-backdrop-filter: blur(26px) saturate(1.4); backdrop-filter: blur(26px) saturate(1.4);
+  border: 1px solid var(--vidrio-borde); box-shadow: var(--brillo), var(--elevacion-2);
+}
+.compositor::backdrop { background: rgba(18, 17, 16, 0.35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.buscador { border-radius: 18px; }
+.buscador:focus-within { box-shadow: var(--brillo), var(--elevacion-2); border-color: var(--arena); }
+
+/* --- 3. El menú, un panel que flota ----------------------------------------------------------------------- */
+@media (min-width: 761px) {
+  .lateral {
+    top: 14px; height: calc(100vh - 28px); margin: 14px 0 14px 14px; border-radius: 26px; border-right: 0;
+    background: var(--vidrio);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3);
+    border: 1px solid var(--vidrio-borde); box-shadow: var(--brillo), var(--elevacion-1);
+  }
+  :root[data-tema="oscuro"] .lateral { border-color: var(--vidrio-filo); }
+  .lateral__enlace.active::before { left: -9px; }
+  .lateral__enlace.active { background: color-mix(in srgb, var(--arena-suave) 85%, transparent); box-shadow: 0 1px 0 var(--vidrio-borde) inset, 0 6px 14px -8px rgba(60, 45, 25, 0.35); }
+}
+@media (max-width: 760px) {
+  .lateral { background: var(--vidrio-fuerte); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+}
+.publicar-flotante { box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, var(--elevacion-2); }
+
+/* --- 4. Relieve: lo que se toca sobresale ------------------------------------------------------------------- */
+.publicacion, .comunidad-fila, .carpeta, .tema-portada, .persona, .ficha-dato {
+  --alza: 0px;
+  transform: perspective(1100px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg)) translate3d(0, var(--alza), 0);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s ease;
+}
+.publicacion, .comunidad-fila, .ficha-dato { position: relative; }
+/* La sombra alta ya está pintada en una capa aparte; al pasar el cursor solo cambia su opacidad (barato). */
+.publicacion::after, .comunidad-fila::after, .ficha-dato::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none;
+  box-shadow: var(--elevacion-2); opacity: 0; transition: opacity 0.35s ease;
+}
+.publicacion:hover::after, .comunidad-fila:hover::after, .ficha-dato:hover::after { opacity: 1; }
+.publicacion:hover, .comunidad-fila:hover, .ficha-dato:hover { --alza: -4px; }
+.carpeta:hover, .persona:hover { --alza: -3px; }
+.tema-portada:hover { --alza: -2px; }
+.recorte { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.recorte:hover { transform: translate3d(0, -3px, 0); }
+/* Mientras sigue al cursor, la inclinación responde rápido; al soltar vuelve despacio (la transición de arriba). */
+.publicacion:hover, .comunidad-fila:hover, .carpeta:hover, .tema-portada:hover, .persona:hover, .ficha-dato:hover {
+  transition: transform 0.12s ease-out, border-color 0.2s ease;
+}
+
+/* --- 5. Entrada ----------------------------------------------------------------------------------------------- */
+@keyframes surgir {
+  from { opacity: 0; transform: perspective(1100px) translate3d(0, 22px, -60px) rotateX(7deg); }
+}
+@keyframes surgir-suave { from { opacity: 0; transform: translate3d(0, 12px, 0); } }
+@keyframes deslizar-menu { from { opacity: 0; transform: translate3d(-22px, 0, 0) scale(0.98); } }
+@keyframes crecer { from { transform: scaleX(0); } }
+@keyframes aparecer-valor { from { opacity: 0; } }
+
+/* "backwards": la animación solo pone el punto de partida; al terminar manda el estilo normal (y el relieve). */
+.principal > *, .derecha > *, .lateral, .lateral__enlace {
+  animation: surgir 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+.lateral { animation-name: deslizar-menu; animation-duration: 0.7s; }
+.lateral__enlace { animation-name: surgir-suave; animation-duration: 0.45s; }
+.principal > :nth-child(2) { animation-delay: 60ms; }
+.principal > :nth-child(3) { animation-delay: 120ms; }
+.principal > :nth-child(4) { animation-delay: 180ms; }
+.principal > :nth-child(n+5) { animation-delay: 240ms; }
+.derecha > :nth-child(1) { animation-delay: 140ms; }
+.derecha > :nth-child(2) { animation-delay: 220ms; }
+.derecha > :nth-child(n+3) { animation-delay: 300ms; }
+
+/* Listas: cada elemento en cascada (los que llegan después al hacer scroll entran sin esperar). */
+.lista-publicaciones > *, .recortes > *, .figuras > *, .lista-comunidades > li, .grafica-tendencias__filas > li,
+.integrantes > li, .lista-datos > * {
+  animation: surgir 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+:is(.lista-publicaciones, .recortes, .figuras, .lista-comunidades, .grafica-tendencias__filas, .integrantes, .lista-datos) > :nth-child(2) { animation-delay: 70ms; }
+:is(.lista-publicaciones, .recortes, .figuras, .lista-comunidades, .grafica-tendencias__filas, .integrantes, .lista-datos) > :nth-child(3) { animation-delay: 140ms; }
+:is(.lista-publicaciones, .recortes, .figuras, .lista-comunidades, .grafica-tendencias__filas, .integrantes, .lista-datos) > :nth-child(4) { animation-delay: 210ms; }
+:is(.lista-publicaciones, .recortes, .figuras, .lista-comunidades, .grafica-tendencias__filas, .integrantes, .lista-datos) > :nth-child(5) { animation-delay: 280ms; }
+:is(.lista-publicaciones, .recortes, .figuras, .lista-comunidades, .grafica-tendencias__filas, .integrantes, .lista-datos) > :nth-child(6) { animation-delay: 350ms; }
+:is(.lista-publicaciones, .recortes, .figuras, .lista-comunidades, .grafica-tendencias__filas, .integrantes, .lista-datos) > :nth-child(7) { animation-delay: 410ms; }
+:is(.lista-publicaciones, .recortes, .figuras, .lista-comunidades, .grafica-tendencias__filas, .integrantes, .lista-datos) > :nth-child(n+8) { animation-delay: 460ms; }
+
+/* Las barras de tendencias crecen desde el eje, en cascada, y su número aparece al final. */
+.barra-tendencia__total { transform-origin: left center; animation: crecer 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+.barra-tendencia__valor { animation: aparecer-valor 0.4s ease backwards; animation-delay: 0.75s; }
+.grafica-tendencias__filas > li:nth-child(2) .barra-tendencia__total { animation-delay: 70ms; }
+.grafica-tendencias__filas > li:nth-child(3) .barra-tendencia__total { animation-delay: 140ms; }
+.grafica-tendencias__filas > li:nth-child(4) .barra-tendencia__total { animation-delay: 210ms; }
+.grafica-tendencias__filas > li:nth-child(5) .barra-tendencia__total { animation-delay: 280ms; }
+.grafica-tendencias__filas > li:nth-child(n+6) .barra-tendencia__total { animation-delay: 350ms; }
+
+/* Avisos y paneles: aparecen desde abajo. */
+.aviso-analisis { animation: surgir-suave 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+
+/* --- Movimiento reducido: todo quieto y sin inclinación ----------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; }
+  .publicacion, .comunidad-fila, .carpeta, .recorte, .tema-portada, .persona, .ficha-dato { transform: none !important; }
+  .seda__plano { transform: none !important; }
+}
+
+/* --- 6. Botones con volumen hacia el frente (sutil) ------------------------------------------------------------
+   Degradado de arriba abajo, un brillo fino en el filo superior, un canto inferior más oscuro (el grosor) y una
+   sombra corta. Al pasar el cursor sube 1 px; al presionar baja y el canto desaparece, como una tecla.
+   Solo transform y sombra en estos pocos elementos: no afecta la fluidez. */
+:root, :root[data-tema="claro"] {
+  --boton-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --boton-canto: inset 0 -2px 0 rgba(70, 52, 28, 0.12);
+  --boton-sombra: 0 1px 1px rgba(60, 45, 25, 0.1), 0 3px 8px -3px rgba(60, 45, 25, 0.28);
+  --boton-sombra-alta: 0 2px 2px rgba(60, 45, 25, 0.1), 0 7px 14px -5px rgba(60, 45, 25, 0.34);
+  --boton-claro-arriba: #fffdf9;
+  --boton-claro-abajo: #efe7da;
+}
+:root[data-tema="oscuro"] {
+  --boton-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  --boton-canto: inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+  --boton-sombra: 0 1px 1px rgba(0, 0, 0, 0.35), 0 3px 8px -3px rgba(0, 0, 0, 0.6);
+  --boton-sombra-alta: 0 2px 2px rgba(0, 0, 0, 0.4), 0 8px 16px -5px rgba(0, 0, 0, 0.7);
+  --boton-claro-arriba: #34302b;
+  --boton-claro-abajo: #25221e;
+}
+
+/* Principal (tinta): el mismo degradado sirve en claro (botón oscuro) y en oscuro (botón crema). */
+.boton:not(.boton--borde) {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tinta) 84%, white) 0%, var(--tinta) 52%,
+                                      color-mix(in srgb, var(--tinta) 88%, black) 100%);
+  border-color: color-mix(in srgb, var(--tinta) 80%, black);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -2px 0 rgba(0, 0, 0, 0.3), var(--boton-sombra);
+}
+:root[data-tema="oscuro"] .boton:not(.boton--borde) {
+  border-color: color-mix(in srgb, var(--tinta) 85%, black);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 0 rgba(90, 70, 40, 0.28), var(--boton-sombra);
+}
+/* El relleno arena del cursor conserva el mismo volumen. */
+.boton::after { background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 55%), var(--arena); box-shadow: inset 0 -2px 0 rgba(70, 52, 28, 0.22); }
+
+/* Claros: borde, seguir, íconos, flechas del carrusel y las opciones de un conmutador. */
+.boton--borde, .boton-seguir, .boton-icono, .tema-portada__flecha {
+  background: linear-gradient(180deg, var(--boton-claro-arriba), var(--boton-claro-abajo));
+  box-shadow: var(--boton-brillo), var(--boton-canto), var(--boton-sombra);
+}
+.boton-seguir { border-color: color-mix(in srgb, var(--arena) 45%, transparent); }
+.boton-seguir:hover { background: linear-gradient(180deg, color-mix(in srgb, var(--arena) 55%, white), var(--arena)); color: #1e1e1e; }
+.boton-seguir--activo { background: transparent; box-shadow: var(--sombra-hundida); border-color: transparent; }
+
+/* Movimiento común: subir al pasar, hundirse al presionar. */
+.boton, .boton-seguir, .boton-icono, .tema-portada__flecha {
+  transition: color 0.25s ease, transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+.boton:hover:not(:disabled), .boton-seguir:hover, .boton-icono:hover, .tema-portada__flecha:hover { transform: translateY(-1px); }
+.boton:not(.boton--borde):hover:not(:disabled) { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -2px 0 rgba(0, 0, 0, 0.3), var(--boton-sombra-alta); }
+.boton--borde:hover:not(:disabled), .boton-seguir:hover, .boton-icono:hover, .tema-portada__flecha:hover {
+  box-shadow: var(--boton-brillo), var(--boton-canto), var(--boton-sombra-alta);
+}
+.boton:active:not(:disabled), .boton-seguir:active, .boton-icono:active, .tema-portada__flecha:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.22), 0 0 0 rgba(0, 0, 0, 0);
+  transition-duration: 0.06s;
+}
+/* El flotante de publicar: mismo volumen, más alto. */
+.publicar-flotante {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tinta) 82%, white) 0%, var(--tinta) 55%,
+                                      color-mix(in srgb, var(--tinta) 88%, black) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -3px 0 rgba(0, 0, 0, 0.3), var(--elevacion-2);
+}
+.publicar-flotante:active { transform: translateY(2px); box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3), var(--elevacion-1); }
+@media (prefers-reduced-motion: reduce) {
+  .boton:hover, .boton:active, .boton-seguir:hover, .boton-seguir:active, .boton-icono:hover, .boton-icono:active { transform: none !important; }
+}

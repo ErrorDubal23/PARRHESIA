@@ -1,0 +1,771 @@
+{
+  "resumen": {
+    "conjunto": "control",
+    "etiqueta": "correcciones",
+    "fecha": "2026-11-21T21:04:29",
+    "aciertos": 9,
+    "total": 10,
+    "evaluables": 10,
+    "meta": 8,
+    "aciertos_con_dato": 6,
+    "total_con_dato": 7
+  },
+  "filas": [
+    {
+      "n": 1,
+      "texto": "La tasa de desempleo en marzo de 2026 fue de 8,8 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "8.8",
+            "conclusion": "se_sostiene"
+          }
+        ]
+      },
+      "por_que": "El DANE publica 8,79 % para marzo de 2026; dicho con un decimal es 8,8 %.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "ff3004f5-c9bf-434d-94d4-0c60c40bee15",
+            "texto_citado": "tasa de desempleo en marzo de 2026 fue de 8,8 %",
+            "indicador": "unemployment",
+            "variante": "tasa",
+            "periodo": "2026-03",
+            "territorio": "national",
+            "valor_dicho": "8.8",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "333246c0-804a-4157-9ec2-048fcd678e80",
+              "version": 1,
+              "conclusion": "se_sostiene",
+              "explicacion": "El texto indica 8,8 %. Según DANE, el dato oficial de marzo de 2026 es 8,8 %. La cifra coincide con la fuente oficial y la serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "dane_geih_unemployment_rate_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:04:10.127231+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "e53d0750-5f6d-4442-a3e7-ae1711b0ae3e",
+                  "rol": "citada",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-03",
+                  "valor": "8.7933861147572046"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "coverage_2014, marco_2018_start_conflict"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 2,
+      "texto": "En julio de 2026 la inflación anual bajó a 6,03 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "6.03",
+            "conclusion": "se_debilita",
+            "prueba": "periodo_limitado"
+          }
+        ]
+      },
+      "por_que": "La cifra coincide, pero que haya bajado depende de con qué se compare: frente a junio (6,14 %) bajó; frente a julio de 2025 (4,90 %) subió.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "52f8cd1e-535d-460b-8017-7d2573bd59ca",
+            "texto_citado": "inflación anual bajó a 6,03 %",
+            "indicador": "inflation",
+            "variante": "anual",
+            "periodo": "2026-07",
+            "territorio": "national",
+            "valor_dicho": "6.03",
+            "direccion": "baja",
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "3a3b0fbc-5eab-4452-a5fb-7ffc1a5167b1",
+              "version": 1,
+              "conclusion": "se_debilita",
+              "explicacion": "Según DANE, el dato oficial de julio de 2026 es 6,03 %. Que haya subido o bajado depende del periodo con que se compare: frente al mes anterior y frente al mismo mes del año anterior el resultado no es el mismo.",
+              "serie": "dane_ipc_annual_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:04:10.142659+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "ef6c2907-2adc-423b-bcc2-39828fdfad7f",
+                  "rol": "citada",
+                  "serie": "dane_ipc_annual_national",
+                  "nombre_serie": "Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-07",
+                  "valor": "6.03"
+                },
+                {
+                  "observacion_id": "260c5d12-2d57-423f-a8d1-3fdaa52fb40f",
+                  "rol": "completa",
+                  "serie": "dane_ipc_annual_national",
+                  "nombre_serie": "Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2025-07",
+                  "valor": "4.90"
+                },
+                {
+                  "observacion_id": "8b4350cc-234b-415a-b383-de46009688bb",
+                  "rol": "completa",
+                  "serie": "dane_ipc_annual_national",
+                  "nombre_serie": "Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-06",
+                  "valor": "6.14"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "con_brecha",
+                  "detalle": "La dirección depende del periodo con que se compare."
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 3,
+      "texto": "En agosto de 2026 el desempleo bajó a 9,4 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "9.4",
+            "conclusion": "se_invierte",
+            "prueba": "nota_serie"
+          }
+        ]
+      },
+      "por_que": "La cifra coincide (9,36 %), pero subió frente a julio (8,10 %) y frente a agosto de 2025 (8,60 %). Además ese mes tiene la nota oficial del sismo.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "b068a739-0134-468c-baf9-c32890674aa0",
+            "texto_citado": "el desempleo bajó a 9,4 %",
+            "indicador": "unemployment",
+            "variante": "tasa",
+            "periodo": "2026-08",
+            "territorio": "national",
+            "valor_dicho": "9.4",
+            "direccion": "baja",
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "50366022-7eb4-4c8c-ba8f-71a9c3bf25a6",
+              "version": 1,
+              "conclusion": "se_invierte",
+              "explicacion": "Según DANE, el texto indica que bajó, pero los datos oficiales muestran que subió: en agosto de 2026 fue 9,4 %, frente a 8,1 % en julio de 2026 y 8,6 % en agosto de 2025. La serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "dane_geih_unemployment_rate_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:04:10.152912+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "af7f6de4-66db-4228-8acc-6e17c63889c9",
+                  "rol": "citada",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-08",
+                  "valor": "9.3636797215898682"
+                },
+                {
+                  "observacion_id": "302e1138-c0ec-4c43-a5fb-90a2bc02e352",
+                  "rol": "completa",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2025-08",
+                  "valor": "8.5984509167776952"
+                },
+                {
+                  "observacion_id": "07efad4f-c17f-449e-9ca8-5a4bb69cfc7f",
+                  "rol": "completa",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-07",
+                  "valor": "8.104577621609879"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "coverage_2014, earthquake_adjustment_2026_08, marco_2018_start_conflict"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 4,
+      "texto": "La inflación anual de julio de 2026 fue de 0,17 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "0.17",
+            "conclusion": "se_debilita",
+            "prueba": "variante_equivocada"
+          }
+        ]
+      },
+      "por_que": "0,17 % es la variación mensual de julio de 2026; la anual fue 6,03 %.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "7d99c1b6-65ec-48bd-bdc1-0f822aab7f7f",
+            "texto_citado": "La inflación anual de julio de 2026 fue de 0,17 %.",
+            "indicador": "inflation",
+            "variante": "anual",
+            "periodo": "2026-07",
+            "territorio": "national",
+            "valor_dicho": "0.17",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "3c30d7b8-4536-4740-bc58-6f9a3cc55b62",
+              "version": 1,
+              "conclusion": "se_debilita",
+              "explicacion": "Según DANE, el dato oficial de julio de 2026 es 6,03 %. La cifra 0,17 % corresponde a la variación mensual de julio de 2026, no a la que dice el texto.",
+              "serie": "dane_ipc_annual_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:04:15.209360+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "ef6c2907-2adc-423b-bcc2-39828fdfad7f",
+                  "rol": "citada",
+                  "serie": "dane_ipc_annual_national",
+                  "nombre_serie": "Inflación total anual (variación del IPC a doce meses), total nacional, publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-07",
+                  "valor": "6.03"
+                },
+                {
+                  "observacion_id": "757160c6-bee0-4d5f-bbdb-26cec7b6c65e",
+                  "rol": "contraste",
+                  "serie": "inflation_monthly_national",
+                  "nombre_serie": "Inflación total mensual (variación del IPC frente al mes anterior), total nacional",
+                  "fuente": "DANE",
+                  "periodo": "2026-07",
+                  "valor": "0.17"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "con_brecha",
+                  "detalle": "Corresponde a la variación mensual."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 5,
+      "texto": "El desempleo de mayo de 2026 se ubicó en 8,8 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "8.8",
+            "conclusion": "se_debilita",
+            "prueba": "periodo_limitado"
+          }
+        ]
+      },
+      "por_que": "El dato de mayo de 2026 es 8,02 %; 8,8 % es el de abril (8,78 %).",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "0d5cfda6-fe59-46e5-8317-0cef45fc15f4",
+            "texto_citado": "El desempleo de mayo de 2026 se ubicó en 8,8 %.",
+            "indicador": "unemployment",
+            "variante": "tasa",
+            "periodo": "2026-05",
+            "territorio": "national",
+            "valor_dicho": "8.8",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "60f19b3c-3af8-4ab8-bda4-a1f8bd461916",
+              "version": 1,
+              "conclusion": "se_debilita",
+              "explicacion": "Según DANE, el dato oficial de mayo de 2026 es 8,0 %. La cifra 8,8 % corresponde al dato oficial de abril de 2026, no de mayo de 2026. La serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "dane_geih_unemployment_rate_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:04:15.228237+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "32d446b9-9846-45c5-97eb-f39645b7a832",
+                  "rol": "citada",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-05",
+                  "valor": "8.0206511267912131"
+                },
+                {
+                  "observacion_id": "ba6c9eb5-38a9-4b03-981c-0ac1e6e64763",
+                  "rol": "contraste",
+                  "serie": "dane_geih_unemployment_rate_national",
+                  "nombre_serie": "Tasa de desocupación, total nacional (mensual, serie empalmada), publicada por el DANE",
+                  "fuente": "DANE",
+                  "periodo": "2026-04",
+                  "valor": "8.7814568020438788"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "coverage_2014, marco_2018_start_conflict"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "con_brecha",
+                  "detalle": "Corresponde a 2026-04."
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 6,
+      "texto": "En octubre de 2025 se registraron 1.112 homicidios en Colombia.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "1112",
+            "conclusion": "se_sostiene"
+          }
+        ]
+      },
+      "por_que": "Coincide con el conteo de la Policía Nacional para octubre de 2025.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "e0aa603f-c3af-4d23-97d8-6bd18218fc77",
+            "texto_citado": "1.112 homicidios",
+            "indicador": "homicides",
+            "variante": "conteo",
+            "periodo": "2025-10",
+            "territorio": "national",
+            "valor_dicho": "1112",
+            "direccion": null,
+            "estado": "verificada",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "d5d3abc1-cb10-4ecc-98e8-de57004e8b4e",
+              "version": 1,
+              "conclusion": "se_sostiene",
+              "explicacion": "El texto indica 1.112 homicidios. Según la Policía Nacional (SIEDCO), el dato oficial de octubre de 2025 es 1.112. La serie tiene una nota oficial para ese periodo que conviene leer junto al dato.",
+              "serie": "homicides_intentional_national",
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:04:15.238439+00:00",
+              "evidencia": [
+                {
+                  "observacion_id": "dd38f9e1-13dd-4fbc-963d-a12047e0dcbd",
+                  "rol": "citada",
+                  "serie": "homicides_intentional_national",
+                  "nombre_serie": "Homicidio intencional, víctimas por mes, total nacional",
+                  "fuente": "Policía Nacional (SIEDCO)",
+                  "periodo": "2025-10",
+                  "valor": "1112"
+                }
+              ],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "con_brecha",
+                  "detalle": "gender_age_completeness"
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "sin_brecha",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 7,
+      "texto": "En lo corrido de 2026, hasta septiembre, la inflación acumula 5,74 %.",
+      "categoria": "con_dato",
+      "esperado": {
+        "requiere": [
+          {
+            "valor": "5.74",
+            "conclusion": "se_sostiene"
+          }
+        ]
+      },
+      "por_que": "La variación año corrido a septiembre de 2026 es 5,74 % (DANE).",
+      "acierto": false,
+      "nota": "falta una afirmación que cumpla {'valor': '5.74', 'conclusion': 'se_sostiene'}",
+      "resultado": {
+        "estado": "requiere_revision",
+        "afirmaciones": [
+          {
+            "id": "db6b30b6-1ed8-45ff-9dd8-4d7d8710ca48",
+            "texto_citado": "inflación acumula 5,74 %",
+            "indicador": "inflation",
+            "variante": "anio_corrido",
+            "periodo": null,
+            "territorio": "national",
+            "valor_dicho": "5.74",
+            "direccion": null,
+            "estado": "requiere_revision",
+            "consenso": "difieren",
+            "verificacion": null
+          }
+        ]
+      }
+    },
+    {
+      "n": 8,
+      "texto": "En Medellín el desempleo fue de 8,5 % en julio de 2026.",
+      "categoria": "sin_serie",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Solo hay series nacionales registradas; no se compara una ciudad con el total del país.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "lista",
+        "afirmaciones": [
+          {
+            "id": "b3b1cd1d-4f27-4d44-8fe3-8a87e67513fe",
+            "texto_citado": "el desempleo fue de 8,5 % en julio de 2026",
+            "indicador": "unemployment",
+            "variante": "tasa",
+            "periodo": "2026-07",
+            "territorio": "medellín",
+            "valor_dicho": "8.5",
+            "direccion": null,
+            "estado": "no_verificable",
+            "consenso": "coinciden",
+            "verificacion": {
+              "id": "33cad624-6f0b-4348-bb11-933250cbd63e",
+              "version": 1,
+              "conclusion": "sin_dato_comparable",
+              "explicacion": "No hay dato comparable. Solo hay series oficiales registradas para el total nacional.",
+              "serie": null,
+              "motor": "motor-1",
+              "creado_en": "2026-11-22T02:03:59.996562+00:00",
+              "evidencia": [],
+              "pruebas": [
+                {
+                  "codigo": "dato_provisional",
+                  "nombre": "Dato provisional",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "fuente_distinta",
+                  "nombre": "Fuente distinta",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nominal_vs_real",
+                  "nombre": "Nominal frente a real",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "nota_serie",
+                  "nombre": "Nota de la serie",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "periodo_limitado",
+                  "nombre": "Periodo de comparación limitado",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                },
+                {
+                  "codigo": "variante_equivocada",
+                  "nombre": "Variante equivocada",
+                  "resultado": "no_aplica",
+                  "detalle": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "n": 9,
+      "texto": "El Banco de la República espera que la inflación cierre 2026 en 5,5 %.",
+      "categoria": "proyeccion",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "Es una proyección, no un dato observado.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    },
+    {
+      "n": 10,
+      "texto": "Con este gobierno el costo de vida está imposible.",
+      "categoria": "sin_cifra",
+      "esperado": {
+        "ninguna_conclusion": [
+          "se_sostiene",
+          "se_debilita",
+          "se_invierte"
+        ]
+      },
+      "por_que": "No hay cifra: se publica como opinión.",
+      "acierto": true,
+      "nota": "ok",
+      "resultado": {
+        "estado": "sin_cifras",
+        "afirmaciones": []
+      }
+    }
+  ]
+}

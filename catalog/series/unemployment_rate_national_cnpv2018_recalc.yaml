@@ -1,0 +1,49 @@
+# Ficha de serie (filtro 1 del protocolo de verificación, docs/PROYECTO.md).
+# Una persona la revisa y la aprueba antes de conectar la serie.
+# BORRADOR: depende del conector del DANE (todavía no existe).
+
+code: unemployment_rate_national_cnpv2018_recalc
+indicator: unemployment
+variant: monthly_rate_cnpv2018_recalc
+name: Tasa de desocupación, total nacional, serie 2001-2021 recalculada con proyecciones del CNPV 2018 (febrero de 2022)
+definition: >
+  Tasa de desocupación nacional de la GEIH marco 2005, recalculada por el DANE en
+  febrero de 2022 con factores de expansión calibrados con las proyecciones y
+  retroproyecciones de población del CNPV 2018. El DANE la presentó entonces como
+  la nueva serie oficial de consulta; en septiembre de 2022 la reemplazó la serie
+  empalmada. Sirve para explicar diferencias cuando alguien cite una cifra de
+  ese periodo. No reemplaza a unemployment_rate_national.
+unit: percent
+unit_label: Porcentaje
+frequency: monthly
+geography: national
+
+producer: DANE
+access_channel: dane_web
+
+external:
+  url: https://www.dane.gov.co/files/investigaciones/boletines/ech/nuevo-enfoque-conceptual-metodologico-2018/anexo-mercado-laboral-segun-proyecciones-CNPV2018.xlsx
+  published_on: 2022-02-21
+  sheet:   # por confirmar al construir el conector del DANE
+
+methodology:
+  technical_sheet: https://www.dane.gov.co/files/investigaciones/boletines/ech/nuevo-enfoque-conceptual-metodologico-2018/Presentacion-Series-GEIH-marco2005-con-factores2018.pdf
+  notes: >
+    "Actualización de las series de poblaciones e indicadores de Mercado Laboral
+    GEIH marco 2005 con factores de expansión" (DANE, 21 de febrero de 2022).
+
+history:
+  first_period: 2001-01
+  last_period: 2021-12
+
+related_variants: [unemployment_rate_national, unemployment_rate_national_as_published]
+
+open_questions:
+  - Falta descargar el anexo y confirmar la hoja, las columnas y el rango exacto
+    (se hace al construir el conector del DANE).
+
+approval:
+  status: pending
+  approved_by:
+  approved_on:
+  comments:
