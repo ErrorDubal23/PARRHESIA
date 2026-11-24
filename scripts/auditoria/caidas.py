@@ -84,6 +84,7 @@ def caida_grafo():
     pendientes = lambda: sql("SELECT count(*) FROM social.evento_salida e WHERE NOT EXISTS (SELECT 1 FROM social.entrega_evento d "
                              "WHERE d.evento_id = e.id AND d.consumidor = 'grafo') AND e.tipo_evento <> 'declaracion_creada'") == "0"
     caso("MS-11", "el grafo se pone al día con lo publicado mientras estuvo apagado (outbox)", esperar(pendientes, 120))
+    coherente("el grafo detenido")
 
 
 def caida_neo4j():
@@ -97,6 +98,7 @@ def caida_neo4j():
     entregado = lambda: sql(f"SELECT count(*) FROM social.entrega_evento d JOIN social.evento_salida e ON e.id = d.evento_id "
                             f"WHERE d.consumidor = 'grafo' AND e.entidad_id = '{pid}'") != "0"
     caso("MS-11", "lo publicado sin Neo4j llega al grafo cuando vuelve (sin reiniciar el trabajador)", esperar(entregado, 180), pid)
+    coherente("Neo4j detenido")
 
 
 def caida_ia():
@@ -110,6 +112,7 @@ def caida_ia():
     listo = lambda: h.get(f"{API}/verificacion/v1/textos/publicacion/{pid}").json().get("estado") != "pendiente"
     caso("MS-14", "al volver la IA, la verificación se completa sola", esperar(listo, 240, 5),
          h.get(f"{API}/verificacion/v1/textos/publicacion/{pid}").json().get("estado"))
+    coherente("la IA detenida")
 
 
 def caida_social():
@@ -121,6 +124,7 @@ def caida_social():
     compose("start", "social")
     caso("MS-11", "servicio social de vuelta sin reiniciar el gateway",
          esperar(lambda: httpx.get(f"{API}/social/v1/tendencias", timeout=5).status_code == 200, 90))
+    coherente("el servicio social detenido")
 
 
 def caida_db():
@@ -137,6 +141,7 @@ def caida_db():
              esperar(lambda: httpx.get(API + ruta, timeout=5).status_code == 200, 90))
     h = sesion()
     caso("MS-11", "base de vuelta: se puede publicar", publicar(h, "Prueba de caída: publico después de que volvió la base.") is not None)
+    coherente("la base detenida")
 
 
 def reinicio():
@@ -147,6 +152,7 @@ def reinicio():
          esperar(lambda: httpx.get(f"{API}/social/v1/tendencias", timeout=5).status_code == 200, 240, 5))
     despues = sql("SELECT (SELECT count(*) FROM social.publicacion)||'/'||(SELECT count(*) FROM social.usuario)||'/'||(SELECT count(*) FROM verificacion.verificacion)")
     caso("MS-12", f"mismos datos antes y después (publicaciones/cuentas/verificaciones {antes})", antes == despues, despues)
+    coherente("down/up")
 
 
 def reconstruir():
@@ -157,9 +163,65 @@ def reconstruir():
     caso("MS-15", "reconstrucción del grafo desde PostgreSQL", r.returncode == 0, r.stderr[-200:])
     despues = conteos_neo4j()
     caso("MS-15", f"el grafo reconstruido es igual (nodos y relaciones: {antes})", antes == despues, despues)
+    coherente("reconstruir el grafo")
 
 
-PASOS = {"grafo": caida_grafo, "neo4j": caida_neo4j, "ia": caida_ia, "social": caida_social, "db": caida_db,
+def coherente(despues_de):
+    """Después de cada caída, PostgreSQL y Neo4j deben coincidir y las invariantes cumplirse."""
+    r = subprocess.run([sys.executable, str(RAIZ / "scripts/auditoria/coherencia.py")], cwd=RAIZ, capture_output=True, text=True, timeout=400)
+    caso("A2", f"coherencia PostgreSQL ↔ Neo4j e invariantes después de: {despues_de}", r.returncode == 0,
+         "\n".join(l for l in r.stdout.splitlines() if l.startswith("FALLA"))[:400])
+
+
+def base_matada():
+    """A2-07: la base se mata con SIGKILL (como un corte de luz) mientras se publica. Todo lo confirmado (201)
+    debe seguir; lo que no se confirmó no debe quedar a medias."""
+    import threading
+    h = sesion()
+    confirmadas, parar = [], threading.Event()
+    def publicar_sin_parar():
+        i = 0
+        while not parar.is_set():
+            i += 1
+            try:
+                r = h.post(f"{API}/social/v1/publicaciones", json={"texto": f"Prueba de corte de luz {i}."}, timeout=5)
+                if r.status_code == 201:
+                    confirmadas.append(r.json()["id"])
+            except httpx.HTTPError:
+                pass
+            time.sleep(0.05)
+    hilo = threading.Thread(target=publicar_sin_parar); hilo.start()
+    time.sleep(3)
+    compose("kill", "-s", "SIGKILL", "db")
+    time.sleep(3)
+    compose("start", "db")
+    esperar(lambda: "healthy" in compose("ps", "db", "--format", "{{.Status}}").stdout, 120)
+    time.sleep(5)
+    parar.set(); hilo.join()
+    ids = ",".join(f"'{i}'" for i in confirmadas)
+    existen = int(sql(f"SELECT count(*) FROM social.publicacion WHERE id IN ({ids})") or 0) if confirmadas else 0
+    caso("A2-07", f"las {len(confirmadas)} publicaciones confirmadas siguen después del corte", existen == len(confirmadas), f"{existen} de {len(confirmadas)}")
+    a_medias = sql("SELECT count(*) FROM social.publicacion p WHERE p.texto LIKE 'Prueba de corte de luz%' AND NOT EXISTS "
+                   "(SELECT 1 FROM social.evento_salida e WHERE e.entidad_id = p.id::text AND e.tipo_evento = 'publicacion_creada')")
+    caso("A2-07", "ninguna publicación sin su evento del outbox (nada a medias)", a_medias == "0", a_medias)
+    for servicio, ruta in (("social", "/social/v1/tendencias"), ("verificacion", "/verificacion/v1/consejos/general/leer_tema")):
+        caso("A2-07", f"{servicio} se recupera solo tras el corte", esperar(lambda: httpx.get(API + ruta, timeout=5).status_code == 200, 90))
+    coherente("el corte de la base")
+
+
+def parar_todo():
+    """A2-08: docker compose stop y start de todo."""
+    antes = sql("SELECT (SELECT count(*) FROM social.publicacion)||'/'||(SELECT count(*) FROM social.usuario)||'/'||(SELECT count(*) FROM verificacion.verificacion)")
+    compose("stop", timeout=300)
+    compose("start", timeout=600)
+    caso("A2-08", "todo vuelve tras stop/start", esperar(lambda: httpx.get(f"{API}/social/v1/tendencias", timeout=5).status_code == 200, 240, 5))
+    despues = sql("SELECT (SELECT count(*) FROM social.publicacion)||'/'||(SELECT count(*) FROM social.usuario)||'/'||(SELECT count(*) FROM verificacion.verificacion)")
+    caso("A2-08", f"mismos datos (publicaciones/cuentas/verificaciones {antes})", antes == despues, despues)
+    esperar(lambda: "healthy" in compose("ps", "grafo", "--format", "{{.Status}}").stdout, 180)
+    coherente("stop/start de todo")
+
+
+PASOS = {"corte": base_matada, "parar": parar_todo, "grafo": caida_grafo, "neo4j": caida_neo4j, "ia": caida_ia, "social": caida_social, "db": caida_db,
          "reconstruir": reconstruir, "reinicio": reinicio}
 
 

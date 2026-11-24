@@ -35,6 +35,8 @@ export function Marco({ children }: { children: ReactNode }) {
   // Cada página nueva entra con su animación (profundidad.css); dentro de la misma página no se repite.
   const ruta = useLocation().pathname;
   useRelieve();
+  // Cada página nueva empieza arriba (en escritorio se desplaza el cuerpo; en celular, la ventana).
+  useEffect(() => { document.body.scrollTo?.(0, 0); window.scrollTo(0, 0); }, [ruta]);
 
   const abrir = (respondeA?: Publicacion | null, comunidad?: ComunidadDestino) => {
     if (!usuario) return irAEntrar();

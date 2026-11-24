@@ -189,3 +189,5 @@ uv run pytest
 ```
 
 Las pruebas crean una base temporal con todas las migraciones y la borran al terminar: la base real no se toca.
+
+Para revisar que PostgreSQL y Neo4j estén coherentes y que la base cumpla sus reglas: `uv run python scripts/auditoria/coherencia.py` (solo lee).

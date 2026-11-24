@@ -72,7 +72,9 @@ if (recortes.length) {
 // FN-10 · Tendencias: clic en una barra
 await ir("/tendencias");
 const barras = await p.$$(".barra-tendencia");
-caso("FN-10", "la gráfica tiene barras", barras.length > 0, barras.length);
+const hayTendencias = (await api("/social/v1/tendencias")).json.tendencias.length > 0;
+// Sin publicaciones en las últimas 24 horas no hay tendencias: la página debe decirlo (la demo se resiembra el día de la presentación).
+caso("FN-10", hayTendencias ? "la gráfica tiene barras" : "sin tendencias, la página lo explica", hayTendencias ? barras.length > 0 : /Aún no hay tendencias/.test(await texto()), barras.length);
 if (barras.length) {
   await Promise.all([p.waitForNavigation({ waitUntil: "networkidle0" }), barras[0].click()]);
   caso("FN-10", "clic en una barra abre su tendencia", /\/tendencias\/[^/]+$/.test(p.url()), p.url());

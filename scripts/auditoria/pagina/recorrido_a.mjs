@@ -70,7 +70,8 @@ const enInicio = await p.evaluate(() => document.body.innerText);
 caso("FN-03", "lo publicado aparece en mi inicio", enInicio.includes("Opinión de la prueba funcional") && !enInicio.includes("Tu inicio está vacío"));
 
 // FN-05 · Reacciones sobre una publicación real de la demo, abierta en su página
-const deLaura = (await api("/social/v1/usuarios/laura_castano/publicaciones")).json.publicaciones.find((x) => !x.responde_a_id && !x.comparte_id && x.estado === "visible");
+// Una publicación fuera de comunidades (en una comunidad solo responden sus integrantes; ese caso va aparte).
+const deLaura = (await api("/social/v1/usuarios/laura_castano/publicaciones")).json.publicaciones.find((x) => !x.responde_a_id && !x.comparte_id && x.estado === "visible" && !x.comunidad);
 const idAjena = deLaura.id;
 await p.goto(BASE + "/publicacion/" + idAjena, { waitUntil: "networkidle0" });
 const ajena = await p.$("article.publicacion");
@@ -113,6 +114,20 @@ caso("FN-04", "la página del hilo muestra la respuesta", textoPagina.includes("
 const cuentaRespuestas = (await api(`/social/v1/publicaciones/${idAjena}`)).json?.totales.respuestas;
 caso("FN-04", "el contador de respuestas coincide con el hilo", cuentaRespuestas === hilo.filter((h) => h.profundidad === 1).length,
   `${cuentaRespuestas} vs ${hilo.filter((h) => h.profundidad === 1).length}`);
+
+// FN-04 · Responder en una comunidad sin ser integrante: se rechaza con un mensaje claro en el compositor
+const enComunidad = (await api("/social/v1/usuarios/laura_castano/publicaciones")).json.publicaciones.find((x) => !x.responde_a_id && x.estado === "visible" && x.comunidad);
+if (enComunidad) {
+  await p.goto(BASE + "/publicacion/" + enComunidad.id, { waitUntil: "networkidle0" });
+  await (await (await p.$("article.publicacion")).$("button[aria-label^='Responder']")).click();
+  await p.waitForSelector(".compositor__texto");
+  await p.type(".compositor__texto", "Intento de respuesta sin ser integrante.");
+  await p.click(".compositor .boton:not(.boton--borde)");
+  await espera(1200);
+  const aviso = await p.$eval("dialog[open] [role=alert]", (e) => e.innerText).catch(() => "");
+  caso("FN-04", "responder en una comunidad sin ser integrante muestra por qué no se puede", /integrantes/i.test(aviso), aviso || "sin mensaje");
+  await p.keyboard.press("Escape");
+}
 
 // FN-06 · Retirar lo propio desde la página
 await p.goto(BASE + "/", { waitUntil: "networkidle0" });
