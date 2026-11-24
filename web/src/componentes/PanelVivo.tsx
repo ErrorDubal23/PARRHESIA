@@ -43,7 +43,7 @@ function dibujar(lienzo: HTMLCanvasElement, relieve: Relieve) {
 }
 
 // Alrededor de Colombia, en puntillismo: el mar Caribe al norte y el océano Pacífico al occidente (azul) y los
-// países vecinos en verde muy tenue. Los océanos llevan puntos azulados más
+// países vecinos en verde tenue. Los océanos llevan puntos azulados más
 // densos junto a la costa y un vaivén suave que sugiere oleaje. Solo se pintan zonas que de verdad son mar
 // (fuera de Panamá, Venezuela y Ecuador), a partir de la proyección del relieve (39,65 px por grado de longitud,
 // 39,68 por grado de latitud; Punta Gallinas en x = 299,8, y = 6,8).
@@ -71,20 +71,27 @@ function dibujarOceanos(c: CanvasRenderingContext2D, p: number[]) {
     if (lon < -71.6) return lat > 8.8 && costaN !== undefined && y < costaN - 10;               // Caribe colombiano
     return lat > 11.85;                                                                         // Caribe, al norte de Venezuela
   };
-  // Todo lo de fuera de Colombia se desvanece hacia los bordes del plano: sin líneas rectas.
+  // Todo lo de fuera de Colombia se desvanece antes de llegar a los bordes del plano, con un contorno ondulado
+  // (superelipse con un vaivén lento) para que no se note un rectángulo. Cerca del borde, además de bajar la
+  // opacidad, quedan cada vez menos puntos (tramado), como una tinta que se acaba.
+  const azar = (n: number) => { const s = Math.sin(n) * 43758.5453; return s - Math.floor(s); };
   const borde = (x: number, y: number) => {
-    const d = Math.min(x, y, PLANO.ancho - x, PLANO.alto - y);
-    const t = Math.max(0, Math.min(1, d / 70));
+    const dx = (x - PLANO.ancho / 2) / (PLANO.ancho / 2), dy = (y - PLANO.alto / 2) / (PLANO.alto / 2);
+    const e = Math.pow(Math.pow(Math.abs(dx), 3) + Math.pow(Math.abs(dy), 3), 1 / 3);
+    const angulo = Math.atan2(dy, dx);
+    const onda = 0.045 * Math.sin(angulo * 5 + 0.8) + 0.03 * Math.sin(angulo * 11 + 2.1);
+    const t = Math.max(0, Math.min(1, (0.98 + onda - e) / 0.3));
     return t * t * (3 - 2 * t);
   };
   let k = 0;
   for (let y = 2; y < PLANO.alto; y += 6.2) {
     for (let x = 2; x < PLANO.ancho; x += 6.2) {
       k++;
-      const jx = x + Math.sin(k * 12.9898) * 1.4, jy = y + Math.cos(k * 78.233) * 1.4;
-      if (jx < 122 && jy < 130) continue;                       // el recuadro de las islas
+      // Desorden de casi media celda: rompe la cuadrícula sin dejar huecos ni montones.
+      const jx = x + (azar(k * 12.9898) - 0.5) * 4.6, jy = y + (azar(k * 78.233) - 0.5) * 4.6;
+      if (jx < RECUADRO.x + RECUADRO.ancho + 8 && jy < RECUADRO.y + RECUADRO.alto + 8) continue; // el recuadro de las islas
       const desvanecer = borde(jx, jy);
-      if (desvanecer <= 0.02) continue;
+      if (desvanecer <= 0.02 || azar(k * 3.17) > Math.pow(desvanecer, 0.6)) continue;
       if (esMar(jx, jy)) {
         // Cerca de la costa, más visible; mar adentro se desvanece. El seno dibuja franjas de oleaje.
         const costa = Math.min(Math.abs((norte.get(Math.round(jx / 4)) ?? 999) - jy), Math.abs((oeste.get(Math.round(jy / 4)) ?? 999) - jx));
@@ -95,12 +102,12 @@ function dibujarOceanos(c: CanvasRenderingContext2D, p: number[]) {
         c.beginPath();
         c.arc(jx, jy, 0.55 + 0.55 * cerca, 0, Math.PI * 2);
         c.fill();
-      } else if (!enColombia(jx, jy) && k % 2 === 0) {
-        // Países vecinos (Panamá, Venezuela, Brasil, Perú, Ecuador): verde muy tenue y más espaciado.
-        c.globalAlpha = (0.09 + 0.05 * Math.abs(Math.sin(k * 3.7))) * desvanecer;
-        c.fillStyle = "#8fbf8a";
+      } else if (!enColombia(jx, jy) && azar(k * 5.71) < 0.5) {   // la mitad, al azar fijo (no por columnas)
+        // Países vecinos (Panamá, Venezuela, Brasil, Perú, Ecuador): verde tenue y más espaciado.
+        c.globalAlpha = (0.17 + 0.07 * Math.abs(Math.sin(k * 3.7))) * desvanecer;
+        c.fillStyle = "#97c991";
         c.beginPath();
-        c.arc(jx, jy, 0.75, 0, Math.PI * 2);
+        c.arc(jx, jy, 0.85, 0, Math.PI * 2);
         c.fill();
       }
     }
@@ -119,11 +126,18 @@ const ISLAS = [
 ];
 const ESCALA_ISLAS = 300; // px del plano por grado (unas 7,5 veces la del mapa)
 
+// Recuadro de las islas. El ancho deja aire a los lados del texto más largo ("San Andrés, Providencia").
+const RECUADRO = { x: 10, y: 10, ancho: 112, alto: 114 };
+const LETRA_ISLAS = "600 7.5px system-ui, sans-serif";
+
 function dibujarIslas(c: CanvasRenderingContext2D) {
+  c.font = LETRA_ISLAS;
+  const lineas = ["San Andrés, Providencia", "y Santa Catalina"];
+  const ancho = Math.max(RECUADRO.ancho, Math.ceil(Math.max(...lineas.map((l) => c.measureText(l).width))) + 12);
   c.globalAlpha = 0.35;
   c.strokeStyle = "#c8b79e";
   c.lineWidth = 0.6;
-  c.strokeRect(10, 10, 104, 112);
+  c.strokeRect(RECUADRO.x, RECUADRO.y, ancho, RECUADRO.alto);
   for (const grupo of ISLAS) {
     const todos = grupo.contornos.flat();
     const lon0 = (Math.min(...todos.map((q) => q[0])) + Math.max(...todos.map((q) => q[0]))) / 2;
@@ -149,9 +163,9 @@ function dibujarIslas(c: CanvasRenderingContext2D) {
   }
   c.globalAlpha = 0.6;
   c.fillStyle = "#c8b79e";
-  c.font = "600 8px system-ui, sans-serif";
-  c.fillText("San Andrés, Providencia", 15, 106);
-  c.fillText("y Santa Catalina", 15, 116);
+  c.font = LETRA_ISLAS;
+  c.fillText(lineas[0], RECUADRO.x + 6, RECUADRO.y + RECUADRO.alto - 16);
+  c.fillText(lineas[1], RECUADRO.x + 6, RECUADRO.y + RECUADRO.alto - 6);
   c.globalAlpha = 1;
 }
 
