@@ -18,6 +18,8 @@
   --tinta: #1e1e1e;
   --tinta-2: #4a453f;
   --tinta-3: #8a8279;
+  --barra-scroll: #a7b7c4;        /* pizarra, como las formas del fondo */
+  --barra-scroll-activa: #6a879d;
   --arena: #c8b79e;
   --arena-fuerte: #a8936f;
   --arena-suave: #ece3d4;
@@ -50,6 +52,8 @@
   --tinta: #f2ece2;
   --tinta-2: #c4c6c4;
   --tinta-3: #8b9196;
+  --barra-scroll: #2c4456;
+  --barra-scroll-activa: #3b6f93;
   --arena: #b8a383;
   --arena-fuerte: #d2bf9f;
   --arena-suave: #1f2a31;
@@ -66,7 +70,7 @@
   --flotante-texto: #1e1e1e;
   --forma-banda: #463a27;
   --forma-esquina: #1c3646;
-  --forma-tira: #1f3748;
+  --forma-tira: #2b485b;
   --forma-lado: #1b2c37;
   --forma-izq: #3d3324;
   --forma-rincon: #1f3a4d;
@@ -86,6 +90,21 @@ body {
   -webkit-font-smoothing: antialiased;
   transition: background 0.25s ease, color 0.25s ease;
 }
+
+html {
+  background: var(--fondo);
+  scrollbar-color: var(--barra-scroll) transparent;
+}
+body { scrollbar-color: var(--barra-scroll) transparent; }
+html::-webkit-scrollbar-track, body::-webkit-scrollbar-track,
+html::-webkit-scrollbar-corner, body::-webkit-scrollbar-corner { background: transparent; }
+html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--barra-scroll);
+  background-clip: padding-box;
+}
+html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover { background: var(--barra-scroll-activa); background-clip: padding-box; }
 
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; }

@@ -1,7 +1,8 @@
 import { useEffect, useId, useState } from "react";
 
-// Interruptor de tema: un recuadro con un cielo. De día, un sol dorado con rayos de puntos (el puntillismo del
-// relieve de Colombia de la pantalla de acceso) sobre un horizonte de puntos; de noche, el astro se desliza a
+// Interruptor de tema: un recuadro con un cielo sobre las montañas de Colombia (tres cordilleras, un nevado y una
+// palma de cera). De día, un sol dorado con rayos de puntos (el puntillismo del relieve de la pantalla de acceso);
+// de noche, el astro se desliza a
 // la derecha, los rayos se recogen, una sombra lo convierte en luna creciente y aparecen estrellas que titilan.
 // La preferencia se guarda y se comparte entre pestañas.
 
@@ -11,7 +12,13 @@ const EVENTO = "tema-cambiado";
 const actual = (): Tema => (document.documentElement.dataset.tema === "oscuro" ? "oscuro" : "claro");
 
 function fijar(tema: Tema) {
-  document.documentElement.dataset.tema = tema;
+  // Cambio uniforme: cada parte de la página tiene su propia transición y, si se dejan, cambian a destiempo.
+  // Se apagan un instante (menos las del interruptor, que tiene su animación) y la página cambia de una vez.
+  const raiz = document.documentElement;
+  raiz.classList.add("cambiando-tema");
+  raiz.dataset.tema = tema;
+  void raiz.offsetHeight;                               // aplica los colores nuevos sin transición
+  requestAnimationFrame(() => requestAnimationFrame(() => raiz.classList.remove("cambiando-tema")));
   try { localStorage.setItem("tema", tema); } catch { /* sin almacenamiento: vale solo esta visita */ }
   window.dispatchEvent(new CustomEvent(EVENTO));
 }
@@ -38,14 +45,9 @@ const RAYOS = Array.from({ length: 12 }, (_, i) => {
   const a = (i * Math.PI) / 6;
   return { cx: 16 + Math.cos(a) * 12.2, cy: 16 + Math.sin(a) * 12.2, r: i % 2 ? 0.95 : 1.35 };
 });
-// Estrellas del cielo nocturno y horizonte de puntos (plano de 72 × 36).
+// Estrellas del cielo nocturno (plano de 72 × 36).
 const ESTRELLAS = [{ x: 9, y: 9, r: 1.1 }, { x: 18, y: 5, r: 0.7 }, { x: 14, y: 17, r: 0.8 }, { x: 25, y: 12, r: 1.2 },
   { x: 6, y: 22, r: 0.6 }, { x: 30, y: 6, r: 0.6 }];
-const HORIZONTE = Array.from({ length: 22 }, (_, i) => {
-  const x = 3 + i * 3.1;
-  return { x, y: 31.5 - Math.sin(i * 0.55) * 1.6 - Math.sin(i * 1.7) * 0.6, r: 0.75 + ((i * 7) % 3) * 0.15 };
-});
-
 export function BotonTema({ className = "" }: { className?: string }) {
   const [tema, setTema] = useTema();
   const oscuro = tema === "oscuro";
@@ -60,7 +62,18 @@ export function BotonTema({ className = "" }: { className?: string }) {
           <circle key={i} className="tema-astro__estrella" cx={e.x} cy={e.y} r={e.r}
             style={{ animationDelay: `${i * 0.45}s`, transitionDelay: `${0.15 + i * 0.05}s` }} />
         ))}
-        {HORIZONTE.map((h, i) => <circle key={i} className="tema-astro__horizonte" cx={h.x} cy={h.y} r={h.r} />)}
+        {/* Las tres cordilleras de los Andes colombianos en capas, un nevado y una palma de cera. */}
+        <path className="tema-astro__monte tema-astro__monte--lejos"
+          d="M0 25 L6 21.5 L11 23 L17 18 L22 20.5 L28 15.5 L32 17.5 L36 13 L41 18 L46 15.5 L52 19.5 L58 16.5 L64 20 L72 18 L72 36 L0 36 Z" />
+        <path className="tema-astro__nieve" d="M33.9 15.1 L36 13 L38.3 15.3 L37.1 14.9 L36.1 15.9 L35.1 14.8 Z" />
+        <path className="tema-astro__monte tema-astro__monte--medio"
+          d="M0 28.5 L5 25.5 L10 27 L16 22.5 L21 25 L27 21.5 L32 24.5 L38 22 L44 25.5 L50 22.5 L56 26 L62 24 L67 26.5 L72 25 L72 36 L0 36 Z" />
+        <path className="tema-astro__monte tema-astro__monte--cerca"
+          d="M0 32 C7 29.5 13 31.5 20 30.5 C27 29.2 33 31.6 41 30.4 C49 29.2 57 31.8 64 30.6 C67 30.1 70 30.4 72 30.8 L72 36 L0 36 Z" />
+        <g className="tema-astro__palma">
+          <path d="M57.3 30.4 C57.6 27.5 57.7 25 57.5 22.4" />
+          <path d="M57.5 22.4 C56 21.6 54.6 21.9 53.6 22.8 M57.5 22.4 C59 21.5 60.5 21.9 61.4 22.9 M57.5 22.4 C56.7 21 55.6 20.3 54.4 20.4 M57.5 22.4 C58.4 21 59.6 20.4 60.7 20.6 M57.5 22.4 C57.4 21 57.6 19.9 58.2 19.3" />
+        </g>
       </svg>
       <span className="tema-astro__ficha" aria-hidden="true">
         <svg viewBox="0 0 32 32">

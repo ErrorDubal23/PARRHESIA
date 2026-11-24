@@ -30,15 +30,82 @@ function dibujar(lienzo: HTMLCanvasElement, relieve: Relieve) {
   c.scale(escala, escala);
   const p = relieve.puntos;
   for (let i = 0; i < p.length; i += 4) {
-    const nivel = p[i + 2], luz = p[i + 3] / 15;
-    // Bajo: puntos pequeños y tenues; alto: más grandes y con luz de crema.
-    c.globalAlpha = 0.16 + 0.84 * luz ** 1.4;
-    c.fillStyle = nivel > 9 ? "#f6f0e6" : nivel > 4 ? "#e4d8c4" : "#c8b79e";
+    const nivel = p[i + 2], altura = nivel / 15, luz = p[i + 3] / 15;
+    // La altura resalta las cordilleras incluso en laderas orientadas fuera de la luz.
+    c.globalAlpha = Math.min(1, 0.55 + 0.5 * luz ** 1.1 + 0.18 * altura);
+    c.fillStyle = nivel > 9 ? "#ffffff" : nivel > 4 ? "#fbf3e6" : "#eadcc6";
     c.beginPath();
-    c.arc(p[i], p[i + 1], 0.5 + nivel * 0.085, 0, Math.PI * 2);
+    c.arc(p[i], p[i + 1], 0.68 + nivel * 0.085, 0, Math.PI * 2);
     c.fill();
   }
+  dibujarOceanos(c, p);
   dibujarIslas(c);
+}
+
+// Alrededor de Colombia, en puntillismo: el mar Caribe al norte y el océano Pacífico al occidente (azul) y los
+// países vecinos en verde muy tenue. Los océanos llevan puntos azulados más
+// densos junto a la costa y un vaivén suave que sugiere oleaje. Solo se pintan zonas que de verdad son mar
+// (fuera de Panamá, Venezuela y Ecuador), a partir de la proyección del relieve (39,65 px por grado de longitud,
+// 39,68 por grado de latitud; Punta Gallinas en x = 299,8, y = 6,8).
+const lonDe = (x: number) => -71.67 + (x - 299.8) / 39.65;
+const latDe = (y: number) => 12.46 - (y - 6.8) / 39.68;
+
+function dibujarOceanos(c: CanvasRenderingContext2D, p: number[]) {
+  // Borde de la tierra: por columna, el punto más al norte; por fila, el más al occidente (celdas de 4 px).
+  const norte = new Map<number, number>(), oeste = new Map<number, number>();
+  // Dónde hay tierra colombiana (celdas de 6 px, ensanchadas dos celdas para cubrir los huecos del relieve).
+  const tierra = new Set<string>();
+  for (let i = 0; i < p.length; i += 4) {
+    const cx = Math.round(p[i] / 4), fy = Math.round(p[i + 1] / 4);
+    norte.set(cx, Math.min(norte.get(cx) ?? Infinity, p[i + 1]));
+    oeste.set(fy, Math.min(oeste.get(fy) ?? Infinity, p[i]));
+    const gx = Math.floor(p[i] / 6), gy = Math.floor(p[i + 1] / 6);
+    for (let dx = -2; dx <= 2; dx++) for (let dy = -2; dy <= 2; dy++) tierra.add(`${gx + dx},${gy + dy}`);
+  }
+  const enColombia = (x: number, y: number) => tierra.has(`${Math.floor(x / 6)},${Math.floor(y / 6)}`);
+  const esMar = (x: number, y: number) => {
+    const lon = lonDe(x), lat = latDe(y);
+    const costaN = norte.get(Math.round(x / 4)), costaO = oeste.get(Math.round(y / 4));
+    if (lat >= 1.45 && lat <= 7.15 && costaO !== undefined && x < costaO - 10) return true;     // Pacífico
+    if (lon < -77.35) return lat > 9.6;                                                         // Caribe, al norte de Panamá
+    if (lon < -71.6) return lat > 8.8 && costaN !== undefined && y < costaN - 10;               // Caribe colombiano
+    return lat > 11.85;                                                                         // Caribe, al norte de Venezuela
+  };
+  // Todo lo de fuera de Colombia se desvanece hacia los bordes del plano: sin líneas rectas.
+  const borde = (x: number, y: number) => {
+    const d = Math.min(x, y, PLANO.ancho - x, PLANO.alto - y);
+    const t = Math.max(0, Math.min(1, d / 70));
+    return t * t * (3 - 2 * t);
+  };
+  let k = 0;
+  for (let y = 2; y < PLANO.alto; y += 6.2) {
+    for (let x = 2; x < PLANO.ancho; x += 6.2) {
+      k++;
+      const jx = x + Math.sin(k * 12.9898) * 1.4, jy = y + Math.cos(k * 78.233) * 1.4;
+      if (jx < 122 && jy < 130) continue;                       // el recuadro de las islas
+      const desvanecer = borde(jx, jy);
+      if (desvanecer <= 0.02) continue;
+      if (esMar(jx, jy)) {
+        // Cerca de la costa, más visible; mar adentro se desvanece. El seno dibuja franjas de oleaje.
+        const costa = Math.min(Math.abs((norte.get(Math.round(jx / 4)) ?? 999) - jy), Math.abs((oeste.get(Math.round(jy / 4)) ?? 999) - jx));
+        const cerca = Math.max(0, 1 - costa / 150);
+        const ola = 0.55 + 0.45 * Math.sin(jx * 0.09 + jy * 0.05 + Math.sin(jy * 0.03) * 2);
+        c.globalAlpha = Math.min(0.9, (0.22 + 0.62 * cerca) * ola) * desvanecer;
+        c.fillStyle = cerca > 0.55 ? "#8fc4ec" : "#5d97c6";
+        c.beginPath();
+        c.arc(jx, jy, 0.55 + 0.55 * cerca, 0, Math.PI * 2);
+        c.fill();
+      } else if (!enColombia(jx, jy) && k % 2 === 0) {
+        // Países vecinos (Panamá, Venezuela, Brasil, Perú, Ecuador): verde muy tenue y más espaciado.
+        c.globalAlpha = (0.09 + 0.05 * Math.abs(Math.sin(k * 3.7))) * desvanecer;
+        c.fillStyle = "#8fbf8a";
+        c.beginPath();
+        c.arc(jx, jy, 0.75, 0, Math.PI * 2);
+        c.fill();
+      }
+    }
+  }
+  c.globalAlpha = 1;
 }
 
 // San Andrés, Providencia y Santa Catalina: a unos 700 km de la costa, fuera del plano del relieve. Como en los

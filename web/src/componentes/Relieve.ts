@@ -4,7 +4,7 @@
 import { useEffect } from "react";
 
 const CON_RELIEVE = ".publicacion, .comunidad-fila, .carpeta, .tema-portada, .persona, .ficha-dato";
-const MAXIMO = 3; // grados
+const MAXIMO = 4; // grados
 
 export function useRelieve() {
   useEffect(() => {

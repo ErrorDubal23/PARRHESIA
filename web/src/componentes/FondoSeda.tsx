@@ -9,6 +9,8 @@
 export function FondoSeda() {
   return (
     <div className="seda" aria-hidden="true">
+      {/* Toque nacional: palmas de cera y granos de café en acuarela, muy desvanecidos detrás del contenido. */}
+      <div className="fondo-nacional" />
       {/* Coordenadas: x = 0 es 400 px antes del borde derecho; y = 0 es el borde de arriba (alto de 950). */}
       <svg className="forma forma--derecha" viewBox="0 0 400 950" preserveAspectRatio="xMaxYMin slice">
         <path className="forma__lado" d="M400 290 C345 330 318 420 328 520 C338 640 352 780 372 950 L400 950 Z" />
