@@ -257,8 +257,9 @@ def perfil(nombre_usuario: str, conn) -> dict:
     usuario = lecturas.usuario_por_nombre(conn, nombre_usuario)
     if usuario is None:
         raise ErrorApi("usuario_inexistente", 404, "No existe ese usuario.")
-    seguidores, seguidos, publicaciones = conn.execute(
-        "SELECT * FROM social.estadisticas_usuario(%s)", (usuario["id"],)).fetchone()
+    seguidores, seguidos, publicaciones = conn.execute(  # vista social.perfil_publico (0039)
+        "SELECT seguidores, seguidos, publicaciones FROM social.perfil_publico WHERE id = %s",
+        (usuario["id"],)).fetchone()
     return {"id": str(usuario["id"]), "nombre_usuario": usuario["nombre_usuario"],
             "nombre_visible": usuario["nombre_visible"], "biografia": usuario["biografia"], "rol": usuario["rol"],
             "estado": usuario["estado"], "foto": fotos.url(usuario["foto"]), "creado_en": usuario["creado_en"].isoformat(),

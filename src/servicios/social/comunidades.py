@@ -67,13 +67,16 @@ SELECT c.id::text, c.nombre, c.descripcion, c.reglas, c.privacidad, c.imagen, c.
        u.nombre_usuario AS creada_por, social.mi_papel(c.id, %(yo)s::uuid) AS mi_papel,
        EXISTS (SELECT 1 FROM social.solicitud_ingreso s WHERE s.comunidad_id = c.id AND s.usuario_id = %(yo)s::uuid
                AND s.estado = 'pendiente') AS solicitud_pendiente,
-       (SELECT count(*) FROM social.publicacion p WHERE p.comunidad_id = c.id AND p.estado = 'visible') AS total_publicaciones
+       a.total_publicaciones, a.ultima_publicacion
 FROM social.comunidad c JOIN social.usuario u ON u.id = c.creada_por
+JOIN social.actividad_comunidad a ON a.comunidad_id = c.id
 """
 
 
 def _comunidad(fila: dict) -> dict:
-    return {**fila, "imagen": fotos.url(fila["imagen"]), "creada_en": fila["creada_en"].isoformat()}
+    ultima = fila.get("ultima_publicacion")
+    return {**fila, "imagen": fotos.url(fila["imagen"]), "creada_en": fila["creada_en"].isoformat(),
+            "ultima_publicacion": ultima.isoformat() if ultima else None}
 
 
 def _exigir(conn, comunidad_id: UUID, usuario_id: str | None, accion: str) -> None:

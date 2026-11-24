@@ -195,6 +195,10 @@ Marcas de una observación (`marcas`):
 | `ia.prioridad_trabajo()` / `primer_proveedor_habilitado()` | `job_priority()` / `first_enabled_provider()` |
 | `social.asignar_rol` / `asignar_rol_consola` / `equipo` (vista) | `assign_role` / `assign_role_console` / `staff` |
 | `social.rol_solo_por_procedimiento()` / `conservar_un_admin()` | `role_only_via_procedure()` / `keep_one_admin()` |
+| `oficial.ultimo_dato_serie` (vista) | `series_latest_point` |
+| `social.perfil_publico` / `actividad_comunidad` (vistas) | `public_profile` / `community_activity` |
+| `verificacion.conclusiones_por_indicador` (vista materializada) / `refrescar_conclusiones()` | `conclusions_by_indicator` / `refresh_conclusions()` |
+| `temas.cobertura_por_medio` (vista) | `outlet_coverage` |
 
 Triggers: `<tabla>_solo_insercion` ← `_append_only`, `<tabla>_actualizado` ← `_touch`, `<tabla>_salida` ← `outbox_*`, `<tabla>_contadores` ← `_counters`, `<tabla>_transicion` ← `_status`.
 

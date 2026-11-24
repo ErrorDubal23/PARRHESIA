@@ -97,8 +97,11 @@ def tema(tema_id: UUID, conn=Depends(conexion)):
 @app.get("/v1/medios")
 def medios(conn=Depends(conexion)):
     with conn.cursor(row_factory=dict_row) as cur:
-        return {"medios": cur.execute("SELECT nombre, url_sitio, canal, url_canal, habilitado FROM temas.medio"
-                                      " ORDER BY nombre").fetchall()}
+        # Vista temas.cobertura_por_medio (0039): artículos y temas de cada medio en la ventana actual.
+        return {"medios": cur.execute(
+            "SELECT m.nombre, m.url_sitio, m.canal, m.url_canal, m.habilitado, c.articulos_totales,"
+            " c.articulos_ventana, c.temas_ventana, c.ultimo_articulo"
+            " FROM temas.medio m JOIN temas.cobertura_por_medio c ON c.medio_id = m.id ORDER BY m.nombre").fetchall()}
 
 
 @app.put("/v1/medios/{nombre}")

@@ -92,7 +92,7 @@ Autenticación: `🔓` pública, `🔒` con sesión, `🛡` verificador o admin.
 | `GET /comunidades/recomendadas` | 🔒 | Comunidades públicas sugeridas por temas compartidos, primero las de fuera de mi red (grafo; aviso si no responde) | grafo `COMUNIDADES_RECOMENDADAS` |
 | `GET /comunidades/{id}/relacionadas` | 🔓 | Comunidades públicas con los mismos temas, primero las de menos integrantes en común (vacío si es privada) | grafo `COMUNIDADES_RELACIONADAS` |
 | `GET /personas/otras-voces` | 🔒 | Personas fuera de mi red cercana que hablan de mis temas | grafo `OTRAS_VOCES` |
-| `GET /comunidades?q=&mias=` | 🔓 | Comunidades (su ficha es pública aunque sean privadas), con mi papel y si tengo una solicitud pendiente | `social.comunidad`, `mi_papel` |
+| `GET /comunidades?q=&mias=` | 🔓 | Comunidades (su ficha es pública aunque sean privadas), con mi papel, si tengo una solicitud pendiente, publicaciones y última actividad | `social.comunidad`, `mi_papel`, vista `social.actividad_comunidad` |
 | `POST /comunidades` · `PATCH /comunidades/{id}` · `PUT /comunidades/{id}/imagen` | 🔒 | Crear (quien crea es administrador) y configurar | `crear_comunidad`, `configurar_comunidad`, `fijar_imagen_comunidad` |
 | `GET /comunidades/{id}` | 🔓 | Ficha y permisos de quien consulta (`ver`, `publicar`, `moderar`, `gestionar_integrantes`, `configurar`) | `social.puede` |
 | `POST /comunidades/{id}/ingreso` · `DELETE /comunidades/{id}/integrantes/yo` | 🔒 | Entrar (pública) o solicitar (privada); salir | `entrar_a_comunidad`, `salir_de_comunidad` |
@@ -107,7 +107,7 @@ Autenticación: `🔓` pública, `🔒` con sesión, `🛡` verificador o admin.
 
 | Método y ruta | Acceso | Qué hace | Base de datos |
 | --- | --- | --- | --- |
-| `GET /usuarios/{nombre_usuario}` | 🔓 | Perfil público y estadísticas | `social.estadisticas_usuario` |
+| `GET /usuarios/{nombre_usuario}` | 🔓 | Perfil público y estadísticas | vista `social.perfil_publico` |
 | `GET /usuarios/{nombre_usuario}/publicaciones?despues=` | 🔓 | Sus publicaciones visibles, de la más nueva a la más vieja | `social.publicacion` |
 | `PUT /usuarios/{nombre_usuario}/seguidores/yo` | 🔒 | Seguir (repetirlo no es un error) | `CALL social.seguir` |
 | `DELETE /usuarios/{nombre_usuario}/seguidores/yo` | 🔒 | Dejar de seguir | `CALL social.dejar_de_seguir` |
@@ -166,6 +166,7 @@ Respuesta `201`:
 | `GET /enlaces/{id}` | 🔓 | Metadatos declarados, estado y los fragmentos con la verificación de cada uno | `verificacion.enlace`, `fragmento_enlace`, `estado_enlace` |
 | `GET /verificaciones/{id}` | 🔓 | Una verificación con su evidencia oficial, sus pruebas de robustez y sus versiones anteriores | `verificacion.*`, `oficial.observaciones_vigentes` |
 | `POST /resumen` | 🔓 | Conteo por conclusión de un conjunto de textos (para la página de un tema) | `verificacion.resumen_conclusiones` |
+| `GET /conclusiones-por-indicador` | 🔓 | Cuántas cifras verificadas quedaron en cada conclusión, por indicador (página Datos oficiales) | vista materializada `verificacion.conclusiones_por_indicador` |
 | `GET /revisiones/pendientes?despues=` | 🛡 | Afirmaciones que requieren revisión humana | `verificacion.afirmacion` con estado `requiere_revision` |
 | `POST /verificaciones/{id}/revisiones` | 🛡 | Revisión humana: `{"decision": "confirmada" \| "corregida", "motivo": "…"}` | `CALL verificacion.registrar_revision` |
 
@@ -226,7 +227,7 @@ Solo se devuelve una explicación con `explicacion_validada = true`. Si no pasó
 | --- | --- | --- | --- |
 | `GET /temas` | 🔓 | Los temas de la última ventana, en orden, cada uno con sus medios (artículos y hora del primero) y su actividad en 8 tramos de 3 horas; además, los medios registrados para la huella de cobertura | `temas.temas_actuales`, `cobertura_tema`, `actividad_tema` |
 | `GET /temas/{id}` | 🔓 | Página del tema: artículos (medio, título, enlace), declaraciones reportadas con su cita exacta, medios y actividad | `temas.pagina_tema`, `cobertura_tema`, `actividad_tema` |
-| `GET /medios` | 🔓 | La lista pública de medios | `temas.medio` |
+| `GET /medios` | 🔓 | La lista pública de medios, con sus artículos y temas de la ventana actual | `temas.medio`, vista `temas.cobertura_por_medio` |
 | `PUT /medios/{nombre}` | 🛡 admin | Agrega, cambia o deshabilita un medio | `CALL temas.configurar_medio` |
 
 La app arma la página de un tema con dos llamadas: `GET /api/temas/v1/temas/{id}`, y para las declaraciones, `GET /api/verificacion/v1/textos/declaracion_reportada/{id}` y `POST /api/verificacion/v1/resumen`. El servicio de temas no conoce las conclusiones: eso es del servicio de verificación.
@@ -242,7 +243,7 @@ La app arma la página de un tema con dos llamadas: `GET /api/temas/v1/temas/{id
 
 | Método y ruta | Acceso | Qué hace | Base de datos |
 | --- | --- | --- | --- |
-| `GET /series` | 🔓 | Las series aprobadas, con su indicador, fuente y unidad, y un `resumen`: último valor vigente (con fecha de actualización de la fuente en ISO y si es provisional), valor del periodo anterior y del mismo periodo un año antes tal como se publicaron (nunca una diferencia calculada), notas vigentes y los últimos 25 valores | `oficial.serie`, `observaciones_vigentes`, `descarga`, `notas_en` |
+| `GET /series` | 🔓 | Las series aprobadas, con su indicador, fuente y unidad, y un `resumen`: último valor vigente (con fecha de actualización de la fuente en ISO y si es provisional), valor del periodo anterior y del mismo periodo un año antes tal como se publicaron (nunca una diferencia calculada), notas vigentes y los últimos 25 valores | `oficial.serie`, vista `ultimo_dato_serie`, `observaciones_vigentes`, `descarga`, `notas_en` |
 | `GET /series/{codigo}?desde=&hasta=` | 🔓 | La serie completa (valores vigentes y aceptados), con su indicador, el mismo `resumen`, sus notas y alertas abiertas | `oficial.observaciones_vigentes`, `nota_serie`, `alertas_abiertas` |
 | `GET /observaciones/{id}` | 🔓 | Trazabilidad de un dato: descarga, archivos originales con su huella, contrastes y versiones anteriores del mismo periodo | `oficial.observacion`, `descarga`, `archivo_original`, `comparacion_contraste` |
 | `GET /alertas?estado=abierta` | 🛡 | Alertas para revisión humana | `oficial.alerta` |

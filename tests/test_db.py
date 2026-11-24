@@ -208,7 +208,10 @@ def _alerta_abierta(ficha, connector, fake_suameca, raw_store, pg_store, conn):
 
 def test_tables_live_in_oficial_with_spanish_names(conn):
     tables = {r[0] for r in conn.execute(
-        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'oficial'")}
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'oficial' AND table_type = 'BASE TABLE'")}
+    views = {r[0] for r in conn.execute(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'oficial' AND table_type = 'VIEW'")}
+    assert views == {"ultimo_dato_serie"}  # migración 0039
     assert tables == {
         "fuente", "indicador", "serie", "aprobacion_serie", "nota_serie", "diferencia_version", "archivo_evidencia",
         "brecha_contexto", "descarga", "archivo_original", "observacion", "comparacion_contraste", "alerta",

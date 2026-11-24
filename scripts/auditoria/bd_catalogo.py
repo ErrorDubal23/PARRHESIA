@@ -159,7 +159,7 @@ def main() -> int:
     # BD-02c: tablas de la base que el diseño no nombra.
     nombradas = tablas_del_diseno()
     tablas = [r[0] for r in conn.execute(f"""SELECT relnamespace::regnamespace::text || '.' || relname, relname FROM pg_class
-                                               WHERE relkind IN ('r', 'v') AND relnamespace::regnamespace::text IN {PROPIOS}
+                                               WHERE relkind IN ('r', 'v', 'm') AND relnamespace::regnamespace::text IN {PROPIOS}
                                                ORDER BY 1""").fetchall() if r[1] not in nombradas]
     print(f"\n[BD-02c] Tablas o vistas de la base que docs/diseno no nombra: {'OK' if not tablas else len(tablas)}")
     for t in tablas:

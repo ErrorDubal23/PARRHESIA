@@ -318,6 +318,27 @@ Si un trabajo de extracción queda `fallido`, la publicación sigue visible y su
 
 ---
 
+## Vistas (migración 0039)
+
+Lecturas que los servicios repetían a mano, con nombre y permiso propio. Corren con los permisos de su dueño:
+cada servicio recibe `SELECT` sobre la vista y nada sobre las tablas que lee por dentro. Ninguna escribe.
+
+| Vista | Tipo | Qué muestra | La usa |
+| --- | --- | --- | --- |
+| `oficial.ultimo_dato_serie` | Vista | Cada serie aprobada con su último periodo vigente y aceptado (misma regla que `observaciones_vigentes`) y cuántos periodos tiene | `GET /oficial/v1/series` (`svc_oficial`) |
+| `social.perfil_publico` | Vista | Datos públicos de cada cuenta con seguidores, seguidos y publicaciones visibles; sin correo ni clave | `GET /social/v1/usuarios/{nombre}` (`svc_social`) |
+| `social.actividad_comunidad` | Vista | Integrantes, publicaciones visibles y última publicación de cada comunidad | Lista y página de comunidades (`svc_social`) |
+| `verificacion.conclusiones_por_indicador` | **Materializada** | Cuántas cifras verificadas (versión vigente) quedaron en cada conclusión, por indicador | `GET /verificacion/v1/conclusiones-por-indicador`, página Datos oficiales (`svc_verificacion`) |
+| `temas.cobertura_por_medio` | Vista | Artículos de cada medio en total y en la ventana actual, en cuántos temas actuales aparece y su último artículo | `GET /temas/v1/medios` (`svc_temas`) |
+| `social.equipo` (0035) | Vista | Cuentas activas con rol de verificador o administrador | `GET /social/v1/equipo` (`svc_social`) |
+
+**La vista materializada** guarda el resultado en disco porque recorre todas las verificaciones y se lee mucho
+más de lo que cambia. El trigger `verificacion_refresca_conclusiones` (`AFTER INSERT ... FOR EACH STATEMENT` sobre
+`verificacion.verificacion`) llama a `verificacion.refrescar_conclusiones()`, que hace
+`REFRESH MATERIALIZED VIEW CONCURRENTLY` (por eso tiene el índice único `conclusiones_por_indicador_uq`, y la vista
+se puede leer mientras se refresca). El refresco va dentro de la misma transacción que la verificación: si la
+verificación se rechaza, el conteo no cambia. La función es `SECURITY DEFINER` y nadie más puede ejecutarla.
+
 ## Transacciones: dónde importan y qué protegen
 
 | Operación | Qué se hace junto | Qué pasaría sin transacción |
@@ -355,6 +376,7 @@ Una prueba con `pytest` contra la base de Docker por cada regla, del estilo "int
 | --- | --- |
 | Procedimientos | `registrar_articulos`, `registrar_temas`, `registrar_declaraciones`, `publicar`, `registrar_declaracion`, `retirar_publicacion`, `seguir`, `reaccionar`, `registrar_tendencias`, `registrar_afirmaciones`, `registrar_verificacion`, `registrar_revision`, `encolar_trabajo`, `registrar_intento`, `cerrar_alerta`, `reabrir_alerta` |
 | Funciones | `articulos_ventana`, `buscar_figura`, `pagina_tema`, `cobertura_tema`, `actividad_tema`, `requiere_extraccion`, `observaciones_vigentes`, `observacion_en`, `extraer_etiquetas`, `extraer_menciones`, `hilo` (recursiva), `estadisticas_usuario`, `contenido_tendencia`, `resumen_conclusiones`, `tendencias_basicas`, `estado_publicacion`, `cifras_en_texto`, `cifras_permitidas`, `texto_plano` (0016), `nombre_usuario_disponible`, `buscar_usuarios`, `resolver_nombre`, `tomar_trabajo`, `elegir_credencial` |
+| Vistas | `ultimo_dato_serie`, `perfil_publico`, `actividad_comunidad`, `cobertura_por_medio`, `equipo` y la vista materializada `conclusiones_por_indicador` con refresco por trigger (0035, 0039) |
 | Triggers | Cita textual y título sin cifras (temas), contadores, outbox, solo inserción, transiciones de estado, integridad entre esquemas, triggers diferidos de evidencia y cifras, `pg_notify` |
 | Transacciones | Todas las operaciones de la tabla anterior; bloqueo con `FOR UPDATE` y `SKIP LOCKED`; restricciones diferidas al confirmar |
 | Microservicios | Un esquema y un rol por servicio, sin llaves foráneas entre esquemas, comunicación por outbox y cola |

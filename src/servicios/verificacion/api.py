@@ -152,6 +152,18 @@ def resumen(pedido: PedidoResumen, conn=Depends(conexion)):
     return {"conclusiones": filas, "total": sum(f["total"] for f in filas)}
 
 
+@app.get("/v1/conclusiones-por-indicador")
+def conclusiones_por_indicador(conn=Depends(conexion)):
+    """Cuántas cifras verificadas quedaron en cada conclusión, por indicador (vista materializada, 0039)."""
+    with conn.cursor(row_factory=dict_row) as cur:
+        filas = cur.execute("SELECT codigo_indicador, conclusion, total FROM verificacion.conclusiones_por_indicador"
+                            " ORDER BY codigo_indicador, conclusion").fetchall()
+    indicadores: dict[str, dict[str, int]] = {}
+    for f in filas:
+        indicadores.setdefault(f["codigo_indicador"], {})[f["conclusion"]] = f["total"]
+    return {"indicadores": indicadores}
+
+
 @app.get("/v1/revisiones/pendientes")
 def revisiones_pendientes(limite: int = Query(50, ge=1, le=200), _: Usuario = Depends(verificador), conn=Depends(conexion)):
     with conn.cursor(row_factory=dict_row) as cur:

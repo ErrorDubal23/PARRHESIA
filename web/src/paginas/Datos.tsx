@@ -6,6 +6,8 @@ import { GraficaSerie, type Punto } from "../componentes/GraficaSerie";
 import * as I from "../componentes/Iconos";
 import { useSesion } from "../sesion";
 import { comoFallo, MostrarFallo, type Fallo } from "../componentes/NoEncontrado";
+import { CONCLUSIONES } from "../componentes/Veredicto";
+import type { Conclusion } from "../tipos";
 
 // Orden de los grupos: economía y luego seguridad, como en el catálogo.
 const ORDEN = ["inflation", "unemployment", "minimum_wage", "public_debt", "homicides", "theft", "extortion", "kidnapping"];
@@ -13,6 +15,9 @@ const ORDEN = ["inflation", "unemployment", "minimum_wage", "public_debt", "homi
 export function Datos() {
   const [series, setSeries] = useState<SerieResumida[] | null>(null);
   useEffect(() => { api<{ series: SerieResumida[] }>("/oficial/v1/series").then((r) => setSeries(r.series)).catch(() => setSeries([])); }, []);
+  // Conteo de conclusiones por indicador (vista materializada verificacion.conclusiones_por_indicador).
+  const [conteo, setConteo] = useState<Record<string, Partial<Record<Conclusion, number>>>>({});
+  useEffect(() => { api<{ indicadores: typeof conteo }>("/verificacion/v1/conclusiones-por-indicador").then((r) => setConteo(r.indicadores)).catch(() => {}); }, []);
   const grupos = ORDEN.map((ind) => [ind, (series ?? []).filter((s) => s.indicador === ind)] as const).filter(([, l]) => l.length);
   return (
     <>
@@ -22,11 +27,21 @@ export function Datos() {
       {grupos.map(([ind, lista]) => (
         <section key={ind} className="grupo-datos">
           <h2 className="grupo-datos__titulo">{INDICADOR[ind] ?? ind}</h2>
+          <ConteoConclusiones conteo={conteo[ind]} />
           <div className="fichas-datos">{lista.map((s) => <FichaDato key={s.codigo} serie={s} />)}</div>
         </section>
       ))}
     </>
   );
+}
+
+const ORDEN_CONCLUSION: Conclusion[] = ["se_sostiene", "se_debilita", "se_invierte", "sin_dato_comparable"];
+
+function ConteoConclusiones({ conteo }: { conteo?: Partial<Record<Conclusion, number>> }) {
+  const partes = ORDEN_CONCLUSION.filter((c) => conteo?.[c]).map((c) => `${CONCLUSIONES[c].titulo}: ${conteo![c]}`);
+  if (!partes.length) return null;
+  const total = ORDEN_CONCLUSION.reduce((s, c) => s + (conteo?.[c] ?? 0), 0);
+  return <p className="tenue grupo-datos__conteo">{total === 1 ? "1 cifra verificada" : `${total} cifras verificadas`} sobre este indicador · {partes.join(" · ")}</p>;
 }
 
 export function SeriePagina() {

@@ -92,9 +92,9 @@ def series(conn=Depends(conexion)):
         filas = cur.execute(
             "SELECT s.codigo, s.nombre, i.codigo AS indicador, s.variante, s.etiqueta_unidad AS unidad, s.frecuencia,"
             " s.geografia, p.nombre AS productor, c.nombre AS canal,"
-            " (SELECT max(o.periodo) FROM oficial.observacion o WHERE o.serie_id = s.id) AS ultimo_periodo"
-            " , sp.otros_canales"
+            " u.ultimo_periodo, sp.otros_canales"
             " FROM oficial.series_publicas() sp JOIN oficial.serie s ON s.codigo = sp.codigo"
+            " JOIN oficial.ultimo_dato_serie u ON u.serie_id = s.id"  # vista (0039): solo lo vigente y aceptado
             " JOIN oficial.indicador i ON i.id = s.indicador_id"
             " JOIN oficial.fuente p ON p.id = s.fuente_productora_id JOIN oficial.fuente c ON c.id = s.fuente_canal_id"
             " ORDER BY i.codigo, s.codigo").fetchall()
